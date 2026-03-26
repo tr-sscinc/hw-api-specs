@@ -14,7 +14,6 @@ tags:
   - name: Accounts 
     #description: Enables the management of Hubwise investor accounts, including fees, money movements, and transfers.
 
-
 security:
   - bearer-token: []
   - x-api-key: []
@@ -439,6 +438,7 @@ paths:
           $ref: "#/components/responses/500-ServerError"
 
   /investors/{investorId}:
+    
     get:
       tags:
         - Investors
@@ -673,6 +673,188 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+    patch:
+      tags:
+        - Investors
+      summary: Updates an investor
+      description: | 
+        Allows the modification of some of the investor details. 
+        
+        
+        Implements JSON Merge Patch to apply the modification. 
+      operationId: modifyInvestor
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: investorId
+          in: path
+          description: Unique SS&C Hubwise Investor identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HWI04003219
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvestorPatch"
+            examples:
+              Ex1:
+                summary: Update investor phone number and notifications
+                value:
+                  {
+                    "individual":
+                      {
+                        "contactDetails":
+                          {
+                            "mobilePhone": "07877156440"
+                          },
+                        "notificationPreferences":
+                          { 
+                            "disableSms": true 
+                          }
+                      }
+                  }
+              Ex2:
+                summary: Update investor address 
+                value:
+                  {
+                    "addresses":
+                      [
+                        {
+                          "premisesIdentifier": "14",
+                          "line1": "Rosewood Cottage",
+                          "line2": "Elm Street",
+                          "town": "Hightown",
+                          "county": "Lancashire",
+                          "countryCode": "GB",
+                          "postCode": "HT1 4AB",
+                          "primary": true
+                        }
+                      ]
+                  }
+              Ex3:
+                summary: Update corporate investor email
+                value:
+                  {
+                    "corporate":
+                      {
+                        "contactDetails":
+                          {
+                            "email": "info@silveroakholdings.com"
+                          }
+                      }
+                  }
+              Ex4:
+                summary: Remove corporate investor LEI, with "LEI Not Required" declaration
+                value:
+                  {
+                    "corporate":
+                      {
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "primary": true,
+                                  "countryCode": "GB"
+                                }
+                              ]
+                          }
+                      },
+                    "declarations": 
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "LEI_NOT_REQ",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
+      responses:
+        "200":
+          description: Invesstor modified successfully
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Investor"
+              examples:
+                Ex1:
+                  summary: Investor with updates applied.
+                  value:
+                    {
+                      "id": "HWI04003219",
+                      "adviserId": "E273053",
+                      "type": "INDIVIDUAL",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "provider": "Curo",
+                          },
+                        ],
+                      "individual":
+                        {
+                          "title": "OTHER",
+                          "titleOtherValue": "General",
+                          "firstName": "Sam",
+                          "middleName": "John",
+                          "surname": "Smith",
+                          "dateOfBirth": "2000-02-20",
+                          "gender": "MALE",
+                          "maritalStatus": "MARRIED",
+                          "incomeAndInvestment":
+                            {
+                              "occupation": "OTHER",
+                              "occupationOtherValue": "Management Consultant",
+                              "industry": "OTHER",
+                              "industryOtherValue": "Consulting Services",
+                              "annualIncome": "FROM_50K_TO_75K",
+                              "investmentReason": "GROW_WEALTH",
+                              "investmentAgreedInPerson": true
+                            },
+                          "territorialProfile":
+                            {
+                              "nationalities":
+                                [{ "countryCode": "GB", "primary": true }],
+                              "taxResidencies":
+                                [
+                                  {
+                                    "countryCode": "GB",
+                                    "tin": "AC123456C",
+                                    "primary": true
+                                  }
+                                ]
+                            },
+                          "contactDetails":
+                            {
+                              "contactPhone": "01619465555",
+                              "homePhone": "01619464444",
+                              "mobilePhone": "07877156340",
+                              "email": "john.doe@outlook.com"
+                            },
+                          "notificationPreferences":
+                            { "disableEmails": false, "disableSms": false }
+                        },
+                      "addresses":
+                        [
+                          {
+                            "premisesIdentifier": "12",
+                            "line1": "Rosewood Cottage",
+                            "line2": "Elm Street",
+                            "town": "Hightown",
+                            "county": "Lancashire",
+                            "countryCode": "GB",
+                            "postCode": "HT3 4AB",
+                            "primary": true
+                          }
+                        ]
+                    }
+        
+
   /investors/{investorId}/vulnerabilities:
     
     get:
@@ -722,7 +904,7 @@ paths:
                             "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
                             "startDate": "2025-10-22",
                             "adviserId": "E273053"
-                          },
+                          }
                         ]
                     }
                 Ex2:
@@ -860,6 +1042,109 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+    put:
+      tags:
+        - Investors
+      summary: Modify the vulnerable characteristics of an investor
+      operationId: modifyInvestorVulnerabilities
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: investorId
+          in: path
+          description: Unique SS&C Hubwise Investor identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HWI04003219
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VulnerabilityHeader"
+            examples:
+              Ex1:
+                summary: Modify the characteristics of a vulnerable investor 
+                description: Note that the "Confirm Vulnerability Consent" declaration is required for this operation.
+                value:
+                  {
+                    "vulnerabilities": [
+                      {
+                        "type": "HEALTH",
+                        "serviceLevel": "SPEAK_LOUDLY_AND_CLEARLY",
+                        "startDate": "2025-12-01",
+                        "expiryDate": "2026-01-01"
+                      },
+                      {
+                        "type": "HEALTH",
+                        "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
+                        "startDate": "2025-10-22"
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E121191",
+                        "templateId": "CONFIRM_VULNERABILITY_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+        required: true
+      responses:
+        "200":
+          description: Investor vulnerabilities modified successfully.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VulnerabilityHeader"
+              examples:
+                Ex1:
+                  summary: Characteristics of a vulnerable investor
+                  value:
+                    {
+                      "investorId": "HWI00016530",
+                      "tenantId": "HUBWISE",
+                      "vulnerabilities":
+                        [
+                          {
+                            "type": "HEALTH",
+                            "serviceLevel": "SPEAK_LOUDLY_AND_CLEARLY",
+                            "startDate": "2025-10-01",
+                            "expiryDate": "2025-10-22",
+                            "adviserId": "E273053"
+                          },
+                          {
+                            "type": "HEALTH",
+                            "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
+                            "startDate": "2025-10-22",
+                            "adviserId": "E273053"
+                          }
+                        ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /investors/{investorId}/correspondences:
     
     get:
@@ -974,7 +1259,10 @@ paths:
                           "startDate": "2025-10-01",
                           "expiryDate": "2025-10-22"
                         },
-                        { "type": "BRAILLE", "startDate": "2025-10-01" },
+                        { 
+                          "type": "BRAILLE", 
+                          "startDate": "2025-10-01" 
+                        }
                       ],
                     "declarations":
                       [
@@ -989,6 +1277,107 @@ paths:
       responses:
         "201":
           description: Investor correspondences created successfully.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrespondenceHeader"
+              examples:
+                Ex1:
+                  summary: Investor correspondences
+                  value:
+                    {
+                      "investorId": "HWI00016530",
+                      "tenantId": "HUBWISE",
+                      "correspondences":
+                        [
+                          {
+                            "type": "AUDIO",
+                            "startDate": "2025-10-01",
+                            "expiryDate": "2025-10-22",
+                            "adviserId": "E273053"
+                          },
+                          {
+                            "type": "BRAILLE",
+                            "startDate": "2025-10-01",
+                            "adviserId": "E273053"
+                          }
+                        ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    put:
+      tags:
+        - Investors
+      summary: Modify an investor's correspondences
+      operationId: modifyInvestorCorrespondences
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: investorId
+          in: path
+          description: Unique SS&C Hubwise Investor identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HWI04003219
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CorrespondenceHeader"
+            examples:
+              Ex1:
+                summary: Update an Investor's correspondences
+                description: Note that the "Confirm correspondences consent" declaration must be included on the update to an investor's correspondences.
+                value:
+                  {
+                    "correspondences":
+                      [
+                        {
+                          "type": "AUDIO",
+                          "startDate": "2025-10-01",
+                          "expiryDate": "2025-10-22"
+                        },
+                        { 
+                          "type": "BRAILLE", 
+                          "startDate": "2025-10-01" 
+                        }
+                      ],
+                    "declarations":
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "CONFIRM_CORRESPONDENCES_CONSENT",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
+        required: true
+      responses:
+        "200":
+          description: Investor correspondences modified successfully.
           headers:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
@@ -4378,10 +4767,119 @@ components:
         notificationPreferences:
           $ref: "#/components/schemas/Notification"
 
+    IndividualPatch:
+      description: required if investor type is individual or court appointed deputy
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          maxLength: 15
+          type: string
+          description: The investors title
+          example: OTHER
+          enum:
+            - MR
+            - MASTER
+            - SIR
+            - MRS
+            - MISS
+            - MS
+            - PROF
+            - DR
+            - REV
+            - LORD
+            - LADY
+            - OTHER
+        titleOtherValue:
+          maxLength: 15
+          minLength: 0
+          type: string
+          description: If the investors title is other this field is applicable and mandatory
+          format: string
+          example: General
+        firstName:
+          maxLength: 25
+          minLength: 0
+          type: string
+          description: The investors First Name
+          format: string
+          example: Sam
+        middleName:
+          maxLength: 25
+          minLength: 0
+          type: string
+          description: The investors Middle Name
+          format: string
+          example: John
+        surname:
+          maxLength: 25
+          minLength: 0
+          type: string
+          description: The investors Surname
+          format: string
+          example: Smith
+        dateOfBirth:
+          maxLength: 10
+          type: string
+          description: The investors Date of Birth
+          format: date
+          example: "2000-02-20"
+        gender:
+          type: string
+          description: The investors Gender
+          example: MALE
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        maritalStatus:
+          type: string
+          description: The investors Marital Status
+          example: MARRIED
+          enum:
+            - SINGLE
+            - MARRIED
+            - DIVORCED
+            - WIDOWED
+            - SEPARATED
+            - CIVIL
+            - COMMONLAW
+            - OTHERDEP
+            - UNDISC
+        incomeAndInvestment:
+          $ref: "#/components/schemas/IncomeAndInvestment"
+        allowance:
+          $ref: "#/components/schemas/Allowance"
+        territorialProfile:
+          $ref: "#/components/schemas/TerritorialProfile"
+        contactDetails:
+          $ref: "#/components/schemas/ContactDetails"
+        notificationPreferences:
+          $ref: "#/components/schemas/Notification"
+
     TrustAndCorporate:
       required:
         - legalName
         - contactDetails
+      description: required if investor type is for a trust or corporate
+      type: object
+      additionalProperties: false
+      properties:
+        legalName:
+          maxLength: 25
+          minLength: 0
+          type: string
+          description: The Legal name of a trust
+          format: string
+          example: Silver Oak Holdings Ltd
+        territorialProfile:
+          $ref: "#/components/schemas/TerritorialProfile"
+        contactDetails:
+          $ref: "#/components/schemas/ContactDetails"
+        notificationPreferences:
+          $ref: "#/components/schemas/Notification"
+
+    TrustAndCorporatePatch:
       description: required if investor type is for a trust or corporate
       type: object
       additionalProperties: false
@@ -4496,6 +4994,94 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/VulnerabilityCorrespondence"
+        declarations:
+          readOnly: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Declaration"
+    
+    InvestorPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          maxLength: 11
+          type: string
+          description: Unique SS&C Hubwise Investor identifier
+          format: string
+          readOnly: true
+          example: HWI04003219
+        tenantId:
+          maxLength: 7
+          minLength: 0
+          type: string
+          description: Unique SS&C Hubwise Tenant identifier
+          format: string
+          readOnly: true
+          example: HUBWISE
+        adviserId:
+          maxLength: 7
+          minLength: 0
+          type: string
+          description: Unique SS&C Hubwise Adviser identifier
+          format: string
+          example: E007290
+        type:
+          type: string
+          description: The type of investor
+          example: INDIVIDUAL
+          enum:
+            - INDIVIDUAL
+            - COURT_APPOINTED_DEPUTY
+            - CORPORATE
+            - BARE_TRUST
+            - VULNERABLE_PERSON_TRUST
+            - PARENT_TRUST
+            - DISCRETIONARY_TRUST
+            - INTEREST_IN_POSSESSION_TRUST
+            - NON_UK_RESIDENT_TRUST
+            - ACCUMULATION_TRUST
+            - MIXED_TRUST
+            - SETTLOR_INTERESTED_TRUST
+            - WILL_TRUST
+        status:
+          type: string
+          description: The current status of the investor
+          readOnly: true
+          example: NEW
+          enum:
+            - NEW
+            - DELETED
+            - INCEPTED
+            - SUSPENDED
+            - FROZEN
+            - DECEASED
+            - PENDING
+            - PRE_AML
+            - REFERRED
+            - FLD_AML
+            - INTENTION_TO_CLOSE
+            - WAITING_AML_DOCUMENTATION
+            - CLOSED
+            - ARCHIVED
+            - NON_UK_RESIDENT
+            - FAS
+        externalReferences:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExternalReference"
+        individual:
+          $ref: "#/components/schemas/IndividualPatch"
+        trust:
+          $ref: "#/components/schemas/TrustAndCorporatePatch"
+        corporate:
+          $ref: "#/components/schemas/TrustAndCorporatePatch"
+        addresses:
+          maxItems: 5
+          minItems: 0
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
         declarations:
           readOnly: true
           type: array
