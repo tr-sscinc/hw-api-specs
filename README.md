@@ -1,3 +1,2 @@
 # hw-api-specs
 
-hello
