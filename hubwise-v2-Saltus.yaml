@@ -536,29 +536,29 @@ paths:
                             "primary": true
                           }
                         ],
-                      # "vulnerabilities": [
-                      #     {
-                      #       "type": "HEALTH",
-                      #       "serviceLevel": "SPEAK_LOUDLY_AND_CLEARLY",
-                      #       "startDate": "2025-10-01",
-                      #       "expiryDate": "2025-10-22",
-                      #       "adviserId": "E273053"
-                      #     },
-                      #     {
-                      #       "type": "HEALTH",
-                      #       "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
-                      #       "startDate": "2025-10-22",
-                      #       "adviserId": "E273053"
-                      #     },
-                      #   ], 
-                      # "correspondences": [
-                      #   {
-                      #     "type": "AUDIO",
-                      #     "startDate": "2025-10-01",
-                      #     "expiryDate": "2025-10-22"
-                      #   },
-                      #   { "type": "BRAILLE", "startDate": "2025-10-01" },
-                      # ]
+                      "vulnerabilities": [
+                          {
+                            "type": "HEALTH",
+                            "serviceLevel": "SPEAK_LOUDLY_AND_CLEARLY",
+                            "startDate": "2025-10-01",
+                            "expiryDate": "2025-10-22",
+                            "adviserId": "E273053"
+                          },
+                          {
+                            "type": "HEALTH",
+                            "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
+                            "startDate": "2025-10-22",
+                            "adviserId": "E273053"
+                          },
+                        ], 
+                      "correspondences": [
+                        {
+                          "type": "AUDIO",
+                          "startDate": "2025-10-01",
+                          "expiryDate": "2025-10-22"
+                        },
+                        { "type": "BRAILLE", "startDate": "2025-10-01" },
+                      ]
                     }
                 Ex2:
                   summary: Investor is a discretionary trust
@@ -3775,6 +3775,7 @@ components:
         model:
           $ref: "#/components/schemas/ModelHeader"
         declarations:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -4032,6 +4033,7 @@ components:
               items:
                 $ref: "#/components/schemas/BankAccountHolder"
             declarations:
+              readOnly: true
               type: array
               items:
                 $ref: "#/components/schemas/Declaration"
@@ -4484,17 +4486,18 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Address"
-        # vulnerabilities:
-        #   readOnly: true
-        #   type: array
-        #   items:
-        #     $ref: "#/components/schemas/Vulnerability"
-        # correspondences:
-        #   readOnly: true
-        #   type: array
-        #   items:
-        #     $ref: "#/components/schemas/VulnerabilityCorrespondence"
+        vulnerabilities:
+          readOnly: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Vulnerability"
+        correspondences:
+          readOnly: true
+          type: array
+          items:
+            $ref: "#/components/schemas/VulnerabilityCorrespondence"
         declarations:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -4648,6 +4651,7 @@ components:
           items:
             $ref: "#/components/schemas/VulnerabilityCorrespondence"
         declarations:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -4676,6 +4680,7 @@ components:
           items:
             $ref: "#/components/schemas/Vulnerability"
         declarations:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -4779,6 +4784,7 @@ components:
           items:
             $ref: "#/components/schemas/Fee"
         declarations:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -5008,6 +5014,7 @@ components:
           items:
             $ref: "#/components/schemas/Movement"
         declarations:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -5429,10 +5436,10 @@ components:
           items:
             $ref: "#/components/schemas/AccountTransfer"
         declarations:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
-
 
     AccountTransfer:
       additionalProperties: false
