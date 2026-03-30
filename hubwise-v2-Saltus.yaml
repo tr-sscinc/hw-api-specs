@@ -477,8 +477,8 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo",
-                          },
+                            "provider": "Curo"
+                          }
                         ],
                       "individual":
                         {
@@ -503,7 +503,12 @@ paths:
                           "territorialProfile":
                             {
                               "nationalities":
-                                [{ "countryCode": "GB", "primary": true }],
+                                [
+                                  { 
+                                    "countryCode": "GB", 
+                                    "primary": true 
+                                  }
+                                ],
                               "taxResidencies":
                                 [
                                   {
@@ -521,7 +526,10 @@ paths:
                               "email": "john.doe@outlook.com"
                             },
                           "notificationPreferences":
-                            { "disableEmails": false, "disableSms": false }
+                            { 
+                              "disableEmails": false, 
+                              "disableSms": false 
+                            }
                         },
                       "addresses":
                         [
@@ -549,7 +557,7 @@ paths:
                             "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
                             "startDate": "2025-10-22",
                             "adviserId": "E273053"
-                          },
+                          }
                         ], 
                       "correspondences": [
                         {
@@ -557,7 +565,10 @@ paths:
                           "startDate": "2025-10-01",
                           "expiryDate": "2025-10-22"
                         },
-                        { "type": "BRAILLE", "startDate": "2025-10-01" },
+                        { 
+                          "type": "BRAILLE", 
+                          "startDate": "2025-10-01" 
+                        }
                       ]
                     }
                 Ex2:
@@ -681,7 +692,7 @@ paths:
         Allows the modification of some of the investor details. 
         
         
-        Implements JSON Merge Patch to apply the modification. 
+        Implements [JSON Merge Patch](https://www.rfc-editor.org/rfc/rfc7386) to apply the modification.
       operationId: modifyInvestor
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1144,6 +1155,48 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
+    
+    delete:
+      tags:
+        - Investors
+      summary: Remove the vulnerable characteristics of an investor
+      operationId: removeInvestorVulnerabilities
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: investorId
+          in: path
+          description: Unique SS&C Hubwise Investor identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HWI04003219
+      responses:
+        "204":
+          description: Investor vulnerabilities removed successfully.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
 
   /investors/{investorId}/correspondences:
     
@@ -1407,6 +1460,48 @@ paths:
                           },
                         ]
                     }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    delete:
+      tags:
+        - Investors
+      summary: Remove an investor's correspondences
+      operationId: removeInvestorCorrespondences
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: investorId
+          in: path
+          description: Unique SS&C Hubwise Investor identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HWI04003219
+      responses:
+        "204":
+          description: Investor correspondences removed successfully.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
         "400":
           description: Bad request
           headers:
@@ -2059,6 +2154,27 @@ paths:
                       }
                     ]
                   }
+              Ex6: 
+                summary: Add a corporate or trust investor's bank account
+                value:
+                  {
+                    "name": "Jane Doe Enterprises LTD",
+                    "number": "87654321",
+                    "sortCode": "309894",
+                    "holders": [
+                      {
+                        "id": "HW00013200A"
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E121191",
+                        "templateId": "BANK_ACCT_VALIDATION",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+
       responses:
         "201":
           description: Bank account created successfully.
@@ -2087,6 +2203,9 @@ paths:
                   summary: Add a multi-holder bank account to a customer's investment account
                   value:
                     {
+                      "accountId": "HW04003258A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
                       "name": "Jane Doe",
                       "number": "87654321",
                       "sortCode": "309894",
@@ -2100,6 +2219,9 @@ paths:
                   summary: Add a third party's bank account to a customer's investment account
                   value:
                     {
+                      "accountId": "HW04003258A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
                       "name": "Jane Doe Enterprises LTD",
                       "number": "87654321",
                       "sortCode": "309894",
@@ -2115,6 +2237,9 @@ paths:
                   summary: Add a customer's EUR bank account to their investment account
                   value:
                     {
+                      "accountId": "HW04003258A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
                       "currency": "EUR",
                       "name": "Erika Mustermann",
                       "iban": "DE75512108001245126199",
@@ -2126,11 +2251,31 @@ paths:
                   summary: Add a customer's USD bank account to their investment account
                   value:
                     {
+                      "accountId": "HW04003258A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
                       "currency": "USD",
                       "name": "Jane Doe",
                       "number": "123456789012",
                       "bicSwift": "BOFAUS6S",
                       "holders": [{ "id": "HWI04003219" }],
+                      "status": "UNCHECKED"
+                    }
+                Ex6:
+                  summary: Add a corporate or trust investor's bank account
+                  value:
+                    {
+                      "accountId": "HW04003258A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
+                      "name": "Jane Doe Enterprises LTD",
+                      "number": "87654321",
+                      "sortCode": "309894",
+                      "holders": [
+                        {
+                          "id": "HW00013200A"
+                        }
+                      ],
                       "status": "UNCHECKED"
                     }
         "400":
