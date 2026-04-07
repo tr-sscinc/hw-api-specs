@@ -2360,6 +2360,7 @@ paths:
                             "percentage": 0.5
                           },
                           "sourceOfFunds": {
+                            "id": 0,
                             "type": "EARNINGS",
                             "fields": {
                               "annualSalary": 100000.0,
@@ -2744,6 +2745,7 @@ paths:
                             "percentage": 0.5
                           },
                           "sourceOfFunds": {
+                            "id": 0,
                             "type": "EARNINGS",
                             "fields": {
                               "annualSalary": 100000.0,
@@ -2818,6 +2820,7 @@ paths:
                             "percentage": 0.5
                           },
                           "sourceOfFunds": {
+                            "id": 0,
                             "type": "EARNINGS",
                             "fields": {
                               "annualSalary": 100000.0,
@@ -6028,6 +6031,14 @@ components:
       type: object
       additionalProperties: false
       properties:
+        id:
+          format: int64
+          description: Unique identifier for the source of fund record.
+          maximum: 99999
+          minimum: 0
+          type: integer
+          readOnly: true
+          example: 0
         type:
           description: the Source of Fund type for one off contributions
           enum:
