@@ -2032,7 +2032,97 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-  
+    patch:
+      tags:
+        - Accounts
+      summary: Update an activated account
+      description: 
+        Updates an activated investment account.
+        
+        This endpoint supports the modification of the account name for activated Individual, Corporate, Trust, and Joint accounts. If an investors name is being updated, the account name should be updated in line with this where applicable.
+
+        The account name is used in documentation and displayed in the Adviser Portal.
+       
+       
+        1.	Corporate or Trust accounts - Organisation name
+        
+        
+        2.	Individual accounts  - title + firstName + middleName + surname
+        
+        
+        3.	Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
+       
+       
+        If the name exceeds 50 characters, the middle name and title should be removed or shortened as required.
+
+      operationId: modifyAccount
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountPatch"
+            examples:
+              Ex1:
+                summary: Update accounts name
+                value:
+                 {
+                    "name": "Mr Sam John James-Smith"
+                 }
+              
+      responses:
+        "200":
+          description: Invesstor modified successfully
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+              examples:
+                Ex1:
+                  summary: Update accounts name
+                  value:
+                    {
+                      "id": "HW00013451A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
+                      "productId": "GIA",
+                      "type": "ADVISED",
+                      "status": "ACTIVE",
+                      "baseCurrency": "GBP",
+                      "marketSettlementCurrency": "GBP",
+                      "name": "Mr Sam John James-Smith",
+                      "model": {
+                        "id": "HW000001984",
+                        "providerId": "DFM0001",
+                        "date": "2024-07-01"
+                      },
+                      "externalReferences": [
+                        {
+                          "reference": "EL1027305",
+                          "provider": "CRMX"
+                        }
+                      ],
+                      "investors": [
+                        {
+                          "id": "HWI04003371",
+                          "relationship": "OWNER"
+                        }
+                      ]
+                    }
+        
+
   /accounts/{accountId}/bank-accounts:
     post:
       tags:
@@ -4321,6 +4411,19 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BankAccount"
+
+    AccountPatch:
+      description: Account Patch Model
+      required:
+        - name
+      properties:
+        name:
+          format: string
+          description: "The name of the account, usually set to the investor(s) name(s)"
+          maxLength: 50
+          minLength: 1
+          type: string
+          example: Mr Hubwise Person
 
     ExternalReference:
       type: object
