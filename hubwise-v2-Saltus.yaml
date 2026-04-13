@@ -4005,6 +4005,105 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /accounts/{accountId}/fees/{feeId}:
+    patch:
+      tags:
+        - Accounts
+      summary: archive an accounts fee
+      description: >-
+        
+        Archives an existing active fee record for an active investment account.
+
+        This endpoint supports the modification of the end date for an active account fee. The end date can only be set to yesterdays date. To add a new fee the Create fee API will need to be used. 
+        
+        The end date can only be set for the following fee types:
+
+        1.  ADVISER_ANNUAL
+
+        2.  PORTFOLIO_MANAGEMENT
+
+        3. INVESTMENT_MANAGEMENT
+
+      operationId: modifyFee
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW04003259A
+        - name: feeId
+          in: path
+          description: Unique SS&C Hubwise Fee identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: '1'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeesHeaderPatch"
+            examples:
+              Ex1:
+                summary: Archive an account fee
+                value:
+                  {
+                    "fees": [
+                      {
+                        "endDate": "2025-12-31"
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "templateId": "AMENDMENT_CONSENT",
+                        "adviserId": "E121191",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+
+              
+      responses:
+        "200":
+          description: Account fee archived successfully
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeesHeader"
+              examples:
+                Ex1:
+                  summary: Archive an account fee
+                  value:
+                    {
+                      "fees": [
+                        {
+                          "id": 1,
+                          "accountId": "HW04003259A",
+                          "adviserId": "E008469",
+                          "tenantId": "HUBWISE",
+                          "type": "ADVISER_ANNUAL",
+                          "status": "ARCHIVED",
+                          "percentage": 0.25,
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate" : "2025-12-31",
+                          "method": "IN_ADVANCE",
+                          "invoiceFrequency": "MONTHLY",
+                          "period": "ANNUALLY",
+                          "invoiceMinimumAmount": 123.45,
+                          "invoiceMaximumAmount": 9999.99
+                        }
+                      ]
+                    }
+        
   /accounts/{accountId}/activate:
     post:
       tags:
@@ -5840,6 +5939,34 @@ components:
           readOnly: true
           example: 100000
     
+    FeesHeaderPatch:
+      required:
+        - fees
+      type: object
+      additionalProperties: false
+      properties:
+        fees:
+          type: array
+          items:
+            $ref: "#/components/schemas/FeePatch"
+        declarations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Declaration"
+
+    FeePatch:
+      description: Represents a fee being archived against an account.
+      required:
+        - endDate
+      type: object
+      additionalProperties: false
+      properties:
+        endDate:
+          format: date
+          description: The date the fee ends
+          type: string
+          example: "2025-05-28"
+
     MovementsHeader:
       required:
         - moneyMovements
