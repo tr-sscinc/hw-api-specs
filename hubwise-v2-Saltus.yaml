@@ -3583,7 +3583,7 @@ paths:
                           "adviserId": "E008469",
                           "tenantId": "HUBWISE",
                           "type": "ADVISER_ANNUAL",
-                          "completed": "N",
+                          "status": "ACTIVE",
                           "code": "AFGVCD",
                           "vatIncluded": true,
                           "startDate": "2025-04-28",
@@ -3620,7 +3620,7 @@ paths:
                           "adviserId": "E008469",
                           "tenantId": "HUBWISE",
                           "type": "ADVISER_ANNUAL",
-                          "completed": "N",
+                          "status": "ACTIVE",
                           "percentage": 0.25,
                           "vatIncluded": true,
                           "startDate": "2025-04-28",
@@ -3636,7 +3636,7 @@ paths:
                           "adviserId": "E008469",
                           "tenantId": "HUBWISE",
                           "type": "ADVISER_ONE_OFF",
-                          "completed": "N",
+                          "status": "ACTIVE",
                           "amount": 50.00,
                           "vatIncluded": true,
                           "startDate": "2025-04-28",
@@ -3795,7 +3795,7 @@ paths:
                             "adviserId": "E008469",
                             "tenantId": "HUBWISE",
                             "type": "ADVISER_ANNUAL",
-                            "completed": "N",
+                            "status": "ACTIVE",
                             "code": "AFGVCD",
                             "vatIncluded": true,
                             "startDate": "2025-04-28",
@@ -3846,7 +3846,7 @@ paths:
                         "adviserId": "E008469",
                         "tenantId": "HUBWISE",
                         "type": "ADVISER_ANNUAL",
-                        "completed": "N",
+                        "status": "ACTIVE",
                         "percentage": 0.25,
                         "vatIncluded": true,
                         "startDate": "2025-04-28",
@@ -3876,7 +3876,7 @@ paths:
                         "adviserId": "E008469",
                         "tenantId": "HUBWISE",
                         "type": "ADVISER_ONE_OFF",
-                        "completed": "N",
+                        "status": "ACTIVE",
                         "amount": 50.00,
                         "vatIncluded": true,
                         "startDate": "2025-04-28",
@@ -5572,12 +5572,12 @@ components:
             - PLATFORM_INITIAL
           type: string
           example: ADVISER_ANNUAL
-        completed:
-          description: If the fee has completed
+        status:
+          description: The status of the fee
           enum:
+            - ACTIVE
+            - COMPLETED
             - ARCHIVED
-            - "N"
-            - "Y"
           type: string
           readOnly: true
         code:
