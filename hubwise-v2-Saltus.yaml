@@ -5877,7 +5877,7 @@ components:
           type: boolean
         includeNonDailyAssets:
           description: >-
-            Allows a customer to indicate if they want to include or exclude non-daily traded assets from one off contributions and withdrawals. Defualts to false for one off contributions and true for one off withdrawals.
+            Allows a customer to indicate if they want to include or exclude non-daily traded assets from one off contributions and withdrawals. Defaults to false for one off contributions and true for one off withdrawals.
           type: boolean
         investmentInstruction:
           description: >-
