@@ -5872,7 +5872,7 @@ components:
           example: HW000134514
         isMaximum:
           description: >-
-            Indicates if the maximum allowable amount. Can only be used for UFPLS,
+            Indicates if the maximum allowable amount. Can only be used for WITHDRAWAL, UFPLS,
             FLEXI_ACCESS_INCOME, FLEXI_ACCESS_PCLS.
           type: boolean
         includeNonDailyAssets:
@@ -5908,7 +5908,7 @@ components:
     Value:
       description: >-
         Value object representing amounts and currency. This is mandatory for money movements unless
-        isMaximum is true and type is UFPLS, FLEXI_ACCESS_INCOME, FLEXI_ACCESS_PCLS
+        isMaximum is true and type is WITHDRAWAL, UFPLS, FLEXI_ACCESS_INCOME, FLEXI_ACCESS_PCLS
       required:
         - amount
         - currency
