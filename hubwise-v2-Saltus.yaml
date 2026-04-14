@@ -1156,48 +1156,7 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
     
-    delete:
-      tags:
-        - Investors
-      summary: Remove the vulnerable characteristics of an investor
-      operationId: removeInvestorVulnerabilities
-      parameters:
-        - $ref: '#/components/parameters/Request-Id'
-        - name: investorId
-          in: path
-          description: Unique SS&C Hubwise Investor identifier
-          required: true
-          schema:
-            type: string
-            maxLength: 14
-          example: HWI04003219
-      responses:
-        "204":
-          description: Investor vulnerabilities removed successfully.
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-        "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
-        "401":
-          $ref: "#/components/responses/401-Unauthorized"
-        "403":
-          $ref: "#/components/responses/403-Forbidden"
-        "404":
-          $ref: "#/components/responses/404-NotFound"
-        "500":
-          $ref: "#/components/responses/500-ServerError"
-
+    
   /investors/{investorId}/correspondences:
     
     get:
@@ -1460,48 +1419,6 @@ paths:
                           },
                         ]
                     }
-        "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
-        "401":
-          $ref: "#/components/responses/401-Unauthorized"
-        "403":
-          $ref: "#/components/responses/403-Forbidden"
-        "404":
-          $ref: "#/components/responses/404-NotFound"
-        "500":
-          $ref: "#/components/responses/500-ServerError"
-
-    delete:
-      tags:
-        - Investors
-      summary: Remove an investor's correspondences
-      operationId: removeInvestorCorrespondences
-      parameters:
-        - $ref: '#/components/parameters/Request-Id'
-        - name: investorId
-          in: path
-          description: Unique SS&C Hubwise Investor identifier
-          required: true
-          schema:
-            type: string
-            maxLength: 14
-          example: HWI04003219
-      responses:
-        "204":
-          description: Investor correspondences removed successfully.
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
         "400":
           description: Bad request
           headers:
