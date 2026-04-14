@@ -3141,15 +3141,7 @@ paths:
                   {
                     "moneyMovements": [
                       {
-                        "value": {
-                          "amount": 1500
-                        },
-                        "fee": {
-                          "amount": 67.50,
-                          "instalmentPlan": {
-                            "totalMonths": 6
-                          }
-                        }
+                        "frequency": "QUARTERLY"
                       }
                     ],
                     "declarations": [
@@ -3160,7 +3152,6 @@ paths:
                       }
                     ]
                   }
-              
               Ex3:
                 summary: Update Regular Contirubtion Bank Details
                 value:
