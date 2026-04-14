@@ -868,73 +868,6 @@ paths:
 
   /investors/{investorId}/vulnerabilities:
     
-    get:
-      tags:
-        - Investors
-      summary: Retrieves an investor's vulnerable Characteristics
-      description: TBC
-      operationId: retrieveInvestorVulnerabilities
-      parameters:
-        - $ref: '#/components/parameters/Request-Id'
-        - name: investorId
-          in: path
-          description: Unique SS&C Hubwise Investor identifier
-          required: true
-          schema:
-            type: string
-            maxLength: 14
-          example: HWI04003219
-      responses:
-        "200":
-          description: Investor vulnerabilities retrieved successfully.
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/VulnerabilityHeader"
-              examples:
-                Ex1:
-                  summary: Characteristics of a vulnerable investor
-                  value:
-                    {
-                      "investorId": "HWI00016530",
-                      "tenantId": "HUBWISE",
-                      "vulnerabilities":
-                        [
-                          {
-                            "type": "HEALTH",
-                            "serviceLevel": "SPEAK_LOUDLY_AND_CLEARLY",
-                            "startDate": "2025-10-01",
-                            "expiryDate": "2025-10-22",
-                            "adviserId": "E273053"
-                          },
-                          {
-                            "type": "HEALTH",
-                            "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
-                            "startDate": "2025-10-22",
-                            "adviserId": "E273053"
-                          }
-                        ]
-                    }
-                Ex2:
-                  summary: No vulnerable characteristics exist
-                  value:
-                    {
-                      "investorId": "HWI00016530",
-                      "tenantId": "HUBWISE",
-                      "vulnerabilities": []
-                    }
-        "401":
-          $ref: "#/components/responses/401-Unauthorized"
-        "403":
-          $ref: "#/components/responses/403-Forbidden"
-        "404":
-          $ref: "#/components/responses/404-NotFound"
-        "500":
-          $ref: "#/components/responses/500-ServerError"
-    
     post:
       tags:
         - Investors
@@ -1053,6 +986,73 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+    get:
+      tags:
+        - Investors
+      summary: Retrieves an investor's vulnerable Characteristics
+      description: TBC
+      operationId: retrieveInvestorVulnerabilities
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: investorId
+          in: path
+          description: Unique SS&C Hubwise Investor identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HWI04003219
+      responses:
+        "200":
+          description: Investor vulnerabilities retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VulnerabilityHeader"
+              examples:
+                Ex1:
+                  summary: Characteristics of a vulnerable investor
+                  value:
+                    {
+                      "investorId": "HWI00016530",
+                      "tenantId": "HUBWISE",
+                      "vulnerabilities":
+                        [
+                          {
+                            "type": "HEALTH",
+                            "serviceLevel": "SPEAK_LOUDLY_AND_CLEARLY",
+                            "startDate": "2025-10-01",
+                            "expiryDate": "2025-10-22",
+                            "adviserId": "E273053"
+                          },
+                          {
+                            "type": "HEALTH",
+                            "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
+                            "startDate": "2025-10-22",
+                            "adviserId": "E273053"
+                          }
+                        ]
+                    }
+                Ex2:
+                  summary: No vulnerable characteristics exist
+                  value:
+                    {
+                      "investorId": "HWI00016530",
+                      "tenantId": "HUBWISE",
+                      "vulnerabilities": []
+                    }
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+    
     put:
       tags:
         - Investors
@@ -1158,71 +1158,6 @@ paths:
     
     
   /investors/{investorId}/correspondences:
-    
-    get:
-      tags:
-        - Investors
-      summary: Retrieves the correspondence preferences of an investor
-      description: TBC
-      operationId: retrieveInvestorCorresponsences
-      parameters:
-        - $ref: '#/components/parameters/Request-Id'
-        - name: investorId
-          in: path
-          description: Unique SS&C Hubwise Investor identifier
-          required: true
-          schema:
-            type: string
-            maxLength: 14
-          example: HWI04003219
-      responses:
-        "200":
-          description: Investor correspondences retrieved
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CorrespondenceHeader"
-              examples:
-                Ex1:
-                  summary: Investor correspondences
-                  value:
-                    {
-                      "investorId": "HWI00016530",
-                      "tenantId": "HUBWISE",
-                      "correspondences":
-                        [
-                          {
-                            "type": "AUDIO",
-                            "startDate": "2025-10-01",
-                            "expiryDate": "2025-10-22",
-                            "adviserId": "E273053"
-                          },
-                          {
-                            "type": "BRAILLE",
-                            "startDate": "2025-10-01",
-                            "adviserId": "E273053"
-                          },
-                        ]
-                    }
-                Ex2:
-                  summary: No investor correspondences found
-                  value:
-                    {
-                      "investorId": "HWI00016530",
-                      "tenantId": "HUBWISE",
-                      "correspondences": []
-                    }
-        "401":
-          $ref: "#/components/responses/401-Unauthorized"
-        "403":
-          $ref: "#/components/responses/403-Forbidden"
-        "404":
-          $ref: "#/components/responses/404-NotFound"
-        "500":
-          $ref: "#/components/responses/500-ServerError"
     
     post:
       tags:
@@ -1339,6 +1274,71 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+    get:
+      tags:
+        - Investors
+      summary: Retrieves the correspondence preferences of an investor
+      description: TBC
+      operationId: retrieveInvestorCorresponsences
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: investorId
+          in: path
+          description: Unique SS&C Hubwise Investor identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HWI04003219
+      responses:
+        "200":
+          description: Investor correspondences retrieved
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CorrespondenceHeader"
+              examples:
+                Ex1:
+                  summary: Investor correspondences
+                  value:
+                    {
+                      "investorId": "HWI00016530",
+                      "tenantId": "HUBWISE",
+                      "correspondences":
+                        [
+                          {
+                            "type": "AUDIO",
+                            "startDate": "2025-10-01",
+                            "expiryDate": "2025-10-22",
+                            "adviserId": "E273053"
+                          },
+                          {
+                            "type": "BRAILLE",
+                            "startDate": "2025-10-01",
+                            "adviserId": "E273053"
+                          },
+                        ]
+                    }
+                Ex2:
+                  summary: No investor correspondences found
+                  value:
+                    {
+                      "investorId": "HWI00016530",
+                      "tenantId": "HUBWISE",
+                      "correspondences": []
+                    }
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+    
     put:
       tags:
         - Investors
@@ -2308,122 +2308,6 @@ paths:
 
   /accounts/{accountId}/money-movements:
     
-    get:
-      tags:
-        - Accounts
-      summary: Retrieves the money movements on an account
-      description: TBC
-      operationId: retrieveAccountMovements
-      parameters:
-        - $ref: '#/components/parameters/Request-Id'
-        - name: accountId
-          in: path
-          description: Unique SS&C Hubwise Account identifier
-          required: true
-          schema:
-            type: string
-            maxLength: 14
-          example: HW00013451A
-      responses:
-        "200":
-          description: Money Movemens retrieved successfully
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MovementsHeader"
-              examples: 
-                Ex1:
-                  summary: Money movements on the account.
-                  value:
-                    {
-                      "moneyMovements": [
-                        {
-                          "id": 1,
-                          "accountId": "HW04003258A",
-                          "tenantId": "HUBWISE",
-                          "adviserId": "E008469",
-                          "status": "NEW",
-                          "type": "CONTRIBUTIONS",
-                          "contributionMethod": "ELECTRONIC",
-                          "payer": "SELF",
-                          "frequency": "ONE_OFF",
-                          "value": {
-                            "amount": 15000,
-                            "currency": "GBP"
-                          },
-                          "startDate": "2026-02-02",
-                          "investmentInstruction": "INVEST_IN_MODEL",
-                          "includeNonDailyAssets": true,
-                          "bank": {
-                            "number": "50220369",
-                            "sortCode": "700125"
-                          },
-                          "fee": {
-                            "id": 1,
-                            "type": "ADVISER_INITIAL",
-                            "percentage": 0.5
-                          },
-                          "sourceOfFunds": {
-                            "id": 0,
-                            "type": "EARNINGS",
-                            "fields": {
-                              "annualSalary": 100000.0,
-                              "jobDescription": "Contractor",
-                              "natureOfBusiness": "Financial Services"
-                            }
-                          }
-                        },
-                        {
-                          "id": 2,
-                          "accountId": "HW04003258A",
-                          "tenantId": "HUBWISE",
-                          "adviserId": "E008469",
-                          "status": "NEW",
-                          "type": "CONTRIBUTIONS",
-                          "contributionMethod": "DIRECT_DEBIT",
-                          "payer": "SELF",
-                          "frequency": "MONTHLY",
-                          "value": {
-                            "amount": 1200,
-                            "currency": "GBP"
-                          },
-                          "startDate": "2026-02-02",
-                          "reference": "HW04003258A-DD",
-                          "investmentInstruction": "INVEST_IN_MODEL",
-                          "bank": {
-                            "number": "50220369",
-                            "sortCode": "700125"
-                          },
-                          "fee": {
-                            "id": 2,
-                            "type": "ADVISER_INITIAL",
-                            "amount": 1200,
-                            "instalmentPlan": {
-                              "totalMonths": 12,
-                              "completedMonths": 0
-                            }
-                          }
-                        }
-                      ]
-                    }
-                Ex2:
-                  summary: No money movements on the account 
-                  value:
-                    {
-                      "moneyMovements": []
-                    }
-        "401":
-          $ref: "#/components/responses/401-Unauthorized"
-        "403":
-          $ref: "#/components/responses/403-Forbidden"
-        "404":
-          $ref: "#/components/responses/404-NotFound"
-        "500":
-          $ref: "#/components/responses/500-ServerError"
-
     post:
       tags:
         - Accounts
@@ -2990,7 +2874,124 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
+    
+    get:
+      tags:
+        - Accounts
+      summary: Retrieves the money movements on an account
+      description: TBC
+      operationId: retrieveAccountMovements
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      responses:
+        "200":
+          description: Money Movemens retrieved successfully
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovementsHeader"
+              examples: 
+                Ex1:
+                  summary: Money movements on the account.
+                  value:
+                    {
+                      "moneyMovements": [
+                        {
+                          "id": 1,
+                          "accountId": "HW04003258A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E008469",
+                          "status": "NEW",
+                          "type": "CONTRIBUTIONS",
+                          "contributionMethod": "ELECTRONIC",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "startDate": "2026-02-02",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "includeNonDailyAssets": true,
+                          "bank": {
+                            "number": "50220369",
+                            "sortCode": "700125"
+                          },
+                          "fee": {
+                            "id": 1,
+                            "type": "ADVISER_INITIAL",
+                            "percentage": 0.5
+                          },
+                          "sourceOfFunds": {
+                            "id": 0,
+                            "type": "EARNINGS",
+                            "fields": {
+                              "annualSalary": 100000.0,
+                              "jobDescription": "Contractor",
+                              "natureOfBusiness": "Financial Services"
+                            }
+                          }
+                        },
+                        {
+                          "id": 2,
+                          "accountId": "HW04003258A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E008469",
+                          "status": "NEW",
+                          "type": "CONTRIBUTIONS",
+                          "contributionMethod": "DIRECT_DEBIT",
+                          "payer": "SELF",
+                          "frequency": "MONTHLY",
+                          "value": {
+                            "amount": 1200,
+                            "currency": "GBP"
+                          },
+                          "startDate": "2026-02-02",
+                          "reference": "HW04003258A-DD",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "bank": {
+                            "number": "50220369",
+                            "sortCode": "700125"
+                          },
+                          "fee": {
+                            "id": 2,
+                            "type": "ADVISER_INITIAL",
+                            "amount": 1200,
+                            "instalmentPlan": {
+                              "totalMonths": 12,
+                              "completedMonths": 0
+                            }
+                          }
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: No money movements on the account 
+                  value:
+                    {
+                      "moneyMovements": []
+                    }
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
 
+    
   /accounts/{accountId}/money-movements/{moneyMovementId}:
     patch:
       tags:
@@ -3217,189 +3218,6 @@ paths:
     
   
   /accounts/{accountId}/transfers:
-    
-    get:
-      tags:
-        - Accounts
-      summary: Retrieves the transfers against an account
-      description: TBC
-      operationId: retrieveAccountTransfers
-      parameters:
-        - $ref: '#/components/parameters/Request-Id'
-        - name: accountId
-          in: path
-          description: Unique SS&C Hubwise Account identifier
-          required: true
-          schema:
-            type: string
-            maxLength: 14
-          example: HW00013451A
-      responses:
-        "200":
-          description: Transfers created successfully
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountTransfersHeader"
-              examples:
-                Ex1:
-                  summary: Transfers against an account
-                  value:
-                    {
-                      "transfers": [
-                        {
-                          "id": 1,
-                          "accountId": "HW00013451A",
-                          "adviserId": "E008469",
-                          "tenantId": "HUBWISE",
-                          "type": "CASH",
-                          "direction": "IN",
-                          "status": "CREATED",
-                          "startDate": "2022-03-24",
-                          "isPartial": false,
-                          "investmentInstruction": "INVEST_IN_MODEL",
-                          "isElectronic": true,
-                          "value": {
-                            "amount": 15000,
-                            "currency": "GBP"
-                          },
-                          "currentYearSubscription": {
-                            "amount": 10000,
-                            "startDate": "2025-05-01"
-                          },
-                          "fee": {
-                            "id": 1,
-                            "type": "ADVISER_INITIAL",
-                            "amount": 50
-                          },
-                          "plan": {
-                            "reference": "896546",
-                            "holderName": "Mr Hub Wise Person",
-                            "type": "STOCKS_AND_SHARES"
-                          },
-                          "provider": {
-                            "id": "HW009",
-                            "name": "Standard Life",
-                            "address": {
-                              "line1": "Standard Life House",
-                              "line2": "30 Lothian Road",
-                              "line3": "Edinburgh",
-                              "line4": "EH1 2DH",
-                              "postCode": "EH1 2DH"
-                            },
-                            "contactDetails": {
-                              "contactPhone": "0345 279 1001",
-                              "email": "platforms_transfers_out@standardlife.com"
-                            }
-                          }
-                        },
-                        {
-                          "id": 2,
-                          "accountId": "HW00013451A",
-                          "adviserId": "E008469",
-                          "tenantId": "HUBWISE",
-                          "type": "CASH",
-                          "direction": "IN",
-                          "status": "CREATED",
-                          "startDate": "2022-03-24",
-                          "isPartial": false,
-                          "investmentInstruction": "INVEST_IN_MODEL",
-                          "isElectronic": true,
-                          "value": {
-                            "amount": 600000,
-                            "currency": "GBP",
-                            "crystallised": 30000,
-                            "uncrystallised": 330000
-                          },
-                          "fee": {
-                            "id": 1,
-                            "type": "ADVISER_INITIAL",
-                            "percentage": 0.25
-                          },
-                          "plan": {
-                            "reference": "896547",
-                            "holderName": "Mr Hub Wise Person",
-                            "type": "SIPP"
-                          },
-                          "provider": {
-                            "id": "HW009",
-                            "name": "Standard Life",
-                            "address": {
-                              "line1": "Standard Life House",
-                              "line2": "30 Lothian Road",
-                              "line3": "Edinburgh",
-                              "line4": "EH1 2DH",
-                              "postCode": "EH1 2DH"
-                            },
-                            "contactDetails": {
-                              "contactPhone": "0345 279 1001",
-                              "email": "platforms_transfers_out@standardlife.com"
-                            }
-                          }
-                        },
-                        {
-                          "id": 3,
-                          "accountId": "HW00013451A",
-                          "adviserId": "E008469",
-                          "tenantId": "HUBWISE",
-                          "type": "INSPECIE",
-                          "direction": "IN",
-                          "status": "CREATED",
-                          "startDate": "2022-03-24",
-                          "isPartial": true,
-                          "investmentInstruction": "INVEST_IN_MODEL",
-                          "isElectronic": true,
-                          "value": {
-                            "amount": 90000,
-                            "currency": "GBP"
-                          },
-                          "fee": {
-                            "id": 1,
-                            "type": "ADVISER_INITIAL",
-                            "amount": 50
-                          },
-                          "plan": {
-                            "reference": "896548",
-                            "holderName": "Mr Hub Wise Person"
-                          },
-                          "provider": {
-                            "id": "HW009",
-                            "name": "Standard Life",
-                            "address": {
-                              "line1": "Standard Life House",
-                              "line2": "30 Lothian Road",
-                              "line3": "Edinburgh",
-                              "line4": "EH1 2DH",
-                              "postCode": "EH1 2DH"
-                            },
-                            "contactDetails": {
-                              "contactPhone": "0345 279 1001",
-                              "email": "platforms_transfers_out@standardlife.com"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                Ex2:
-                  summary: No transfers against this account
-                  value:
-                    {
-                      "transfers": [
-                        
-                      ]
-                    }
-                
-        "401":
-          $ref: "#/components/responses/401-Unauthorized"
-        "403":
-          $ref: "#/components/responses/403-Forbidden"
-        "404":
-          $ref: "#/components/responses/404-NotFound"
-        "500":
-          $ref: "#/components/responses/500-ServerError"
     
     post:
       tags:
@@ -3775,14 +3593,12 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
-  /accounts/{accountId}/fees:
-    
     get:
       tags:
         - Accounts
-      summary: Get account fees
+      summary: Retrieves the transfers against an account
       description: TBC
-      operationId: retrieveAccountFees
+      operationId: retrieveAccountTransfers
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
@@ -3795,95 +3611,162 @@ paths:
           example: HW00013451A
       responses:
         "200":
-          description: Account fees retrieved successfully.
+          description: Transfers created successfully
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FeesHeader"
+                $ref: "#/components/schemas/AccountTransfersHeader"
               examples:
                 Ex1:
-                  summary: Fees associated with the account
+                  summary: Transfers against an account
                   value:
                     {
-                      "fees": [
+                      "transfers": [
                         {
                           "id": 1,
-                          "accountId": "HW04003258A",
+                          "accountId": "HW00013451A",
                           "adviserId": "E008469",
                           "tenantId": "HUBWISE",
-                          "type": "ADVISER_ANNUAL",
-                          "status": "ACTIVE",
-                          "code": "AFGVCD",
-                          "vatIncluded": true,
-                          "startDate": "2025-04-28",
-                          "method": "IN_ADVANCE",
-                          "invoiceFrequency": "MONTHLY",
-                          "period": "ANNUALLY",
-                          "invoiceMinimumAmount": 123.45,
-                          "invoiceMaximumAmount": 9999.99,
-                          "bandDetails": {
-                            "type": "TIERED",
-                            "currency": "GBP",
-                            "minimumAmount": 123.45,
-                            "maximumAmount": 9999.99,
-                            "description": "Adviser Annual Tiered Fee",
-                            "bands": [
-                              {
-                                "currency": "GBP",
-                                "percentage": 0.75,
-                                "lower": 0,
-                                "upper": 100000
-                              },
-                              {
-                                "currency": "GBP",
-                                "percentage": 0.65,
-                                "lower": 100000.01,
-                                "upper": 1000000
-                              }
-                            ]
+                          "type": "CASH",
+                          "direction": "IN",
+                          "status": "CREATED",
+                          "startDate": "2022-03-24",
+                          "isPartial": false,
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "isElectronic": true,
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "currentYearSubscription": {
+                            "amount": 10000,
+                            "startDate": "2025-05-01"
+                          },
+                          "fee": {
+                            "id": 1,
+                            "type": "ADVISER_INITIAL",
+                            "amount": 50
+                          },
+                          "plan": {
+                            "reference": "896546",
+                            "holderName": "Mr Hub Wise Person",
+                            "type": "STOCKS_AND_SHARES"
+                          },
+                          "provider": {
+                            "id": "HW009",
+                            "name": "Standard Life",
+                            "address": {
+                              "line1": "Standard Life House",
+                              "line2": "30 Lothian Road",
+                              "line3": "Edinburgh",
+                              "line4": "EH1 2DH",
+                              "postCode": "EH1 2DH"
+                            },
+                            "contactDetails": {
+                              "contactPhone": "0345 279 1001",
+                              "email": "platforms_transfers_out@standardlife.com"
+                            }
                           }
                         },
                         {
                           "id": 2,
-                          "accountId": "HW04003259A",
+                          "accountId": "HW00013451A",
                           "adviserId": "E008469",
                           "tenantId": "HUBWISE",
-                          "type": "ADVISER_ANNUAL",
-                          "status": "ACTIVE",
-                          "percentage": 0.25,
-                          "vatIncluded": true,
-                          "startDate": "2025-04-28",
-                          "method": "IN_ADVANCE",
-                          "invoiceFrequency": "MONTHLY",
-                          "period": "ANNUALLY",
-                          "invoiceMinimumAmount": 123.45,
-                          "invoiceMaximumAmount": 9999.99
-                        }, 
+                          "type": "CASH",
+                          "direction": "IN",
+                          "status": "CREATED",
+                          "startDate": "2022-03-24",
+                          "isPartial": false,
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "isElectronic": true,
+                          "value": {
+                            "amount": 600000,
+                            "currency": "GBP",
+                            "crystallised": 30000,
+                            "uncrystallised": 330000
+                          },
+                          "fee": {
+                            "id": 1,
+                            "type": "ADVISER_INITIAL",
+                            "percentage": 0.25
+                          },
+                          "plan": {
+                            "reference": "896547",
+                            "holderName": "Mr Hub Wise Person",
+                            "type": "SIPP"
+                          },
+                          "provider": {
+                            "id": "HW009",
+                            "name": "Standard Life",
+                            "address": {
+                              "line1": "Standard Life House",
+                              "line2": "30 Lothian Road",
+                              "line3": "Edinburgh",
+                              "line4": "EH1 2DH",
+                              "postCode": "EH1 2DH"
+                            },
+                            "contactDetails": {
+                              "contactPhone": "0345 279 1001",
+                              "email": "platforms_transfers_out@standardlife.com"
+                            }
+                          }
+                        },
                         {
                           "id": 3,
-                          "accountId": "HW04003259A",
+                          "accountId": "HW00013451A",
                           "adviserId": "E008469",
                           "tenantId": "HUBWISE",
-                          "type": "ADVISER_ONE_OFF",
-                          "status": "ACTIVE",
-                          "amount": 50.00,
-                          "vatIncluded": true,
-                          "startDate": "2025-04-28",
-                          "method": "IN_ADVANCE",
-                          "invoiceFrequency": "ONE_OFF",
-                          "period": "ONE_OFF",
+                          "type": "INSPECIE",
+                          "direction": "IN",
+                          "status": "CREATED",
+                          "startDate": "2022-03-24",
+                          "isPartial": true,
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "isElectronic": true,
+                          "value": {
+                            "amount": 90000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "id": 1,
+                            "type": "ADVISER_INITIAL",
+                            "amount": 50
+                          },
+                          "plan": {
+                            "reference": "896548",
+                            "holderName": "Mr Hub Wise Person"
+                          },
+                          "provider": {
+                            "id": "HW009",
+                            "name": "Standard Life",
+                            "address": {
+                              "line1": "Standard Life House",
+                              "line2": "30 Lothian Road",
+                              "line3": "Edinburgh",
+                              "line4": "EH1 2DH",
+                              "postCode": "EH1 2DH"
+                            },
+                            "contactDetails": {
+                              "contactPhone": "0345 279 1001",
+                              "email": "platforms_transfers_out@standardlife.com"
+                            }
+                          }
                         }
                       ]
                     }
                 Ex2:
-                  summary: No fees found for this account
+                  summary: No transfers against this account
                   value:
                     {
-                      "fees": []
-                    }   
+                      "transfers": [
+                        
+                      ]
+                    }
+                
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -3892,7 +3775,9 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-
+    
+  /accounts/{accountId}/fees:
+    
     post:
       tags:
         - Accounts
@@ -4138,6 +4023,122 @@ paths:
               examples:
                 RequestBody:
                   $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    get:
+      tags:
+        - Accounts
+      summary: Get account fees
+      description: TBC
+      operationId: retrieveAccountFees
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      responses:
+        "200":
+          description: Account fees retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeesHeader"
+              examples:
+                Ex1:
+                  summary: Fees associated with the account
+                  value:
+                    {
+                      "fees": [
+                        {
+                          "id": 1,
+                          "accountId": "HW04003258A",
+                          "adviserId": "E008469",
+                          "tenantId": "HUBWISE",
+                          "type": "ADVISER_ANNUAL",
+                          "status": "ACTIVE",
+                          "code": "AFGVCD",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "method": "IN_ADVANCE",
+                          "invoiceFrequency": "MONTHLY",
+                          "period": "ANNUALLY",
+                          "invoiceMinimumAmount": 123.45,
+                          "invoiceMaximumAmount": 9999.99,
+                          "bandDetails": {
+                            "type": "TIERED",
+                            "currency": "GBP",
+                            "minimumAmount": 123.45,
+                            "maximumAmount": 9999.99,
+                            "description": "Adviser Annual Tiered Fee",
+                            "bands": [
+                              {
+                                "currency": "GBP",
+                                "percentage": 0.75,
+                                "lower": 0,
+                                "upper": 100000
+                              },
+                              {
+                                "currency": "GBP",
+                                "percentage": 0.65,
+                                "lower": 100000.01,
+                                "upper": 1000000
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "id": 2,
+                          "accountId": "HW04003259A",
+                          "adviserId": "E008469",
+                          "tenantId": "HUBWISE",
+                          "type": "ADVISER_ANNUAL",
+                          "status": "ACTIVE",
+                          "percentage": 0.25,
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "method": "IN_ADVANCE",
+                          "invoiceFrequency": "MONTHLY",
+                          "period": "ANNUALLY",
+                          "invoiceMinimumAmount": 123.45,
+                          "invoiceMaximumAmount": 9999.99
+                        }, 
+                        {
+                          "id": 3,
+                          "accountId": "HW04003259A",
+                          "adviserId": "E008469",
+                          "tenantId": "HUBWISE",
+                          "type": "ADVISER_ONE_OFF",
+                          "status": "ACTIVE",
+                          "amount": 50.00,
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "method": "IN_ADVANCE",
+                          "invoiceFrequency": "ONE_OFF",
+                          "period": "ONE_OFF",
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: No fees found for this account
+                  value:
+                    {
+                      "fees": []
+                    }   
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
