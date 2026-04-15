@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Hubwise API
-  version: 0.7.0-Saltus
+  version: 0.8.0
   description: API Contract to integrate with SS&C Hubwise
   
 servers:
@@ -21,6 +21,7 @@ security:
 paths:
 
   /investors:
+    
     post:
       tags:
         - Investors
@@ -543,33 +544,7 @@ paths:
                             "postCode": "HT3 4AB",
                             "primary": true
                           }
-                        ],
-                      "vulnerabilities": [
-                          {
-                            "type": "HEALTH",
-                            "serviceLevel": "SPEAK_LOUDLY_AND_CLEARLY",
-                            "startDate": "2025-10-01",
-                            "expiryDate": "2025-10-22",
-                            "adviserId": "E273053"
-                          },
-                          {
-                            "type": "HEALTH",
-                            "serviceLevel": "SPEAK_SLOWLY_FOR_CLIENT",
-                            "startDate": "2025-10-22",
-                            "adviserId": "E273053"
-                          }
-                        ], 
-                      "correspondences": [
-                        {
-                          "type": "AUDIO",
-                          "startDate": "2025-10-01",
-                          "expiryDate": "2025-10-22"
-                        },
-                        { 
-                          "type": "BRAILLE", 
-                          "startDate": "2025-10-01" 
-                        }
-                      ]
+                        ]
                     }
                 Ex2:
                   summary: Investor is a discretionary trust
@@ -865,7 +840,6 @@ paths:
                         ]
                     }
         
-
   /investors/{investorId}/vulnerabilities:
     
     post:
@@ -1156,7 +1130,6 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
     
-    
   /investors/{investorId}/correspondences:
     
     post:
@@ -1441,6 +1414,7 @@ paths:
           $ref: "#/components/responses/500-ServerError"
 
   /accounts:
+    
     post:
       tags:
         - Accounts
@@ -1787,6 +1761,7 @@ paths:
           $ref: "#/components/responses/500-ServerError"
   
   /accounts/{accountId}:
+    
     get:
       tags:
         - Accounts
@@ -1842,15 +1817,6 @@ paths:
                         {
                           "id": "HWI04003371",
                           "relationship": "OWNER"
-                        }
-                      ],
-                      "bankAccounts": [
-                        {
-                          "name": "John Doe",
-                          "number": "87654321",
-                          "sortCode": "309894",
-                          "holders": [{ "id": "HWI04003371" }],
-                          "status": "ACTIVE"
                         }
                       ]
                     }
@@ -1925,21 +1891,7 @@ paths:
                           "id": "HW000000090",
                           "providerId": "HUBWISE",
                           "date": "2020-04-28"
-                        }, 
-                      "bankAccounts":[
-                        {
-                          "name": "Jane Doe Enterprises LTD",
-                          "number": "87654321",
-                          "sortCode": "309894",
-                          "holders": [
-                              { 
-                                "id": "1", 
-                                "thirdParty": true 
-                              }
-                            ],
-                          "status": "UNCHECKED"
                         }
-                      ]
                     }
         "401":
           $ref: "#/components/responses/401-Unauthorized"
@@ -1949,6 +1901,7 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
+    
     patch:
       tags:
         - Accounts
@@ -2039,8 +1992,8 @@ paths:
                       ]
                     }
         
-
   /accounts/{accountId}/bank-accounts:
+    
     post:
       tags:
         - Accounts
@@ -2297,6 +2250,123 @@ paths:
               examples:
                 RequestBody:
                   $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    get:
+      tags:
+        - Accounts
+      summary: Retrieves the bank accounts against an investment account.
+      description: TBC
+      operationId: retrieveBankAccounts
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      responses:
+        "200":
+          description: Account retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BankAccount"
+              examples: 
+                Ex1:
+                  summary: Retail bank accounts associated with an investment account
+                  value:
+                    [
+                      { 
+                        "accountId": "HW04003258A",
+                        "advisorId": "E008469",
+                        "tenantId": "ASCOTLD",
+                        "status": "ACTIVE",
+                        "name": "Jane Doe",
+                        "number": "87654321",
+                        "sortCode": "309894",
+                        "holders": [
+                          {
+                            "id": "HW00013200A"
+                          }
+                        ]
+                      },
+                      { 
+                        "accountId": "HW04003258A",
+                        "advisorId": "E008469",
+                        "tenantId": "ASCOTLD",
+                        "status": "ACTIVE",
+                        "name": "Jane Doe",
+                        "number": "87654321",
+                        "sortCode": "309894",
+                        "holders": [
+                          {
+                            "id": "HW00013200A"
+                          },
+                          {
+                            "id": "HW00013300A"
+                          }
+                        ]
+                      }
+                    ]
+                Ex2:
+                  summary: Business bank account associated with an investment account
+                  value: 
+                    [
+                      { 
+                        "accountId": "HW04003258A",
+                        "advisorId": "E008469",
+                        "tenantId": "ASCOTLD",
+                        "status": "ACTIVE",
+                        "name": "Jane Doe Enterprises Inc.",
+                        "number": "87654321",
+                        "sortCode": "309894",
+                        "holders": [
+                          {
+                            "id": "HW00013200A"
+                          }
+                        ]
+                      }
+                    ]
+                Ex3:
+                  summary: Third party bank account associated with a SIPP account
+                  value:
+                    [
+                      { 
+                        "accountId": "HW04003258A",
+                        "advisorId": "E008469",
+                        "tenantId": "ASCOTLD",
+                        "status": "UNCHECKED",
+                        "name": "Jane Doe Enterprises LTD",
+                        "number": "87654321",
+                        "sortCode": "309894",
+                        "holders": [
+                          {
+                            "id": "1",
+                            "thirdParty": true
+                          }
+                        ]
+                      }
+                    ]
+                Ex4:
+                  summary: No bank accounts associated with an investment account
+                  value: []
+
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2991,8 +3061,8 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
-    
   /accounts/{accountId}/money-movements/{moneyMovementId}:
+    
     patch:
       tags:
         - Accounts
@@ -3216,7 +3286,6 @@ paths:
                       ]
                     }
     
-  
   /accounts/{accountId}/transfers:
     
     post:
@@ -4149,6 +4218,7 @@ paths:
           $ref: "#/components/responses/500-ServerError"
 
   /accounts/{accountId}/fees/{feeId}:
+    
     patch:
       tags:
         - Accounts
@@ -4248,6 +4318,7 @@ paths:
                     }
         
   /accounts/{accountId}/activate:
+    
     post:
       tags:
         - Accounts
