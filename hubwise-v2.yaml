@@ -5239,12 +5239,14 @@ components:
 
     IncomeOptionHeader:
       type: object
+      additionalProperties: false
       properties:
         incomeOption:
           $ref: '#/components/schemas/IncomeOption'
 
     IncomeOption:
       type: object
+      additionalProperties: false
       required:
         - type
       properties:
