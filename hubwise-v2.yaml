@@ -1818,7 +1818,11 @@ paths:
                           "id": "HWI04003371",
                           "relationship": "OWNER"
                         }
-                      ]
+                      ], 
+                      "incomeOption": { 
+                        "type": "REINVEST",
+                        "reinvestmentDate": "2026-01-07"
+                      }
                     }
                 Ex2:
                   summary: Pending ISA account
@@ -1849,6 +1853,14 @@ paths:
                         "id": "DF000000001",
                         "providerId": "DFM0001",
                         "date": "2026-01-01"
+                      }, 
+                      "incomeOption": { 
+                        "type": "WITHDRAW",
+                        "withdrawalDate": "2026-01-07",
+                        "withdrawalFrequency": "MONTHLY",
+                        "sortCode": "212121",
+                        "accountNumber": "21212121",
+                        "accountName": "Dr Martyn Sullivan"
                       }
                     }
                 Ex3:
@@ -1891,7 +1903,10 @@ paths:
                           "id": "HW000000090",
                           "providerId": "HUBWISE",
                           "date": "2020-04-28"
-                        }
+                        },
+                      "incomeOption": { 
+                        "type": "CASH"
+                      }
                     }
         "401":
           $ref: "#/components/responses/401-Unauthorized"
@@ -2134,7 +2149,6 @@ paths:
                       }
                     ]
                   }
-
       responses:
         "201":
           description: Bank account created successfully.
@@ -2277,7 +2291,7 @@ paths:
           example: HW00013451A
       responses:
         "200":
-          description: Account retrieved successfully.
+          description: Bank accounts queried successfully.
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
@@ -4317,6 +4331,132 @@ paths:
                       ]
                     }
         
+  /accounts/{accountId}/income-options:
+
+    put:
+      tags:
+        - Accounts
+      summary: Add or update an income option on an investment account
+      description: >-
+        An advisor should be able to manage how investment income for an investment account is handled by Hubwise. 
+
+        The income for an account can be:
+
+          - Kept in cash
+
+          - Reinvested in the account's portfolio
+
+          - Withdrawn to a bank account
+
+      operationId: createOrModifyIncomeOption
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncomeOptionHeader"
+            examples:
+              Ex1:
+                summary: Keep income as cash.
+                value:
+                  {
+                    "incomeOption": { 
+                      "type": "CASH"
+                    }
+                  }
+              Ex2:
+                summary: Reinvest income in account portfolio.
+                value:
+                  {
+                    "incomeOption": { 
+                      "type": "REINVEST",
+                      "reinvestmentDate": "2026-01-07"
+                    }
+                  }
+              Ex3:
+                summary: Withdraw all income
+                value:
+                  {
+                    "incomeOption": { 
+                      "type": "WITHDRAW",
+                      "withdrawalDate": "2026-01-07",
+                      "withdrawalFrequency": "MONTHLY",
+                      "sortCode": "212121",
+                      "accountNumber": "21212121",
+                      "accountName": "Dr Martyn Sullivan"
+                    }
+                  }
+      responses:
+        "200":
+          description: Income option added or updated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncomeOptionHeader"
+              examples:
+                Ex1:
+                  summary: Keep income as cash.
+                  value:
+                    {
+                      "incomeOption": { 
+                        "type": "CASH"
+                      }
+                    }
+                Ex2:
+                  summary: Reinvest income in account portfolio.
+                  value:
+                    {
+                      "incomeOption": { 
+                        "type": "REINVEST",
+                        "reinvestmentDate": "2026-01-07"
+                      }
+                    }
+                Ex3:
+                  summary: Withdraw all income
+                  value:
+                    {
+                      "incomeOption": { 
+                        "type": "WITHDRAW",
+                        "withdrawalDate": "2026-01-07",
+                        "withdrawalFrequency": "MONTHLY",
+                        "sortCode": "212121",
+                        "accountNumber": "21212121",
+                        "accountName": "Dr Martyn Sullivan"
+                      }
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /accounts/{accountId}/activate:
     
     post:
@@ -4715,7 +4855,7 @@ components:
         model:
           $ref: "#/components/schemas/ModelHeader"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -4724,6 +4864,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BankAccount"
+        incomeOption:
+          $ref: "#/components/schemas/IncomeOption"
 
     AccountPatch:
       description: Account Patch Model
@@ -4986,7 +5128,7 @@ components:
               items:
                 $ref: "#/components/schemas/BankAccountHolder"
             declarations:
-              readOnly: true
+              writeOnly: true
               type: array
               items:
                 $ref: "#/components/schemas/Declaration"
@@ -5094,6 +5236,46 @@ components:
         - $ref: '#/components/schemas/ContactDetails'
         - type: object
           readOnly: true
+
+    IncomeOptionHeader:
+      type: object
+      properties:
+        incomeOption:
+          $ref: '#/components/schemas/IncomeOption'
+
+    IncomeOption:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - CASH
+            - REINVEST
+            - WITHDRAW
+        reinvestmentDate:
+          type: string
+          format: date
+        withdrawalDate:
+          type: string
+          format: date
+        withdrawalFrequency: 
+          type: string
+          enum: 
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - YEARLY
+        accountNumber: 
+          type: string
+          pattern: ^[0-9]{8}$
+        sortCode:
+          type: string
+          pattern: ^[0-9]{6}$
+        accountName:
+          type: string
+          maxLength: 50
 
     IncomeAndInvestment:
       description: income and investment details are mandatory for an adult individual or court appointed deputy investor type
@@ -5559,7 +5741,7 @@ components:
           items:
             $ref: "#/components/schemas/VulnerabilityCorrespondence"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -5647,7 +5829,7 @@ components:
           items:
             $ref: "#/components/schemas/Address"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -5801,7 +5983,7 @@ components:
           items:
             $ref: "#/components/schemas/VulnerabilityCorrespondence"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -5830,7 +6012,7 @@ components:
           items:
             $ref: "#/components/schemas/Vulnerability"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -5934,7 +6116,7 @@ components:
           items:
             $ref: "#/components/schemas/Fee"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -6164,6 +6346,7 @@ components:
           items:
             $ref: "#/components/schemas/FeePatch"
         declarations:
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -6192,7 +6375,7 @@ components:
           items:
             $ref: "#/components/schemas/Movement"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -6208,7 +6391,7 @@ components:
           items:
             $ref: "#/components/schemas/MovementPatch"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
@@ -6690,7 +6873,7 @@ components:
           items:
             $ref: "#/components/schemas/AccountTransfer"
         declarations:
-          readOnly: true
+          writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
