@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Hubwise API
-  version: 0.8.0
+  version: 0.8.1
   description: API Contract to integrate with SS&C Hubwise
   
 servers:
@@ -429,6 +429,18 @@ paths:
                           }
                         ]
                     }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -656,6 +668,8 @@ paths:
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -839,7 +853,27 @@ paths:
                           }
                         ]
                     }
-        
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /investors/{investorId}/vulnerabilities:
     
     post:
@@ -1018,6 +1052,18 @@ paths:
                       "tenantId": "HUBWISE",
                       "vulnerabilities": []
                     }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1303,6 +1349,18 @@ paths:
                       "tenantId": "HUBWISE",
                       "correspondences": []
                     }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2308,7 +2366,7 @@ paths:
                     [
                       { 
                         "accountId": "HW04003258A",
-                        "advisorId": "E008469",
+                        "adviserId": "E008469",
                         "tenantId": "ASCOTLD",
                         "status": "ACTIVE",
                         "name": "Jane Doe",
@@ -2322,7 +2380,7 @@ paths:
                       },
                       { 
                         "accountId": "HW04003258A",
-                        "advisorId": "E008469",
+                        "adviserId": "E008469",
                         "tenantId": "ASCOTLD",
                         "status": "ACTIVE",
                         "name": "Jane Doe",
@@ -2344,7 +2402,7 @@ paths:
                     [
                       { 
                         "accountId": "HW04003258A",
-                        "advisorId": "E008469",
+                        "adviserId": "E008469",
                         "tenantId": "ASCOTLD",
                         "status": "ACTIVE",
                         "name": "Jane Doe Enterprises Inc.",
@@ -2363,7 +2421,7 @@ paths:
                     [
                       { 
                         "accountId": "HW04003258A",
-                        "advisorId": "E008469",
+                        "adviserId": "E008469",
                         "tenantId": "ASCOTLD",
                         "status": "UNCHECKED",
                         "name": "Jane Doe Enterprises LTD",
@@ -4338,7 +4396,7 @@ paths:
         - Accounts
       summary: Add or update an income option on an investment account
       description: >-
-        An advisor should be able to manage how investment income for an investment account is handled by Hubwise. 
+        An adviser should be able to manage how investment income for an investment account is handled by Hubwise. 
 
         The income for an account can be:
 
