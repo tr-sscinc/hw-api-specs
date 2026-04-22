@@ -699,8 +699,31 @@ paths:
             schema:
               $ref: "#/components/schemas/InvestorPatch"
             examples:
-              Ex1:
-                summary: Update investor phone number and notifications
+              Ex0-1:
+                summary: Add a new external reference
+                description: Add a new external reference for the SomeCRM system.
+                value:
+                  {
+                    "externalReferences":
+                        [
+                          {
+                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "provider": "Curo"
+                          },
+                          {
+                            "reference": "6878768XX66",
+                            "provider": "SomeCRM"
+                          }
+                        ]
+                  }
+              Ex0-2:
+                summary: Remove all external references
+                value:
+                  {
+                    "externalReferences": []
+                  }
+              Ex1-1:
+                summary: Update investor phone number and notification preference
                 value:
                   {
                     "individual":
@@ -715,8 +738,90 @@ paths:
                           }
                       }
                   }
-              Ex2:
-                summary: Update investor address 
+              Ex1-2:
+                summary: Add investor nationality
+                description: Adds a new French secondary nationality
+                value:
+                  {
+                    "individual":
+                      {
+                        "territorialProfile":
+                          {
+                            "nationalities":
+                              [
+                                { 
+                                  "countryCode": "GB", 
+                                  "primary": true 
+                                },
+                                { 
+                                  "countryCode": "FR", 
+                                  "primary": false 
+                                }
+                              ]
+                          }
+                      }
+                  }
+              Ex1-3:
+                summary: Delete investor nationality
+                description: Remove all nationalities other than the primary one
+                value:
+                  {
+                    "individual":
+                      {
+                        "territorialProfile":
+                          {
+                            "nationalities":
+                              [
+                                { 
+                                  "countryCode": "GB", 
+                                  "primary": true 
+                                }
+                              ]
+                          }
+                      }
+                  }
+              Ex1-4:
+                summary: Update investor tax residency
+                description: Adds a new FR primary tax residency and removes the old GB one.
+                value:
+                  {
+                    "individual":
+                      {
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "countryCode": "FR",
+                                  "tin": "0701798458255",
+                                  "primary": true
+                                }
+                              ]
+                          }
+                      }
+                  }
+              Ex1-5:
+                summary: Delete investor tax residency
+                description: Removes all except the primary tax residency
+                value:
+                  {
+                    "individual":
+                      {
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "countryCode": "GB",
+                                  "tin": "AC123456C",
+                                  "primary": true
+                                }
+                              ]
+                          }
+                      }
+                  }
+              Ex2-1:
+                summary: Update the investor's primary address 
                 value:
                   {
                     "addresses":
@@ -730,6 +835,35 @@ paths:
                           "countryCode": "GB",
                           "postCode": "HT1 4AB",
                           "primary": true
+                        }
+                      ]
+                  }
+              Ex2-2:
+                summary: Add a new investor address 
+                description: Adds a new secondary address for the investor
+                value:
+                  {
+                    "addresses":
+                      [
+                        {
+                          "premisesIdentifier": "10",
+                          "line1": "Willow House",
+                          "line2": "Riverside Estate",
+                          "town": "Northford",
+                          "county": "Westshire",
+                          "countryCode": "GB",
+                          "postCode": "NF13 2XY",
+                          "primary": true
+                        },
+                        {
+                          "premisesIdentifier": "Unit 4",
+                          "line1": "Riverside Business Park",
+                          "line2": "Millwright Road",
+                          "town": "Brayford",
+                          "county": "Devon",
+                          "countryCode": "GB",
+                          "postCode": "BR4 7QP",
+                          "primary": false
                         }
                       ]
                   }
@@ -5790,16 +5924,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Address"
-        vulnerabilities:
-          readOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/Vulnerability"
-        correspondences:
-          readOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/VulnerabilityCorrespondence"
         declarations:
           writeOnly: true
           type: array
@@ -5810,68 +5934,6 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id:
-          maxLength: 11
-          type: string
-          description: Unique SS&C Hubwise Investor identifier
-          format: string
-          readOnly: true
-          example: HWI04003219
-        tenantId:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: Unique SS&C Hubwise Tenant identifier
-          format: string
-          readOnly: true
-          example: HUBWISE
-        adviserId:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: Unique SS&C Hubwise Adviser identifier
-          format: string
-          example: E007290
-        type:
-          type: string
-          description: The type of investor
-          example: INDIVIDUAL
-          enum:
-            - INDIVIDUAL
-            - COURT_APPOINTED_DEPUTY
-            - CORPORATE
-            - BARE_TRUST
-            - VULNERABLE_PERSON_TRUST
-            - PARENT_TRUST
-            - DISCRETIONARY_TRUST
-            - INTEREST_IN_POSSESSION_TRUST
-            - NON_UK_RESIDENT_TRUST
-            - ACCUMULATION_TRUST
-            - MIXED_TRUST
-            - SETTLOR_INTERESTED_TRUST
-            - WILL_TRUST
-        status:
-          type: string
-          description: The current status of the investor
-          readOnly: true
-          example: NEW
-          enum:
-            - NEW
-            - DELETED
-            - INCEPTED
-            - SUSPENDED
-            - FROZEN
-            - DECEASED
-            - PENDING
-            - PRE_AML
-            - REFERRED
-            - FLD_AML
-            - INTENTION_TO_CLOSE
-            - WAITING_AML_DOCUMENTATION
-            - CLOSED
-            - ARCHIVED
-            - NON_UK_RESIDENT
-            - FAS
         externalReferences:
           type: array
           items:
