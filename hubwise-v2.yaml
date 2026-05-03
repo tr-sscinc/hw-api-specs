@@ -10,9 +10,7 @@ servers:
 
 tags:
   - name: Investors 
-    #description: Enables the management of Hubwise investors, including characteristics of vulnerability.
   - name: Accounts 
-    #description: Enables the management of Hubwise investor accounts, including fees, money movements, and transfers.
 
 security:
   - bearer-token: []
@@ -705,16 +703,16 @@ paths:
                 value:
                   {
                     "externalReferences":
-                        [
-                          {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
-                          },
-                          {
-                            "reference": "6878768XX66",
-                            "provider": "SomeCRM"
-                          }
-                        ]
+                      [
+                        {
+                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "provider": "Curo"
+                        },
+                        {
+                          "reference": "6878768XX66",
+                          "provider": "SomeCRM"
+                        }
+                      ]
                   }
               Ex0-2:
                 summary: Remove all external references
@@ -1745,7 +1743,7 @@ paths:
                     "adviserId": "E273053",
                     "baseCurrency": "GBP",
                     "marketSettlementCurrency": "GBP",
-                    "name": "Mr Hubwise Person",
+                    "name": "Mr John Doe",
                     "externalReferences":
                       [
                         {
@@ -1787,6 +1785,44 @@ paths:
                           "acknowledgement": true
                         }
                       ]
+                  }
+              Ex4: 
+                summary: Add a JISA account
+                value:
+                  {
+                    "productId": "JIS",
+                    "type": "ADVISED",
+                    "adviserId": "E008615",
+                    "baseCurrency": "GBP",
+                    "marketSettlementCurrency": "GBP",
+                    "name": "YAYAH JISA",
+                    "investors": [
+                      {
+                        "id": "HW000547564",
+                        "relationship": "OWNER"
+                      },
+                      {
+                        "id": "HW000547522",
+                        "relationship": "REGISTERED_CONTACT"
+                      }
+                    ],
+                    "model": {
+                        "id": "HW000000090",
+                        "providerId": "HUBWISE",
+                        "date": "2020-04-28"
+                      },
+                    "declarations": [
+                      {
+                        "adviserId": "E008615",
+                        "templateId": "JISA_ACKNOWLEDGEMENT",
+                        "acknowledgement": true
+                      },
+                      {
+                        "adviserId": "E008615",
+                        "templateId": "JISA_NOT_IN_WRITING",
+                        "acknowledgement": true
+                      }
+                    ]
                   }
       responses:
         "201":
@@ -1831,7 +1867,7 @@ paths:
                       ]
                     }
                 Ex2:
-                  summary: ISA account added
+                  summary: ISA account created
                   value: 
                     {
                       "id": "HW04003259A",
@@ -1859,27 +1895,10 @@ paths:
                         "id": "DF000000001",
                         "providerId": "DFM0001",
                         "date": "2026-01-01"
-                      },
-                      "declarations": [
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "TARGET_MARKET",
-                          "acknowledgement": true
-                        },
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "ISA_ACKNOWLEDGEMENT",
-                          "acknowledgement": true
-                        },
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "ISA_NOT_IN_WRITING",
-                          "acknowledgement": true
-                        }
-                      ]
+                      }
                     }
                 Ex3:
-                  summary: Add a SIPP account
+                  summary: SIPP account created
                   value:
                     {
                       "id": "HW04003260A",
@@ -1890,7 +1909,7 @@ paths:
                       "status": "PENDING", 
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hubwise Person",
+                      "name": "Mr John Doe",
                       "externalReferences":
                         [
                           {
@@ -1918,20 +1937,36 @@ paths:
                           "id": "HW000000090",
                           "providerId": "HUBWISE",
                           "date": "2020-04-28"
+                        }
+                    }
+                Ex4: 
+                  summary: JISA account created
+                  value:
+                    {
+                      "id": "HW04003260A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
+                      "productId": "HWS",
+                      "type": "ADVISED",
+                      "status": "PENDING", 
+                      "baseCurrency": "GBP",
+                      "marketSettlementCurrency": "GBP",
+                      "name": "YAYAH JISA",
+                      "investors": [
+                        {
+                          "id": "HW000547564",
+                          "relationship": "OWNER"
                         },
-                      "declarations":
-                        [
-                          {
-                            "adviserId": "E273053",
-                            "templateId": "TARGET_MARKET",
-                            "acknowledgement": true
-                          },
-                          {
-                            "templateId": "SIPP_ACKNOWLEDGEMENT",
-                            "adviserId": "E273053",
-                            "acknowledgement": true
-                          }
-                        ]
+                        {
+                          "id": "HW000547522",
+                          "relationship": "REGISTERED_CONTACT"
+                        }
+                      ],
+                      "model": {
+                          "id": "HW000000090",
+                          "providerId": "HUBWISE",
+                          "date": "2020-04-28"
+                        }
                     }
         "400":
           description: Bad request
@@ -2067,7 +2102,7 @@ paths:
                       "status": "SUSPENDED", 
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hubwise Person",
+                      "name": "Mr John Doe",
                       "externalReferences":
                         [
                           {
@@ -2239,6 +2274,7 @@ paths:
                     "number": "87654321",
                     "sortCode": "309894",
                     "holders": [{ "id": "HWI04003219" }],
+                    "primary": true,
                     "declarations": [
                       {
                         "adviserId": "E121191",
@@ -2254,6 +2290,7 @@ paths:
                     "name": "Jane Doe",
                     "number": "87654321",
                     "sortCode": "309894",
+                    "primary": true,
                     "holders": [
                         { "id": "HWI04003219" }, 
                         { "id": "HWI04003220" }
@@ -2296,6 +2333,7 @@ paths:
                     "iban": "DE75512108001245126199",
                     "bicSwift": "DEUTDEFF",
                     "holders": [{ "id": "HWI04003219" }],
+                    "primary": false,
                     "declarations": [
                       {
                         "adviserId": "E121191",
@@ -2328,6 +2366,7 @@ paths:
                     "name": "Jane Doe Enterprises LTD",
                     "number": "87654321",
                     "sortCode": "309894",
+                    "primary": true,
                     "holders": [
                       {
                         "id": "HW00013200A"
@@ -2642,7 +2681,7 @@ paths:
                           "amount": 15000,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "includeNonDailyAssets": false,
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "bank": {
@@ -2670,7 +2709,7 @@ paths:
                           "amount": 1200,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "reference": "HW04003258A-DD",
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "bank": {
@@ -2707,7 +2746,7 @@ paths:
                           "amount": 15000,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "thirdPartyId": "1",
                         "bank": {
@@ -2735,7 +2774,7 @@ paths:
                           "amount": 1200,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "bank": {
                           "number": "50220369",
@@ -2767,7 +2806,7 @@ paths:
                           "amount": 15000,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "reference": "HW04003258A-WD",
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "includeNonDailyAssets": true,
@@ -2784,7 +2823,7 @@ paths:
                           "amount": 1200,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "reference": "HW04003258A-WD",
                         "bank": {
                           "number": "50220369",
@@ -2809,7 +2848,7 @@ paths:
                         "type": "UFPLS",
                         "payer": "SELF",
                         "frequency": "ONE_OFF",
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "isMaximum": true,
                         "bank": {
                           "number": "50220369",
@@ -2843,7 +2882,7 @@ paths:
                           "amount": 97000,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "bank": {
                           "number": "50220369",
                           "sortCode": "700125"
@@ -2899,7 +2938,7 @@ paths:
                             "amount": 15000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "includeNonDailyAssets": false,
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -2935,7 +2974,7 @@ paths:
                             "amount": 120,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-DD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": false,
@@ -2974,7 +3013,7 @@ paths:
                             "amount": 15000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "thirdPartyId": "1",
                           "bank": {
@@ -3010,7 +3049,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "reference",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -3043,7 +3082,7 @@ paths:
                             "amount": 15000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-WD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": true,
@@ -3065,7 +3104,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-WD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -3089,7 +3128,7 @@ paths:
                           "type": "UFPLS",
                           "payer": "SELF",
                           "frequency": "ONE_OFF",
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "isMaximum": true,
                           "bank": {
                             "number": "50220369",
@@ -3116,7 +3155,7 @@ paths:
                             "amount": 97000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "bank": {
                             "number": "50220369",
                             "sortCode": "700125"
@@ -3197,7 +3236,7 @@ paths:
                             "amount": 15000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": true,
                           "bank": {
@@ -3233,7 +3272,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-DD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -3398,7 +3437,7 @@ paths:
                             "amount": 1500,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-DD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": false,
@@ -3437,7 +3476,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-DD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": false,
@@ -3476,7 +3515,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "reference",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -3552,40 +3591,41 @@ paths:
                 summary: Create a full ISA cash transfer in for an ISA
                 value: 
                   {
-                  "transfers": [
-                    {
-                      "type": "CASH",
-                      "isPartial": false,
-                      "investmentInstruction": "INVEST_IN_MODEL",
-                      "value": {
-                        "amount": 15000,
-                        "currency": "GBP"
-                      },
-                      "currentYearSubscription": {
-                        "amount": 10000,
-                        "startDate": "2025-05-01"
-                      },
-                      "fee": {
-                        "amount": 50,
-                      },
-                      "plan": {
-                        "reference": "896546",
-                        "holderName": "Mr Hub Wise Person",
-                        "type": "STOCKS_AND_SHARES"
-                      },
-                      "provider": {
-                        "id": "HW009"
+                    "transfers": [
+                      {
+                        "type": "CASH",
+                        "isPartial": false,
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "value": {
+                          "amount": 15000,
+                          "currency": "GBP"
+                        },
+                        "currentYearSubscription": {
+                          "amount": 10000,
+                          "amountNotTransfered": 7589.33,
+                          "startDate": "2025-05-01"
+                        },
+                        "fee": {
+                          "amount": 50,
+                        },
+                        "plan": {
+                          "reference": "896546",
+                          "holderName": "Mr Hub Wise Person",
+                          "type": "STOCKS_AND_SHARES"
+                        },
+                        "provider": {
+                          "id": "HW009"
+                        }
                       }
-                    }
-                  ],
-                  "declarations": [
-                    {
-                      "adviserId": "E008469",
-                      "templateId": "TRANSFER_IN",
-                      "acknowledgement": true
-                    }
-                  ]
-                }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E008469",
+                        "templateId": "TRANSFER_IN",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
               Ex2:
                 summary: Create a full SIPP Cash Transfer In
                 value: 
@@ -3625,44 +3665,35 @@ paths:
                 summary: Create a partial GIA inspecie transfer in
                 value: 
                   {
-                  "transfers": [
-                    {
-                      "type": "INSPECIE",
-                      "isPartial": true,
-                      "investmentInstruction": "INVEST_IN_MODEL",
-                      "value": {
-                        "amount": 90000,
-                        "currency": "GBP"
-                      },
-                      "fee": {
-                        "amount": 50
-                      },
-                      "plan": {
-                        "reference": "896548",
-                        "holderName": "Mr Hub Wise Person"
-                      },
-                      "provider": {
-                        "id": "HW009",
-                        "name": "Standard Life",
-                        "address": {
-                          "line1": "Standard Life House",
-                          "line2": "30 Lothian Road",
-                          "line3": "Edinburgh",
-                          "line4": "EH1 2DH",
-                          "postCode": "EH1 2DH"
+                    "transfers": [
+                      {
+                        "type": "INSPECIE",
+                        "isPartial": true,
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "value": {
+                          "amount": 90000,
+                          "currency": "GBP"
+                        },
+                        "fee": {
+                          "amount": 50
+                        },
+                        "plan": {
+                          "reference": "896548",
+                          "holderName": "Mr Hub Wise Person"
+                        },
+                        "provider": {
+                          "id": "HW009"
                         }
                       }
-                    }
-                  ],
-                  "declarations": [
-                    {
-                      "adviserId": "E008469",
-                      "templateId": "TRANSFER_IN",
-                      "acknowledgement": true
-                    }
-                  ]
-                }
-        required: true
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E008469",
+                        "templateId": "TRANSFER_IN",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
       responses:
         "200":
           description: Transfers created successfully
@@ -3697,6 +3728,7 @@ paths:
                           },
                           "currentYearSubscription": {
                             "amount": 10000,
+                            "amountNotTransfered": 7589.33,
                             "startDate": "2025-05-01"
                           },
                           "fee": {
@@ -3918,6 +3950,7 @@ paths:
                           },
                           "currentYearSubscription": {
                             "amount": 10000,
+                            "amountNotTransfered": 8000,
                             "startDate": "2025-05-01"
                           },
                           "fee": {
@@ -4218,13 +4251,6 @@ paths:
                               ]
                             }
                           }
-                        ],
-                        "declarations": [
-                          {
-                            "templateId": "AMENDMENT_CONSENT",
-                            "adviserId": "E008469",
-                            "acknowledgement": true
-                          }
                         ]
                       }
                 Ex2:
@@ -4248,13 +4274,6 @@ paths:
                         "invoiceMinimumAmount": 123.45,
                         "invoiceMaximumAmount": 9999.99
                       }
-                    ],
-                    "declarations": [
-                      {
-                        "templateId": "AMENDMENT_CONSENT",
-                        "adviserId": "E008469",
-                        "acknowledgement": true
-                      }
                     ]
                   }
                 Ex3:
@@ -4275,13 +4294,6 @@ paths:
                         "method": "IN_ADVANCE",
                         "invoiceFrequency": "ONE_OFF",
                         "period": "ONE_OFF",
-                      }
-                    ],
-                    "declarations": [
-                      {
-                        "templateId": "AMENDMENT_CONSENT",
-                        "adviserId": "E008469",
-                        "acknowledgement": true
                       }
                     ]
                   }
@@ -4530,7 +4542,7 @@ paths:
         - Accounts
       summary: Add or update an income option on an investment account
       description: >-
-        An adviser should be able to manage how investment income for an investment account is handled by Hubwise. 
+        An adviser should be able to manage how investment income for an investment account is handled by SS&C Hubwise. 
 
         The income for an account can be:
 
@@ -4774,7 +4786,7 @@ paths:
                       "status": "ACTIVE", 
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hubwise Person",
+                      "name": "Mr John Doe",
                       "externalReferences":
                         [
                           {
@@ -4838,6 +4850,764 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
+
+  /accounts/{accountId}/third-parties:
+
+    post:
+      tags:
+        - Accounts
+      summary: Create Third Parties on an account
+      description: >-
+        Allows you to add third parties linked to a SS&C Hubwise Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
+
+        
+        Three types of third parties are supported:
+        
+         - Beneficiaries - only use this operation if no beneficiaries already exist on the account; otherwise, use the Replace Beneficiaries operation instead
+         
+         - Power of Attorney - can be used to add the first or additional entries
+         
+         - Employers - only use this endpoint if no employer is already linked as only one employer third-party is permitted per account
+         
+        
+        A single request can contain multiple third parties of different types, provided they all relate to the same investment account.
+        
+        
+        An investment account must already exist before adding third parties, and the Investment Account ID must be provided as a required path parameter.
+      operationId: createThirdParties
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartiesHeader"
+            examples:
+              Ex1:
+                summary: Add an Employer 
+                value: 
+                  {
+                    "thirdParties": [
+                      {
+                        "type": "EMPLOYER",
+                        "companyName": "Bloxwich Engineering",
+                        "companyRegistration": "REGH78451",
+                        "contactDetails": {
+                          "email": "hr@bloxeng.co.uk",
+                          "phone": "01922712162"
+                        },
+                        "address": {
+                          "premisesIdentifier": "38",
+                          "line1": "Saunton Road",
+                          "line2": "Bloxwich",
+                          "town": "Walsall",
+                          "county": "West Midlands",
+                          "countryCode": "GB",
+                          "postCode": "WS3 3TS"
+                        }
+                      }
+                    ]
+                  }
+              Ex2:
+                summary: Add beneficiaries whose percentage adds up to 100
+                value:
+                  {
+                    "thirdParties": [
+                      {
+                        "type": "BENEFICIARY",
+                        "title": "MR",
+                        "firstName": "Ross",
+                        "surname": "Geller",
+                        "contactDetails": {
+                          "email": "rranson@gmail.com",
+                          "phone": "07724104725"
+                        },
+                        "beneficiaryDetails": {
+                          "dateOfBirth": "1981-04-11",
+                          "relationship": "Brother",
+                          "percentage": 60
+                        },
+                        "address": {
+                          "premisesIdentifier": "11",
+                          "line1": "Mallard Avenue",
+                          "line2": "Groby",
+                          "town": "Leicester",
+                          "county": "Leicestershire",
+                          "countryCode": "GB",
+                          "postCode": "LE6 0GR"
+                        }
+                      },
+                      {
+                        "type": "BENEFICIARY",
+                        "title": "MRS",
+                        "firstName": "Tracy",
+                        "surname": "King",
+                        "contactDetails": {
+                          "email": "tking@gmail.com",
+                          "phone": "07724104724"
+                        },
+                        "beneficiaryDetails": {
+                          "dateOfBirth": "1982-11-01",
+                          "relationship": "Sister",
+                          "percentage": 40
+                        },
+                        "address": {
+                          "premisesIdentifier": "14",
+                          "line1": "Eatock Way",
+                          "line2": "Westhoughton",
+                          "town": "Bolton",
+                          "county": "",
+                          "countryCode": "GB",
+                          "postCode": "BL5 2RB"
+                        }
+                      }
+                    ]
+                  }
+              Ex3:
+                summary: Add a power of attorney
+                value:
+                  {
+                    "thirdParties": [
+                      {
+                        "type": "POWER_OF_ATTORNEY",
+                        "title": "MR",
+                        "firstName": "Ray",
+                        "surname": "Ranson",
+                        "contactDetails": {
+                          "email": "rranson@gmail.com",
+                          "phone": "07724104725"
+                        },
+                        "address": {
+                          "premisesIdentifier": "12",
+                          "line1": "Bluebell Close",
+                          "town": "Kendal",
+                          "countryCode": "GB",
+                          "postCode": "LA9 7SH"
+                        }
+                      }
+                    ]
+                  }
+      responses:
+        "201":
+          description: Third parties created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartiesHeader"
+              examples:
+                Ex1:
+                  summary: Added an employer 
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "EMPLOYER",
+                          "companyName": "Bloxwich Engineering",
+                          "companyRegistration": "REGH78451",
+                          "contactDetails": {
+                            "email": "hr@bloxeng.co.uk",
+                            "phone": "01922712162"
+                          },
+                          "address": {
+                            "premisesIdentifier": "38",
+                            "line1": "Saunton Road",
+                            "line2": "Bloxwich",
+                            "town": "Walsall",
+                            "county": "West Midlands",
+                            "countryCode": "GB",
+                            "postCode": "WS3 3TS"
+                          }
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: Added beneficiaries
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 2,
+                          "type": "BENEFICIARY",
+                          "title": "MR",
+                          "firstName": "Ross",
+                          "surname": "Geller",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1981-04-11",
+                            "relationship": "Brother",
+                            "percentage": 60
+                          },
+                          "address": {
+                            "premisesIdentifier": "11",
+                            "line1": "Mallard Avenue",
+                            "line2": "Groby",
+                            "town": "Leicester",
+                            "county": "Leicestershire",
+                            "countryCode": "GB",
+                            "postCode": "LE6 0GR"
+                          }
+                        },
+                        {
+                          "id": 3,
+                          "type": "BENEFICIARY",
+                          "title": "MRS",
+                          "firstName": "Tracy",
+                          "surname": "King",
+                          "contactDetails": {
+                            "email": "tking@gmail.com",
+                            "phone": "07724104724"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1982-11-01",
+                            "relationship": "Sister",
+                            "percentage": 40
+                          },
+                          "address": {
+                            "premisesIdentifier": "14",
+                            "line1": "Eatock Way",
+                            "line2": "Westhoughton",
+                            "town": "Bolton",
+                            "county": "",
+                            "countryCode": "GB",
+                            "postCode": "BL5 2RB"
+                          }
+                        }
+                      ]
+                    }
+                Ex3:
+                  summary: Added a power of attorney
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "POWER_OF_ATTORNEY",
+                          "title": "MR",
+                          "firstName": "Ray",
+                          "surname": "Ranson",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "address": {
+                            "premisesIdentifier": "12",
+                            "line1": "Bluebell Close",
+                            "town": "Kendal",
+                            "countryCode": "GB",
+                            "postCode": "LA9 7SH"
+                          }
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    get:
+      tags:
+        - Accounts
+      summary: Get Third Parties on an account
+      description: >-
+        Returns third parties linked to an Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
+
+
+        Three types of third parties are supported:
+        
+         - Beneficiaries
+         
+         - Power of Attorney
+         
+         - Employers
+      operationId: retrieveThirdParties
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      responses:
+        "200":
+          description: Third parties retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartiesHeader"
+              examples:
+                Ex1:
+                  summary: The third parties against a SIPP account 
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "EMPLOYER",
+                          "companyName": "Bloxwich Engineering",
+                          "companyRegistration": "REGH78451",
+                          "contactDetails": {
+                            "email": "hr@bloxeng.co.uk",
+                            "phone": "01922712162"
+                          },
+                          "address": {
+                            "premisesIdentifier": "38",
+                            "line1": "Saunton Road",
+                            "line2": "Bloxwich",
+                            "town": "Walsall",
+                            "county": "West Midlands",
+                            "countryCode": "GB",
+                            "postCode": "WS3 3TS"
+                          }
+                        },
+                        {
+                          "id": 2,
+                          "type": "BENEFICIARY",
+                          "title": "MR",
+                          "firstName": "Ross",
+                          "surname": "Geller",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1981-04-11",
+                            "relationship": "Brother",
+                            "percentage": 60
+                          },
+                          "address": {
+                            "premisesIdentifier": "11",
+                            "line1": "Mallard Avenue",
+                            "line2": "Groby",
+                            "town": "Leicester",
+                            "county": "Leicestershire",
+                            "countryCode": "GB",
+                            "postCode": "LE6 0GR"
+                          }
+                        },
+                        {
+                          "id": 3,
+                          "type": "BENEFICIARY",
+                          "title": "MRS",
+                          "firstName": "Tracy",
+                          "surname": "King",
+                          "contactDetails": {
+                            "email": "tking@gmail.com",
+                            "phone": "07724104724"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1982-11-01",
+                            "relationship": "Sister",
+                            "percentage": 40
+                          },
+                          "address": {
+                            "premisesIdentifier": "14",
+                            "line1": "Eatock Way",
+                            "line2": "Westhoughton",
+                            "town": "Bolton",
+                            "county": "",
+                            "countryCode": "GB",
+                            "postCode": "BL5 2RB"
+                          }
+                        },
+                        {
+                          "id": 4,
+                          "type": "POWER_OF_ATTORNEY",
+                          "title": "MR",
+                          "firstName": "Ray",
+                          "surname": "Ranson",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "address": {
+                            "premisesIdentifier": "12",
+                            "line1": "Bluebell Close",
+                            "town": "Kendal",
+                            "countryCode": "GB",
+                            "postCode": "LA9 7SH"
+                          }
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    patch:
+      tags:
+        - Accounts
+      summary: Update Third Parties on an account
+      description: >-
+        Allows partial updates to existing third parties associated with a specified investment account.
+        
+        
+        This endpoint supports updates for third party types of beneficiary, power of attorney and employer. 
+        
+        
+        A single message can include multiple third parties, which may differ in type, as long as they all relate to the same investment account. 
+        
+        
+        Only the fields provided in the request payload will be updated. All omitted fields will remain unchanged. To remove an optional field this should be provided as null in the request payload.
+
+        This endpoint should be used to modify third parties associated with a specified investment account. The third party must already exist, and its identifier must be supplied in the request message. 
+
+        The supported changes are restricted to names, contact details and addresses. 
+        
+        
+        The endpoint does not support updates to the following:
+
+         - the third party type
+
+         - beneficiary details - DOB, relationship or percentage
+      operationId: updateThirdParties
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartiesHeaderPatch"
+            examples:
+              Ex1:
+                summary: Update an employer company name 
+                value: 
+                  {
+                    "thirdParties": [
+                      {
+                        "id": 1,
+                        "companyName": "Bloxwich Engineering"
+                      }
+                    ]
+                  }
+              Ex2:
+                summary: Update the Power of Attorney's email and phone number
+                value:
+                  {
+                    "thirdParties": [
+                      {
+                        "id": 3,
+                        "contactDetails": {
+                          "email": "rranson@gmail.com",
+                          "phone": "07724104725"
+                        }
+                      }
+                    ]
+                  }      
+      responses:
+        "200":
+          description: Third parties updated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartiesHeader"
+              examples:
+                Ex1:
+                  summary: Employer company name updated. 
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "EMPLOYER",
+                          "companyName": "Bloxwich Engineering",
+                          "companyRegistration": "REGH78451",
+                          "contactDetails": {
+                            "email": "hr@bloxeng.co.uk",
+                            "phone": "01922712162"
+                          },
+                          "address": {
+                            "premisesIdentifier": "38",
+                            "line1": "Saunton Road",
+                            "line2": "Bloxwich",
+                            "town": "Walsall",
+                            "county": "West Midlands",
+                            "countryCode": "GB",
+                            "postCode": "WS3 3TS"
+                          }
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: Power of attorney's phone and email address updated.
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "POWER_OF_ATTORNEY",
+                          "title": "MR",
+                          "firstName": "Ray",
+                          "surname": "Ranson",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "address": {
+                            "premisesIdentifier": "12",
+                            "line1": "Bluebell Close",
+                            "town": "Kendal",
+                            "countryCode": "GB",
+                            "postCode": "LA9 7SH"
+                          }
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    put:
+      tags:
+        - Accounts
+      summary: Update Beneficiaries on an account
+      description: >-
+        Supports full replacement of all third party beneficies associated with a specified pension account.
+
+
+        This endpoint is intended for pension accounts that already have one or more beneficiaries. The request must include the complete set of beneficiaries to be associated with the account. Any existing beneficiaries that should be retained must be included in the request, as the submitted list will replace the current set.
+
+
+        The endpoint should not be used to replace third party types other than beneficiaries.
+      operationId: replaceBeneficiaries
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Hubwise Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartiesHeader"
+            examples:
+              Ex1:
+                summary: Replace the beneficiaries on an account 
+                value: 
+                  {
+                    "thirdParties": [
+                      {
+                        "type": "BENEFICIARY",
+                        "title": "MR",
+                        "firstName": "Ross",
+                        "surname": "Geller",
+                        "contactDetails": {
+                          "email": "rranson@gmail.com",
+                          "phone": "07724104725"
+                        },
+                        "beneficiaryDetails": {
+                          "dateOfBirth": "1981-04-11",
+                          "relationship": "Brother",
+                          "percentage": 60
+                        },
+                        "address": {
+                          "premisesIdentifier": "11",
+                          "line1": "Mallard Avenue",
+                          "line2": "Groby",
+                          "town": "Leicester",
+                          "county": "Leicestershire",
+                          "countryCode": "GB",
+                          "postCode": "LE6 0GR"
+                        }
+                      },
+                      {
+                        "type": "BENEFICIARY",
+                        "title": "MRS",
+                        "firstName": "Tracy",
+                        "surname": "King",
+                        "contactDetails": {
+                          "email": "tking@gmail.com",
+                          "phone": "07724104724"
+                        },
+                        "beneficiaryDetails": {
+                          "dateOfBirth": "1982-11-01",
+                          "relationship": "Sister",
+                          "percentage": 40
+                        },
+                        "address": {
+                          "premisesIdentifier": "14",
+                          "line1": "Eatock Way",
+                          "line2": "Westhoughton",
+                          "town": "Bolton",
+                          "county": "",
+                          "countryCode": "GB",
+                          "postCode": "BL5 2RB"
+                        }
+                      }
+                    ]
+                  }
+      responses:
+        "200":
+          description: Beneficiaries resplaced successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartiesHeader"
+              examples:
+                Ex1:
+                  summary: Beneficiaries on an account were replaced 
+                  value: 
+                    {
+                      "thirdParties": [
+                        {
+                          "type": "BENEFICIARY",
+                          "title": "MR",
+                          "firstName": "Ross",
+                          "surname": "Geller",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1981-04-11",
+                            "relationship": "Brother",
+                            "percentage": 60
+                          },
+                          "address": {
+                            "premisesIdentifier": "11",
+                            "line1": "Mallard Avenue",
+                            "line2": "Groby",
+                            "town": "Leicester",
+                            "county": "Leicestershire",
+                            "countryCode": "GB",
+                            "postCode": "LE6 0GR"
+                          }
+                        },
+                        {
+                          "type": "BENEFICIARY",
+                          "title": "MRS",
+                          "firstName": "Tracy",
+                          "surname": "King",
+                          "contactDetails": {
+                            "email": "tking@gmail.com",
+                            "phone": "07724104724"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1982-11-01",
+                            "relationship": "Sister",
+                            "percentage": 40
+                          },
+                          "address": {
+                            "premisesIdentifier": "14",
+                            "line1": "Eatock Way",
+                            "line2": "Westhoughton",
+                            "town": "Bolton",
+                            "county": "",
+                            "countryCode": "GB",
+                            "postCode": "BL5 2RB"
+                          }
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"      
 
 components:
   
@@ -4976,6 +5746,7 @@ components:
             - NON_UK_RESIDENT
             - AML
             - CLOSED_SUB_ACCOUNT
+            - XX3
           type: string
           readOnly: true
         activationDate:
@@ -5033,7 +5804,7 @@ components:
           maxLength: 50
           minLength: 1
           type: string
-          example: Mr Hubwise Person
+          example: Mr John Doe
         externalReferences:
           type: array
           items:
@@ -5070,7 +5841,7 @@ components:
           maxLength: 50
           minLength: 1
           type: string
-          example: Mr Hubwise Person
+          example: Mr John Doe
 
     ExternalReference:
       type: object
@@ -5154,7 +5925,6 @@ components:
         - line1
         - postCode
         - premisesIdentifier
-        - primary
         - town
       type: object
       properties:
@@ -5163,50 +5933,86 @@ components:
           description: Id
           format: int64
           readOnly: true
-          example: 1
         primary:
           type: boolean
           description: Primary
-          example: true
+          default: false
         premisesIdentifier:
           maxLength: 75
-          minLength: 0
           type: string
           description: Premises Identifier
           example: "12"
         line1:
           maxLength: 75
-          minLength: 0
           type: string
           description: Address line 1
           example: Rosewood Cottage
         line2:
           maxLength: 75
-          minLength: 0
           type: string
           description: Address line 2
           example: Elm Street
         town:
           maxLength: 75
-          minLength: 0
           type: string
           description: Town or city
           example: Hightown
         county:
           maxLength: 75
-          minLength: 0
           type: string
           description: County
           example: Lancashire
         postCode:
           maxLength: 12
-          minLength: 0
           type: string
           description: Postcode
           example: HT3 4AB
         countryCode:
           maxLength: 3
-          minLength: 0
+          type: string
+          description: Country code
+          example: GB
+
+    AddressPatch:
+      additionalProperties: false
+      type: object
+      properties:
+        primary:
+          type: boolean
+          description: Primary
+          default: false
+        premisesIdentifier:
+          maxLength: 75
+          type: string
+          description: Premises Identifier
+          example: "12"
+        line1:
+          maxLength: 75
+          type: string
+          description: Address line 1
+          example: Rosewood Cottage
+        line2:
+          maxLength: 75
+          type: string
+          description: Address line 2
+          example: Elm Street
+        town:
+          maxLength: 75
+          type: string
+          description: Town or city
+          example: Hightown
+        county:
+          maxLength: 75
+          type: string
+          description: County
+          example: Lancashire
+        postCode:
+          maxLength: 12
+          type: string
+          description: Postcode
+          example: HT3 4AB
+        countryCode:
+          maxLength: 3
           type: string
           description: Country code
           example: GB
@@ -5220,7 +6026,6 @@ components:
       properties:
         id:
           maxLength: 11
-          minLength: 0
           type: string
           description: The identifier of the investor holding the account. For third party account holders use the third party sequence number.
         thirdParty:
@@ -5312,6 +6117,9 @@ components:
                 - DELETED
                 - UNCHECKED
                 - WAITING_FOR_CUSTOMER
+            primary:
+              type: boolean
+              default: false
             holders:
               maxItems: 20
               minItems: 1
@@ -5396,21 +6204,18 @@ components:
       properties:
         contactPhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Contact Phone
           format: string
           example: "01619465555"
         homePhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Home Phone
           format: string
           example: "01619464444"
         mobilePhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Mobile Phone
           format: string
@@ -5509,7 +6314,6 @@ components:
             - OTHER
         occupationOtherValue:
           maxLength: 50
-          minLength: 0
           type: string
           description: If the investors occupation is other this field is applicable and mandatory
           format: string
@@ -5574,7 +6378,6 @@ components:
             - OTHER
         industryOtherValue:
           maxLength: 50
-          minLength: 0
           type: string
           description: If the investors industry is other this field is applicable and mandatory
           format: string
@@ -5623,47 +6426,27 @@ components:
       additionalProperties: false
       properties:
         title:
-          maxLength: 15
-          type: string
-          description: The investors title
-          example: OTHER
-          enum:
-            - MR
-            - MASTER
-            - SIR
-            - MRS
-            - MISS
-            - MS
-            - PROF
-            - DR
-            - REV
-            - LORD
-            - LADY
-            - OTHER
+          $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
-          minLength: 0
           type: string
           description: If the investors title is other this field is applicable and mandatory
           format: string
           example: General
         firstName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors First Name
           format: string
           example: Sam
         middleName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Middle Name
           format: string
           example: John
         surname:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Surname
           format: string
@@ -5707,29 +6490,29 @@ components:
         notificationPreferences:
           $ref: "#/components/schemas/Notification"
 
+    Title:
+      type: string
+      enum:
+        - MR
+        - MASTER
+        - SIR
+        - MRS
+        - MISS
+        - MS
+        - PROF
+        - DR
+        - REV
+        - LORD
+        - LADY
+        - OTHER 
+    
     IndividualPatch:
       description: required if investor type is individual or court appointed deputy
       type: object
       additionalProperties: false
       properties:
         title:
-          maxLength: 15
-          type: string
-          description: The investors title
-          example: OTHER
-          enum:
-            - MR
-            - MASTER
-            - SIR
-            - MRS
-            - MISS
-            - MS
-            - PROF
-            - DR
-            - REV
-            - LORD
-            - LADY
-            - OTHER
+          $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
           minLength: 0
@@ -5972,7 +6755,6 @@ components:
           example: 1
         countryCode:
           maxLength: 3
-          minLength: 0
           type: string
           description: Country Code
           format: String
@@ -6010,7 +6792,6 @@ components:
           example: 1
         countryCode:
           maxLength: 3
-          minLength: 0
           type: string
           description: Country Code
           format: String
@@ -6022,14 +6803,12 @@ components:
           example: true
         tin:
           maxLength: 35
-          minLength: 0
           type: string
           description: Taxpayer Identification Number (validated for UK), mandatory for an adult individual or court appointed deputy
           format: String
           example: AC123456C
         lei:
           maxLength: 35
-          minLength: 0
           type: string
           description: Legal Entity Identifier (validated via GLEIF), mandatory for a corporate or trust unless exception
           format: String
@@ -6094,7 +6873,6 @@ components:
           description: Unique SS&C Hubwise Investor identifier
         tenantId:
           maxLength: 7
-          minLength: 0
           type: string
           description: Unique SS&C Hubwise Tenant identifier
           format: string
@@ -6123,7 +6901,6 @@ components:
           description: Unique SS&C Hubwise Investor identifier
         tenantId:
           maxLength: 7
-          minLength: 0
           type: string
           description: Unique SS&C Hubwise Tenant identifier
           format: string
@@ -6303,7 +7080,6 @@ components:
         code:
           description: Unique SS&C Hubwise Fee identifier
           maxLength: 6
-          minLength: 0
           type: string
           example: AFGVCD
         amount:
@@ -6412,7 +7188,6 @@ components:
         description:
           description: The name of the fee
           maxLength: 35
-          minLength: 0
           type: string
           readOnly: true
           example: Adviser Annual Tiered Fee
@@ -6615,11 +7390,10 @@ components:
             - ONE_OFF
           type: string
           example: ONE_OFF
-        startDate:
+        nextDate:
           format: date
           description: >-
-            The intended start date of the money movement. The available dates will depend on the
-            type of movement and the contribution method.
+            The initial date or next date for the money movement. 
           type: string
           example: "2025-01-22"
         endDate:
@@ -6849,13 +7623,10 @@ components:
       additionalProperties: false
       properties:
         id:
-          format: int64
           description: Unique identifier for the source of fund record.
           maximum: 99999
-          minimum: 0
           type: integer
           readOnly: true
-          example: 0
         type:
           description: the Source of Fund type for one off contributions
           enum:
@@ -7110,6 +7881,11 @@ components:
           description: The current tax year ISA or JISA subscriptions being transferred
           type: number
           example: 15000
+        amountNotTransfered:
+          format: double
+          description: The current tax year ISA or JISA subscriptions being transferred
+          type: number
+          example: 15000
         startDate:
           format: date
           description: The first date of the ISA or JISA subscribtion in the current tax year
@@ -7137,7 +7913,7 @@ components:
           maxLength: 70
           minLength: 1
           type: string
-          example: Hubwise Person
+          example: James Holden
         type:
           description: >-
             The type of ISA, JISA and pension plan being transfered. This field is only relevant
@@ -7207,28 +7983,24 @@ components:
         line2:
           description: Address line 2
           maxLength: 75
-          minLength: 0
           type: string
           readOnly: true
           example: "4 Exchange Quay, Salford Quay"
         line3:
           description: Address line 3
           maxLength: 75
-          minLength: 0
           type: string
           readOnly: true
           example: 15 Dalkeith Road
         line4:
           description: Address line 4
           maxLength: 75
-          minLength: 0
           type: string
           readOnly: true
           example: Edinburgh
         line5:
           description: Address line 5
           maxLength: 75
-          minLength: 0
           type: string
           readOnly: true
         postCode:
@@ -7238,6 +8010,130 @@ components:
           type: string
           readOnly: true
           example: M5 3EE
+
+    ThirdPartiesHeader:
+      type: object
+      additionalProperties: false
+      required:
+        - thirdParties
+      properties:
+        thirdParties:    
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/ThirdParty"
+
+    ThirdParty:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - BENEFICIARY
+            - EMPLOYER
+            - POWER_OF_ATTORNEY
+        title:
+          $ref: "#/components/schemas/Title"
+        firstName:
+          type: string
+          maxLength: 30
+        surname:
+          type: string
+          maxLength: 25
+        contactDetails:
+          type: object
+          additionalProperties: false
+          required:
+            - phone
+            - email
+          properties:
+            phone:
+              type: string
+              maxLength: 25
+            email:
+              type: string
+              maxLength: 50
+        beneficiaryDetails:
+          type: object
+          additionalProperties: false
+          required:
+            - relationship
+            - percentage
+          properties:
+            relationship:
+              type: string
+              maxLength: 30
+            percentage:
+              type: number
+              maximum: 100
+            dateOfBirth:
+              type: string
+              format: date
+        companyName:
+          type: string
+          maxLength: 50
+        companyRegistration:
+          type: string
+          maxLength: 10
+        address:
+          $ref: "#/components/schemas/Address"
+          
+    ThirdPartiesHeaderPatch:
+      type: object
+      additionalProperties: false
+      required:
+        - thirdParties
+      properties:
+        thirdParties:    
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/ThirdPartyPatch"
+
+    ThirdPartyPatch:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+        title:
+          $ref: "#/components/schemas/Title"
+        firstName:
+          type: string
+          maxLength: 30
+        surname:
+          type: string
+          maxLength: 25
+        contactDetails:
+          type: object
+          additionalProperties: false
+          required:
+            - phone
+            - email
+          properties:
+            phone:
+              type: string
+              maxLength: 25
+            email:
+              type: string
+              maxLength: 50
+        companyName:
+          type: string
+          maxLength: 50
+        companyRegistration:
+          type: string
+          maxLength: 10
+        address:
+          $ref: "#/components/schemas/AddressPatch"
+        
 
   examples:
     400-BadRequest:
