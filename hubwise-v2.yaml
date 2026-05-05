@@ -1,8 +1,8 @@
 openapi: 3.0.1
 info:
-  title: SS&C Hubwise API
+  title: SS&C Wealth Platform API
   version: 0.8.1
-  description: API Contract to integrate with SS&C Hubwise
+  description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
   - url: "https://rest-qd.hubwise.co.uk"
@@ -34,7 +34,7 @@ paths:
         This endpoint should be used when creating new investor records. An investor can have a maximum of 10 addresses, 5 nationalities, and 5 tax residencies.
         
         
-        The SS&C Hubwise Investor ID returned in the response payload uniquely identifies the investor and must be used for all subsequent investor maintenance and account creation operations.
+        The SS&C Wealth Platform Investor ID returned in the response payload uniquely identifies the investor and must be used for all subsequent investor maintenance and account creation operations.
         
         
         The endpoint must be called once for each investor record to be created.
@@ -274,7 +274,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo",
+                            "provider": "CRM",
                           },
                         ],
                       "individual":
@@ -345,7 +345,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "trust":
@@ -386,7 +386,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "corporate":
@@ -460,7 +460,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -488,7 +488,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "individual":
@@ -567,7 +567,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "trust":
@@ -608,7 +608,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "corporate":
@@ -685,7 +685,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -706,7 +706,7 @@ paths:
                       [
                         {
                           "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                          "provider": "Curo"
+                          "provider": "CRM"
                         },
                         {
                           "reference": "6878768XX66",
@@ -925,7 +925,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo",
+                            "provider": "CRM",
                           },
                         ],
                       "individual":
@@ -1016,7 +1016,7 @@ paths:
         Creates one or more characteristics of vulnerability records for an existing investor.
 
 
-        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Hubwise Investor ID generated during investor creation.
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
 
 
         This endpoint should be used when creating new vulnerability records against an existing investor. Each record must include the vulnerability characteristic and its associated service level. If a start date is not provided, it will default to the current date.
@@ -1032,7 +1032,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1136,7 +1136,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1214,7 +1214,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1318,7 +1318,7 @@ paths:
         Creates one or more correspondence preference records for an existing investor.
         
         
-        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Hubwise Investor ID generated during investor creation.
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
         
         
         This endpoint should be used when creating new correspondence records against an existing investor. Each correspondence record must be provided in the request. If a start date is not supplied, it will default to the current date.
@@ -1334,7 +1334,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1435,7 +1435,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1511,7 +1511,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1603,6 +1603,182 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /investors/{investorId}/taxations/{taxationId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors Taxation
+      description: This endpoint allows the hard deletion of a single taxation record associated with a specific investor. Primary taxations cannot be deleted unless another taxation is promoted to primary.
+      operationId: removeInvestorTaxation
+      parameters:
+        - name: investorId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: taxationId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Taxation deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Taxation deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /investors/{investorId}/nationalities/{nationalityId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors nationality
+      description: This endpoint allows the hard deletion of a single nationality record associated with a specific investor. Primary nationalities cannot be deleted unless another nationality is promoted to primary. Nationalities cannot be deleted for Corporates and Trusts.
+      operationId: removeInvestorNationality
+      parameters:
+        - name: investorId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: nationalityId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Nationality deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Nationality deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /investors/{investorId}/addresses/{addressId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors Address
+      description: This endpoint allows the soft deletion of a single address record associated with a specific investor. Primary addresses cannot be deleted unless another address is promoted to primary.
+      operationId: removeInvestorAddress
+      parameters:
+        - name: investorId
+          in: path
+          description: Investor ID
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: addressId
+          in: path
+          description: Address ID
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Address deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Address deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+  
   /accounts:
     
     post:
@@ -1623,7 +1799,7 @@ paths:
         Once the account has been created, the product, account type, and currencies cannot be modified. The number and type of related investors permitted for an account varies depending on the product type.
         
         
-        The SS&C Hubwise Account ID returned in the response uniquely identifies the account and must be used for subsequent account maintenance operations.
+        The SS&C Wealth Platform Account ID returned in the response uniquely identifies the account and must be used for subsequent account maintenance operations.
         
         
         New accounts are created in a PENDING status. To activate the account, the account activation endpoint must be called once all required account endpoints have been called (for example Bank Accounts, Money Movements, Transfers, Fees, and Relationships).
@@ -1663,7 +1839,7 @@ paths:
                     "baseCurrency": "GBP",
                     "adviserId": "E001428",
                     "marketSettlementCurrency": "GBP",
-                    "name": "Mr Hub Wise Person",
+                    "name": "Mr John Doe",
                     "model": {
                       "id": "HW000001984",
                       "providerId": "DFM0001",
@@ -1812,6 +1988,11 @@ paths:
                         "date": "2020-04-28"
                       },
                     "declarations": [
+                       {
+                        "adviserId": "E273053",
+                        "templateId": "TARGET_MARKET",
+                        "acknowledgement": true
+                      },
                       {
                         "adviserId": "E008615",
                         "templateId": "JISA_ACKNOWLEDGEMENT",
@@ -1847,7 +2028,7 @@ paths:
                       "status": "PENDING",
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hub Wise Person",
+                      "name": "Mr John Doe",
                       "model": {
                         "id": "HW000001984",
                         "providerId": "DFM0001",
@@ -1946,12 +2127,19 @@ paths:
                       "id": "HW04003260A",
                       "adviserId": "E008469",
                       "tenantId": "HUBWISE",
-                      "productId": "HWS",
+                      "productId": "JIS",
                       "type": "ADVISED",
                       "status": "PENDING", 
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
                       "name": "YAYAH JISA",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "provider": "CRM"
+                          },
+                        ],
                       "investors": [
                         {
                           "id": "HW000547564",
@@ -1999,7 +2187,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2028,7 +2216,7 @@ paths:
                       "status": "ACTIVE",
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hub Wise Person",
+                      "name": "Mr John Doe",
                       "model": {
                         "id": "HW000001984",
                         "providerId": "DFM0001",
@@ -2172,7 +2360,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2187,9 +2375,9 @@ paths:
               Ex1:
                 summary: Update accounts name
                 value:
-                 {
+                  {
                     "name": "Mr Sam John James-Smith"
-                 }
+                  }
               
       responses:
         "200":
@@ -2244,7 +2432,7 @@ paths:
         Creates a new bank account and associates it with an existing investment account.
 
 
-        This endpoint creates GBP and non GBP retail and business bank details. The bank details  are linked to a specified SS&C Hubwise Account ID and SS&C Hubwise Investor ID(s) or SS&C Hubwise Third Party ID(s) and validated.
+        This endpoint creates GBP and non GBP retail and business bank details. The bank details  are linked to a specified SS&C Wealth Platform Account ID and SS&C Wealth Platform Investor ID(s) or SS&C Wealth Platform Third Party ID(s) and validated.
 
 
         The investment account must exist before a bank account can be created and associated with it.
@@ -2254,7 +2442,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2514,7 +2702,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2646,7 +2834,7 @@ paths:
         A single request can include multiple movements, such as a combination of regular and lump-sum contributions or contributions and withdrawals.
         
         
-        The SS&C Hubwise Movement ID returned in the response uniquely identifies the movement record.
+        The SS&C Wealth Platform Movement ID returned in the response uniquely identifies the movement record.
         
         
         The account record and bank details must exist before creating money movements.
@@ -2655,7 +2843,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2729,6 +2917,11 @@ paths:
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
                         "acknowledgement": true
+                      },
+                      {
+                        "adviserId": "E121191",
+                        "templateId": "CASH_FLOW",
+                        "acknowledgement": true
                       }
                     ]
                   }
@@ -2790,6 +2983,11 @@ paths:
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
                         "acknowledgement": true
+                      },
+                      {
+                        "adviserId": "E121191",
+                        "templateId": "CASH_FLOW",
+                        "acknowledgement": true
                       }
                     ]
                   }
@@ -2836,6 +3034,11 @@ paths:
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
                         "acknowledgement": true
+                      },
+                      {
+                        "adviserId": "E121191",
+                        "templateId": "CASH_FLOW",
+                        "acknowledgement": true
                       }
                     ]
                   } 
@@ -2864,7 +3067,7 @@ paths:
                       },
                       {
                         "adviserId": "E121191",
-                        "templateId": "DRAWDOWN_INCOME",
+                        "templateId": "PENSION_INCOME",
                         "acknowledgement": true
                       }
                     ]
@@ -2902,7 +3105,7 @@ paths:
                       },
                       {
                         "adviserId": "E121191",
-                        "templateId": "DRAWDOWN_INCOME",
+                        "templateId": "PENSION_INCOME",
                         "acknowledgement": true
                       }
                     ]
@@ -3200,7 +3403,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -3323,7 +3526,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -3331,7 +3534,7 @@ paths:
           example: HW00013451A
         - name: moneyMovementId
           in: path
-          description: Unique SS&C Hubwise Money Movement identifier
+          description: Unique SS&C Wealth Platform Money Movement identifier
           required: true
           schema:
             type: string
@@ -3547,13 +3750,13 @@ paths:
        Required information includes the Investment Account ID and the Provider ID.
        
        
-       Both full and partial transfers are supported. Partial transfers are identified by setting the is partial flag to true. For partial in-specie transfers, additional information must be provided to SS&C Hubwise.
+       Both full and partial transfers are supported. Partial transfers are identified by setting the is partial flag to true. For partial in-specie transfers, additional information must be provided to SS&C Wealth Platform.
       
       
        Additional rules include:
       
       
-       1.	The plan reference must match the ceding provider’s format.
+       1.	The plan reference must match the ceding provider's format.
        
        
        2.	The plan type field is mandatory for ISA, JISA, and pension transfers.
@@ -3575,7 +3778,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -3610,7 +3813,7 @@ paths:
                         },
                         "plan": {
                           "reference": "896546",
-                          "holderName": "Mr Hub Wise Person",
+                          "holderName": "Mr John Doe",
                           "type": "STOCKS_AND_SHARES"
                         },
                         "provider": {
@@ -3645,7 +3848,7 @@ paths:
                         },
                         "plan": {
                           "reference": "896547",
-                          "holderName": "Mr Hub Wise Person",
+                          "holderName": "Mr John Doe",
                           "type": "SIPP"
                         },
                         "provider": {
@@ -3679,7 +3882,7 @@ paths:
                         },
                         "plan": {
                           "reference": "896548",
-                          "holderName": "Mr Hub Wise Person"
+                          "holderName": "Mr John Doe"
                         },
                         "provider": {
                           "id": "HW009"
@@ -3738,7 +3941,7 @@ paths:
                           },
                           "plan": {
                             "reference": "896546",
-                            "holderName": "Mr Hub Wise Person",
+                            "holderName": "Mr John Doe",
                             "type": "STOCKS_AND_SHARES"
                           },
                           "provider": {
@@ -3796,7 +3999,7 @@ paths:
                         },
                         "plan": {
                           "reference": "896547",
-                          "holderName": "Mr Hub Wise Person",
+                          "holderName": "Mr John Doe",
                           "type": "SIPP"
                         },
                         "provider": {
@@ -3852,7 +4055,7 @@ paths:
                         },
                         "plan": {
                           "reference": "896548",
-                          "holderName": "Mr Hub Wise Person"
+                          "holderName": "Mr John Doe"
                         },
                         "provider": {
                           "id": "HW009",
@@ -3910,7 +4113,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -3960,7 +4163,7 @@ paths:
                           },
                           "plan": {
                             "reference": "896546",
-                            "holderName": "Mr Hub Wise Person",
+                            "holderName": "Mr John Doe",
                             "type": "STOCKS_AND_SHARES"
                           },
                           "provider": {
@@ -4004,7 +4207,7 @@ paths:
                           },
                           "plan": {
                             "reference": "896547",
-                            "holderName": "Mr Hub Wise Person",
+                            "holderName": "Mr John Doe",
                             "type": "SIPP"
                           },
                           "provider": {
@@ -4046,7 +4249,7 @@ paths:
                           },
                           "plan": {
                             "reference": "896548",
-                            "holderName": "Mr Hub Wise Person"
+                            "holderName": "Mr John Doe"
                           },
                           "provider": {
                             "id": "HW009",
@@ -4126,7 +4329,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4329,7 +4532,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4460,7 +4663,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4468,7 +4671,7 @@ paths:
           example: HW04003259A
         - name: feeId
           in: path
-          description: Unique SS&C Hubwise Fee identifier
+          description: Unique SS&C Wealth Platform Fee identifier
           required: true
           schema:
             type: string
@@ -4542,7 +4745,7 @@ paths:
         - Accounts
       summary: Add or update an income option on an investment account
       description: >-
-        An adviser should be able to manage how investment income for an investment account is handled by SS&C Hubwise. 
+        An adviser should be able to manage how investment income for an investment account is handled by SS&C Wealth Platform. 
 
         The income for an account can be:
 
@@ -4557,7 +4760,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4678,7 +4881,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4707,7 +4910,7 @@ paths:
                       "status": "ACTIVE",
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hub Wise Person",
+                      "name": "Mr John Doe",
                       "model": {
                         "id": "HW000001984",
                         "providerId": "DFM0001",
@@ -4858,7 +5061,7 @@ paths:
         - Accounts
       summary: Create Third Parties on an account
       description: >-
-        Allows you to add third parties linked to a SS&C Hubwise Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
+        Allows you to add third parties linked to a SS&C Wealth Platform Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
 
         
         Three types of third parties are supported:
@@ -4879,7 +5082,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -5155,7 +5358,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -5318,7 +5521,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -5455,7 +5658,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -5717,7 +5920,7 @@ components:
       properties:
         id:
           format: string
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           maxLength: 11
           minLength: 11
           type: string
@@ -5756,14 +5959,14 @@ components:
           readOnly: true
         tenantId:
           format: string
-          description: SS&C Hubwise tenant ID
+          description: SS&C Wealth Platform tenant ID
           maxLength: 7
           minLength: 7
           type: string
           readOnly: true
         productId:
           format: string
-          description: Unique SS&C Hubwise Product identifier
+          description: Unique SS&C Wealth Platform Product identifier
           maxLength: 3
           minLength: 3
           type: string
@@ -5777,7 +5980,7 @@ components:
           type: string
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -6073,7 +6276,7 @@ components:
           properties:
             accountId:
               format: string
-              description: Unique SS&C Hubwise Account identifier
+              description: Unique SS&C Wealth Platform Account identifier
               maxLength: 11
               minLength: 11
               type: string
@@ -6081,7 +6284,7 @@ components:
               example: HW00013451A
             tenantId:
               format: string
-              description: Unique SS&C Hubwise Tenant identifier
+              description: Unique SS&C Wealth Platform Tenant identifier
               maxLength: 7
               minLength: 7
               type: string
@@ -6089,7 +6292,7 @@ components:
               example: HUBWISE
             adviserId:
               format: string
-              description: Unique SS&C Hubwise Adviser identifier
+              description: Unique SS&C Wealth Platform Adviser identifier
               maxLength: 7
               minLength: 7
               readOnly: true
@@ -6138,13 +6341,13 @@ components:
       additionalProperties: false
       properties:
         templateId:
-          description: Unique SS&C Hubwise Template identifier
+          description: Unique SS&C Wealth Platform Template identifier
           maxLength: 50
           type: string
           example: TEMPLATE_ID_VALUE
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier assigned to the declaration
+          description: Unique SS&C Wealth Platform Adviser identifier assigned to the declaration
           maxLength: 7
           minLength: 7
           type: string
@@ -6168,7 +6371,7 @@ components:
       properties:
         id:
           format: string
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           maxLength: 11
           minLength: 11
           type: string
@@ -6632,7 +6835,7 @@ components:
         id:
           maxLength: 11
           type: string
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           format: string
           readOnly: true
           example: HWI04003219
@@ -6640,7 +6843,7 @@ components:
           maxLength: 7
           minLength: 0
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -6648,7 +6851,7 @@ components:
           maxLength: 7
           minLength: 0
           type: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           format: string
           example: E007290
         type:
@@ -6749,7 +6952,7 @@ components:
       properties:
         id:
           type: integer
-          description: SS&C Hubwise Investor Nationalities identifier
+          description: SS&C Wealth Platform Investor Nationalities identifier
           format: int64
           readOnly: true
           example: 1
@@ -6786,7 +6989,7 @@ components:
       properties:
         id:
           type: integer
-          description: SS&C Hubwise Investor Tax Residencies identifier
+          description: SS&C Wealth Platform Investor Tax Residencies identifier
           format: int64
           readOnly: true
           example: 1
@@ -6840,7 +7043,7 @@ components:
       properties:
         id:
           format: string
-          description: Unique SS&C Hubwise Model identifier
+          description: Unique SS&C Wealth Platform Model identifier
           maxLength: 11
           minLength: 11
           type: string
@@ -6848,7 +7051,7 @@ components:
         providerId:
           format: string
           description: >-
-            Unique SS&C Hubwise tenant ID for the model owner. If not provided the tenantId
+            Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId
             against the token will be used.
           maxLength: 7
           minLength: 7
@@ -6870,11 +7073,11 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
         tenantId:
           maxLength: 7
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -6898,11 +7101,11 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
         tenantId:
           maxLength: 7
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -6947,7 +7150,7 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
 
     Vulnerability:
       required:
@@ -7002,7 +7205,7 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
 
     FeesHeader:
       required:
@@ -7029,28 +7232,28 @@ components:
       properties:
         id:
           format: int64
-          description: SS&C Hubwise Account Fee identifier
+          description: SS&C Wealth Platform Account Fee identifier
           maximum: 99999
           minimum: 0
           type: integer
           readOnly: true
           example: 1
         accountId:
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           maxLength: 11
           minLength: 11
           type: string
           readOnly: true
           example: HW00013451A
         adviserId:
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           maxLength: 7
           minLength: 7
           type: string
           readOnly: true
           example: E000139
         tenantId:
-          description: Unique SS&C Hubwise Tennant identifier
+          description: Unique SS&C Wealth Platform Tennant identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -7078,7 +7281,7 @@ components:
           type: string
           readOnly: true
         code:
-          description: Unique SS&C Hubwise Fee identifier
+          description: Unique SS&C Wealth Platform Fee identifier
           maxLength: 6
           type: string
           example: AFGVCD
@@ -7305,13 +7508,13 @@ components:
       properties:
         id:
           format: int64
-          description: SS&C Hubwise Movement identifier
+          description: SS&C Wealth Platform Movement identifier
           type: integer
           readOnly: true
           example: 2
         accountId:
           format: string
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           maxLength: 11
           minLength: 11
           type: string
@@ -7319,7 +7522,7 @@ components:
           example: HW00013451A
         tenantId:
           format: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -7327,7 +7530,7 @@ components:
           example: HUBWISE
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           maxLength: 7
           minLength: 7
           readOnly: true
@@ -7428,7 +7631,7 @@ components:
           type: string
           example: INVEST_IN_MODEL
         thirdPartyId:
-          description: SS&C Hubwise third party identifier
+          description: SS&C Wealth Platform third party identifier
           maxLength: 2
           minLength: 1
           type: string
@@ -7605,7 +7808,7 @@ components:
           type: string
         copyP45Provided:
           description: >-
-            Where any drawdown event is selected, then we require a copy of the investor’s P45 to
+            Where any drawdown event is selected, then we require a copy of the investor's P45 to
             ensure we have the correct Tax Code.
           default: false
           type: boolean
@@ -7618,7 +7821,7 @@ components:
           example: FP161234567890A
 
     SourceOfFunding:
-      description: This provides details explaining the source of funds. Only applicable for one off self contributions
+      description: This provides details explaining the source of funds. Only applicable for one-off self contributions for retail accounts.
       type: object
       additionalProperties: false
       properties:
@@ -7782,19 +7985,19 @@ components:
       properties:
         id:
           format: int64
-          description: SS&C Hubwise transfer identifier
+          description: SS&C Wealth Platform transfer identifier
           type: integer
           readOnly: true
           example: 0
         accountId:
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           maxLength: 11
           minLength: 11
           type: string
           readOnly: true
           example: HW00013451A
         tenantId:
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -7802,7 +8005,7 @@ components:
           example: HUBWISE
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -7948,7 +8151,7 @@ components:
       type: object
       properties:
         id:
-          description: Unique SS&C Hubwise authorised provider identifier
+          description: Unique SS&C Wealth Platform authorised provider identifier
           maxLength: 10
           minLength: 1
           type: string
@@ -8133,7 +8336,33 @@ components:
           maxLength: 10
         address:
           $ref: "#/components/schemas/AddressPatch"
-        
+
+    DeletedInfo:
+      type: object
+      description: Information once a delete operation is performed.
+      additionalProperties: false
+      properties:
+        records:
+          maxLength: 3
+          type: integer
+          description: Number of records deleted during the delete operation
+          readOnly: true
+          example: 2
+        accountId:
+          maxLength: 11
+          type: string
+          description: Account for which the action is being called.
+          format: string
+          readOnly: true
+          example: HW00013451A
+        ids:
+          type: array
+          description: The ids that were deleted.
+          readOnly: true
+          items:
+            type: integer
+            description: List of ids which are being deleted.
+            readOnly: true
 
   examples:
     400-BadRequest:
