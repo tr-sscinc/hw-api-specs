@@ -1796,6 +1796,10 @@ paths:
                       "providerId": "DFM0001",
                       "date": "2026-01-01"
                     },
+                    "currentYearSubscription" : {
+                      "amountNotTransfered": 8003.07,
+                      "startDate": "2025-05-01"
+                    },
                     "declarations": [
                       {
                         "adviserId": "E273053",
@@ -3709,7 +3713,6 @@ paths:
                         },
                         "currentYearSubscription": {
                           "amount": 10000,
-                          "amountNotTransfered": 7589.33,
                           "startDate": "2025-05-01"
                         },
                         "fee": {
@@ -5927,6 +5930,8 @@ components:
           $ref: "#/components/schemas/ModelHeader"
         incomeOption:
           $ref: "#/components/schemas/IncomeOption"
+        currentYearSubscription:
+          $ref: "#/components/schemas/AccountTransferSubscription"
         declarations:
           writeOnly: true
           type: array
@@ -7976,24 +7981,28 @@ components:
 
     AccountTransferSubscription:
       additionalProperties: false
-      description: Subscription details for an ISA transfer
+      description: | 
+        Subscription details for an ISA or JISA. Applies to:
+        
+          - Transfers in, to record the transfered amount
+          - Investment account, to record the amount not tranferred. 
       type: object
       properties:
+        startDate:
+          format: date
+          description: The first date of the ISA or JISA subscribtion in the current tax year.
+          type: string
+          example: "2025-04-15"
         amount:
           format: double
-          description: The current tax year ISA or JISA subscriptions being transferred
+          description: The current tax year ISA or JISA subscriptions being transferred. Only applicable to transfers, not the investment account.
           type: number
           example: 15000
         amountNotTransfered:
           format: double
-          description: The current tax year ISA or JISA subscriptions being transferred
+          description: The current tax year ISA or JISA subscriptions being transferred. Only applicable to the investment account, not transfers.
           type: number
           example: 15000
-        startDate:
-          format: date
-          description: The first date of the ISA or JISA subscribtion in the current tax year
-          type: string
-          example: "2025-04-15"
 
     AccountTransferPlan:
       additionalProperties: false
