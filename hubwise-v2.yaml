@@ -675,11 +675,7 @@ paths:
       tags:
         - Investors
       summary: Updates an investor
-      description: | 
-        Allows the modification of some of the investor details. 
-        
-        
-        Implements [JSON Merge Patch](https://www.rfc-editor.org/rfc/rfc7386) to apply the modification.
+      description: Allows the modification of some of the investor details. 
       operationId: modifyInvestor
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -697,31 +693,8 @@ paths:
             schema:
               $ref: "#/components/schemas/InvestorPatch"
             examples:
-              Ex0-1:
-                summary: Add a new external reference
-                description: Add a new external reference for the SomeCRM system.
-                value:
-                  {
-                    "externalReferences":
-                      [
-                        {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                          "provider": "CRM"
-                        },
-                        {
-                          "reference": "6878768XX66",
-                          "provider": "SomeCRM"
-                        }
-                      ]
-                  }
-              Ex0-2:
-                summary: Remove all external references
-                value:
-                  {
-                    "externalReferences": []
-                  }
-              Ex1-1:
-                summary: Update investor phone number and notification preference
+              Ex1:
+                summary: Update investor phone number and notifications
                 value:
                   {
                     "individual":
@@ -736,95 +709,14 @@ paths:
                           }
                       }
                   }
-              Ex1-2:
-                summary: Add investor nationality
-                description: Adds a new French secondary nationality
-                value:
-                  {
-                    "individual":
-                      {
-                        "territorialProfile":
-                          {
-                            "nationalities":
-                              [
-                                { 
-                                  "countryCode": "GB", 
-                                  "primary": true 
-                                },
-                                { 
-                                  "countryCode": "FR", 
-                                  "primary": false 
-                                }
-                              ]
-                          }
-                      }
-                  }
-              Ex1-3:
-                summary: Delete investor nationality
-                description: Remove all nationalities other than the primary one
-                value:
-                  {
-                    "individual":
-                      {
-                        "territorialProfile":
-                          {
-                            "nationalities":
-                              [
-                                { 
-                                  "countryCode": "GB", 
-                                  "primary": true 
-                                }
-                              ]
-                          }
-                      }
-                  }
-              Ex1-4:
-                summary: Update investor tax residency
-                description: Adds a new FR primary tax residency and removes the old GB one.
-                value:
-                  {
-                    "individual":
-                      {
-                        "territorialProfile":
-                          {
-                            "taxResidencies":
-                              [
-                                {
-                                  "countryCode": "FR",
-                                  "tin": "0701798458255",
-                                  "primary": true
-                                }
-                              ]
-                          }
-                      }
-                  }
-              Ex1-5:
-                summary: Delete investor tax residency
-                description: Removes all except the primary tax residency
-                value:
-                  {
-                    "individual":
-                      {
-                        "territorialProfile":
-                          {
-                            "taxResidencies":
-                              [
-                                {
-                                  "countryCode": "GB",
-                                  "tin": "AC123456C",
-                                  "primary": true
-                                }
-                              ]
-                          }
-                      }
-                  }
-              Ex2-1:
-                summary: Update the investor's primary address 
+              Ex2:
+                summary: Update investor address with ID 1
                 value:
                   {
                     "addresses":
                       [
                         {
+                          "id": 1,
                           "premisesIdentifier": "14",
                           "line1": "Rosewood Cottage",
                           "line2": "Elm Street",
@@ -833,35 +725,6 @@ paths:
                           "countryCode": "GB",
                           "postCode": "HT1 4AB",
                           "primary": true
-                        }
-                      ]
-                  }
-              Ex2-2:
-                summary: Add a new investor address 
-                description: Adds a new secondary address for the investor
-                value:
-                  {
-                    "addresses":
-                      [
-                        {
-                          "premisesIdentifier": "10",
-                          "line1": "Willow House",
-                          "line2": "Riverside Estate",
-                          "town": "Northford",
-                          "county": "Westshire",
-                          "countryCode": "GB",
-                          "postCode": "NF13 2XY",
-                          "primary": true
-                        },
-                        {
-                          "premisesIdentifier": "Unit 4",
-                          "line1": "Riverside Business Park",
-                          "line2": "Millwright Road",
-                          "town": "Brayford",
-                          "county": "Devon",
-                          "countryCode": "GB",
-                          "postCode": "BR4 7QP",
-                          "primary": false
                         }
                       ]
                   }
@@ -903,6 +766,47 @@ paths:
                         }
                       ]
                   }
+              Ex5:
+                summary: Add a new external reference
+                description: Add a new external reference for the SomeCRM system.
+                value:
+                  {
+                    "externalReferences":
+                      [
+                        {
+                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "provider": "CRM"
+                        },
+                        {
+                          "reference": "6878768XX66",
+                          "provider": "SomeCRM"
+                        }
+                      ]
+                  }
+              Ex6:
+                summary: Remove an external references
+                value:
+                  {
+                    "externalReferences": [
+                      {
+                        "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                        "provider": "CRM"
+                      }
+                    ]
+                  }
+              Ex7:
+                summary: Update corporate investor email
+                value:
+                  {
+                    "corporate":
+                      {
+                        "contactDetails":
+                          {
+                            "email": "info@silveroakholdings.com"
+                          }
+                      }
+                  }
+              
       responses:
         "200":
           description: Invesstor modified successfully
@@ -3809,7 +3713,7 @@ paths:
                           "startDate": "2025-05-01"
                         },
                         "fee": {
-                          "amount": 50,
+                          "amount": 50
                         },
                         "plan": {
                           "reference": "896546",
@@ -5843,6 +5747,7 @@ components:
       example: 5cc9dc98-c5a4-481d-bd3b-3c0d3af67c25
   
   schemas:
+    
     Error:
       type: object
       description: A standard error response.
@@ -6020,18 +5925,13 @@ components:
           $ref: "#/components/schemas/AccountPension"
         model:
           $ref: "#/components/schemas/ModelHeader"
+        incomeOption:
+          $ref: "#/components/schemas/IncomeOption"
         declarations:
           writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
-        bankAccounts:
-          readOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/BankAccount"
-        incomeOption:
-          $ref: "#/components/schemas/IncomeOption"
 
     AccountPatch:
       description: Account Patch Model
