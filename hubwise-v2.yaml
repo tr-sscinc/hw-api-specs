@@ -1797,8 +1797,7 @@ paths:
                       "date": "2026-01-01"
                     },
                     "currentYearSubscription" : {
-                      "amountNotTransfered": 8003.07,
-                      "startDate": "2025-05-01"
+                      "amountNotTransfered": 8003.07
                     },
                     "declarations": [
                       {
@@ -1980,6 +1979,9 @@ paths:
                           "relationship": "OWNER"
                         } 
                       ],
+                      "currentYearSubscription" : {
+                        "amountNotTransfered": 8003.07
+                      },
                       "model": {
                         "id": "DF000000001",
                         "providerId": "DFM0001",
@@ -3731,7 +3733,7 @@ paths:
                     "declarations": [
                       {
                         "adviserId": "E008469",
-                        "templateId": "TRANSFER_IN",
+                        "templateId": "TRANSFR_IN",
                         "acknowledgement": true
                       }
                     ]
@@ -3766,7 +3768,7 @@ paths:
                     "declarations": [
                       {
                         "adviserId": "E008469",
-                        "templateId": "TRANSFER_IN",
+                        "templateId": "TRANSFR_IN",
                         "acknowledgement": true
                       }
                     ]
@@ -3799,7 +3801,7 @@ paths:
                     "declarations": [
                       {
                         "adviserId": "E008469",
-                        "templateId": "TRANSFER_IN",
+                        "templateId": "TRANSFR_IN",
                         "acknowledgement": true
                       }
                     ]
@@ -3838,7 +3840,6 @@ paths:
                           },
                           "currentYearSubscription": {
                             "amount": 10000,
-                            "amountNotTransfered": 7589.33,
                             "startDate": "2025-05-01"
                           },
                           "fee": {
@@ -3866,13 +3867,6 @@ paths:
                               "email": "platforms_transfers_out@standardlife.com"
                             }
                           }
-                        }
-                      ],
-                      "declarations": [
-                        {
-                          "adviserId": "E008469",
-                          "templateId": "TRANSFER_IN",
-                          "acknowledgement": true
                         }
                       ]
                     }
@@ -3925,13 +3919,6 @@ paths:
                           }
                         }
                       }
-                    ],
-                    "declarations": [
-                      {
-                        "adviserId": "E008469",
-                        "templateId": "TRANSFER_IN",
-                        "acknowledgement": true
-                      }
                     ]
                   }
                 Ex3:
@@ -3979,13 +3966,6 @@ paths:
                             "email": "platforms_transfers_out@standardlife.com"
                           }
                         }
-                      }
-                    ],
-                    "declarations": [
-                      {
-                        "adviserId": "E008469",
-                        "templateId": "TRANSFER_IN",
-                        "acknowledgement": true
                       }
                     ]
                   }
@@ -4060,7 +4040,6 @@ paths:
                           },
                           "currentYearSubscription": {
                             "amount": 10000,
-                            "amountNotTransfered": 8000,
                             "startDate": "2025-05-01"
                           },
                           "fee": {
