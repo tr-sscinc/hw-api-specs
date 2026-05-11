@@ -869,6 +869,33 @@ paths:
                           }
                       }
                   }
+              Ex8: 
+                summary: Add corporate investor LEI
+                value:
+                  {
+                    "corporate":
+                      {
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "primary": true,
+                                  "countryCode": "GB",
+                                  "lei": "GB619465555"
+                                }
+                              ]
+                          }
+                      },
+                    "declarations": 
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "LEI_VALID",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
               
       responses:
         "200":
