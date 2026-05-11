@@ -1,7 +1,6 @@
 extends: spectral:oas
 
 rules:
-  # disable default rules that overlap with custom rules
   info-contact: off
   operation-description: off
   # oas3-api-servers: off
