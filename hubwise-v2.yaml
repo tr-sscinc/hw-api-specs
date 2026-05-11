@@ -6412,7 +6412,7 @@ components:
       additionalProperties: false
       properties:
         templateId:
-          description: Unique SS&C Wealth Platform Template identifier
+          description: SS&C Wealth Platform declaration template identifier
           type: string
           enum:
             - AMENDMENT_CONSENT
