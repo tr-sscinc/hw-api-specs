@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.1
+  version: 0.8.3
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -2827,11 +2827,6 @@ paths:
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
                         "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E121191",
-                        "templateId": "CASH_FLOW",
-                        "acknowledgement": true
                       }
                     ]
                   }
@@ -2893,11 +2888,6 @@ paths:
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
                         "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E121191",
-                        "templateId": "CASH_FLOW",
-                        "acknowledgement": true
                       }
                     ]
                   }
@@ -2944,11 +2934,6 @@ paths:
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
                         "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E121191",
-                        "templateId": "CASH_FLOW",
-                        "acknowledgement": true
                       }
                     ]
                   } 
@@ -2973,11 +2958,6 @@ paths:
                       {
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
-                        "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E121191",
-                        "templateId": "PENSION_INCOME",
                         "acknowledgement": true
                       }
                     ]
@@ -3011,11 +2991,6 @@ paths:
                       {
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
-                        "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E121191",
-                        "templateId": "PENSION_INCOME",
                         "acknowledgement": true
                       }
                     ]
@@ -7062,19 +7037,25 @@ components:
             firm should communicate with or support the investor
           example: ARRANGE_WRITTEN_CONFIRMATION_OF_ANY_DISCUSSIONS
           enum:
+            - ALLOW_EXTRA_TIME_FOR_CUSTOMER_TO_ANSWER_PHONE
             - ARRANGE_WRITTEN_CONFIRMATION_OF_ANY_DISCUSSIONS
             - CLIENT_UNABLE_TO_USE_INTERNET
+            - COLOURED_PAPER_BLUE
+            - COLOURED_PAPER_CREAM
+            - COLOURED_PAPER_LILAC
+            - COLOURED_PAPER_YELLOW
+            - DO_NOT_OUTBOUND_CALL
             - EMPATHY_NEEDED_FOR_CUSTOMER
             - ENGLISH_LANGUAGE_SUPPORT_REQUIRED
+            - EXTRA_TIME_REQUIRED_TO_RESPOND_OR_COMPLETE_TASKS
             - LITERACY_OR_NUMERACY_SUPPORT_NEEDED
+            - NONE_REQUIRED
             - ONLINE_SUPPORT_NEEDED
-            - DO_NOT_OUTBOUND_CALL
-            - USE_SIMPLIFIED_LANGUAGE
             - SPEAK_LOUDLY_AND_CLEARLY
             - SPEAK_SLOWLY_FOR_CLIENT
-            - NONE_REQUIRED
+            - UNABLE_TO_COMPLETE_SECURITY_ALONE
+            - USE_SIMPLIFIED_LANGUAGE
             - VARIED_CORRESPONDENCE_FORMAT
-            - ERROR
         startDate:
           type: string
           description: Vulnerabilities start date (any date). Defaulted to current date if not provided.
