@@ -1,8 +1,8 @@
 openapi: 3.0.1
 info:
-  title: SS&C Hubwise API
-  version: 0.8.1
-  description: API Contract to integrate with SS&C Hubwise
+  title: SS&C Wealth Platform API
+  version: 0.8.3
+  description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
   - url: "https://rest-qd.hubwise.co.uk"
@@ -10,9 +10,7 @@ servers:
 
 tags:
   - name: Investors 
-    #description: Enables the management of Hubwise investors, including characteristics of vulnerability.
   - name: Accounts 
-    #description: Enables the management of Hubwise investor accounts, including fees, money movements, and transfers.
 
 security:
   - bearer-token: []
@@ -36,7 +34,7 @@ paths:
         This endpoint should be used when creating new investor records. An investor can have a maximum of 10 addresses, 5 nationalities, and 5 tax residencies.
         
         
-        The SS&C Hubwise Investor ID returned in the response payload uniquely identifies the investor and must be used for all subsequent investor maintenance and account creation operations.
+        The SS&C Wealth Platform Investor ID returned in the response payload uniquely identifies the investor and must be used for all subsequent investor maintenance and account creation operations.
         
         
         The endpoint must be called once for each investor record to be created.
@@ -184,7 +182,7 @@ paths:
                         },
                         {
                           "adviserId": "E273053",
-                          "templateId": "LEI_NOT_REQ",
+                          "templateId": "LEI_VALID",
                           "acknowledgement": true
                         }
                       ]
@@ -248,8 +246,71 @@ paths:
                         },
                         {
                           "adviserId": "E273053",
+                          "templateId": "LEI_VALID",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
+              Ex4:
+                summary: Corporate investor but LEI not provided
+                value:
+                  {
+                    "adviserId": "E273053",
+                    "type": "CORPORATE",
+                    "externalReferences":
+                      [
+                        {
+                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "provider": "CRM Name"
+                        }
+                      ],
+                    "corporate":
+                      {
+                        "legalName": "Silver Oak Holdings Ltd",
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "primary": true,
+                                  "countryCode": "GB"
+                                }
+                              ]
+                          },
+                        "contactDetails":
+                          {
+                            "contactPhone": "01619887766",
+                            "homePhone": "01619887777",
+                            "mobilePhone": "07799123456",
+                            "email": "info@silveroakholdings.co.uk"
+                          },
+                        "notificationPreferences":
+                          { "disableEmails": false, "disableSms": false }
+                      },
+                    "addresses":
+                      [
+                        {
+                          "premisesIdentifier": "15",
+                          "line1": "Maple House",
+                          "line2": "Business Park Avenue",
+                          "town": "Northford",
+                          "county": "Westshire",
+                          "countryCode": "GB",
+                          "postCode": "NF12 8XY",
+                          "primary": true
+                        }
+                      ],
+                    "declarations":
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "IFA_FCA_AUTH",
+                          "acknowledgement": true
+                        },
+                        {
+                          "adviserId": "E273053",
                           "templateId": "LEI_NOT_REQ",
-                          "acknowledgement": false
+                          "acknowledgement": true
                         }
                       ]
                   }
@@ -276,7 +337,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo",
+                            "provider": "CRM",
                           },
                         ],
                       "individual":
@@ -347,7 +408,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "trust":
@@ -388,7 +449,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "corporate":
@@ -462,7 +523,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -490,7 +551,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "individual":
@@ -569,7 +630,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "trust":
@@ -610,7 +671,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "corporate":
@@ -677,17 +738,13 @@ paths:
       tags:
         - Investors
       summary: Updates an investor
-      description: | 
-        Allows the modification of some of the investor details. 
-        
-        
-        Implements [JSON Merge Patch](https://www.rfc-editor.org/rfc/rfc7386) to apply the modification.
+      description: Allows the modification of some of the investor details. 
       operationId: modifyInvestor
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -716,12 +773,13 @@ paths:
                       }
                   }
               Ex2:
-                summary: Update investor address 
+                summary: Update investor address with ID 1
                 value:
                   {
                     "addresses":
                       [
                         {
+                          "id": 1,
                           "premisesIdentifier": "14",
                           "line1": "Rosewood Cottage",
                           "line2": "Elm Street",
@@ -771,6 +829,74 @@ paths:
                         }
                       ]
                   }
+              Ex5:
+                summary: Add a new external reference
+                description: Add a new external reference for the SomeCRM system.
+                value:
+                  {
+                    "externalReferences":
+                      [
+                        {
+                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "provider": "CRM"
+                        },
+                        {
+                          "reference": "6878768XX66",
+                          "provider": "SomeCRM"
+                        }
+                      ]
+                  }
+              Ex6:
+                summary: Remove an external references
+                value:
+                  {
+                    "externalReferences": [
+                      {
+                        "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                        "provider": "CRM"
+                      }
+                    ]
+                  }
+              Ex7:
+                summary: Update corporate investor email
+                value:
+                  {
+                    "corporate":
+                      {
+                        "contactDetails":
+                          {
+                            "email": "info@silveroakholdings.com"
+                          }
+                      }
+                  }
+              Ex8: 
+                summary: Add corporate investor LEI
+                value:
+                  {
+                    "corporate":
+                      {
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "primary": true,
+                                  "countryCode": "GB",
+                                  "lei": "GB619465555"
+                                }
+                              ]
+                          }
+                      },
+                    "declarations": 
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "LEI_VALID",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
+              
       responses:
         "200":
           description: Invesstor modified successfully
@@ -793,7 +919,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo",
+                            "provider": "CRM",
                           },
                         ],
                       "individual":
@@ -884,7 +1010,7 @@ paths:
         Creates one or more characteristics of vulnerability records for an existing investor.
 
 
-        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Hubwise Investor ID generated during investor creation.
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
 
 
         This endpoint should be used when creating new vulnerability records against an existing investor. Each record must include the vulnerability characteristic and its associated service level. If a start date is not provided, it will default to the current date.
@@ -900,7 +1026,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1004,7 +1130,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1082,7 +1208,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1186,7 +1312,7 @@ paths:
         Creates one or more correspondence preference records for an existing investor.
         
         
-        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Hubwise Investor ID generated during investor creation.
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
         
         
         This endpoint should be used when creating new correspondence records against an existing investor. Each correspondence record must be provided in the request. If a start date is not supplied, it will default to the current date.
@@ -1202,7 +1328,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1303,7 +1429,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1379,7 +1505,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1471,6 +1597,182 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /investors/{investorId}/taxations/{taxationId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors Taxation
+      description: This endpoint allows the hard deletion of a single taxation record associated with a specific investor. Primary taxations cannot be deleted unless another taxation is promoted to primary.
+      operationId: removeInvestorTaxation
+      parameters:
+        - name: investorId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: taxationId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Taxation deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Taxation deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /investors/{investorId}/nationalities/{nationalityId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors nationality
+      description: This endpoint allows the hard deletion of a single nationality record associated with a specific investor. Primary nationalities cannot be deleted unless another nationality is promoted to primary. Nationalities cannot be deleted for Corporates and Trusts.
+      operationId: removeInvestorNationality
+      parameters:
+        - name: investorId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: nationalityId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Nationality deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Nationality deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /investors/{investorId}/addresses/{addressId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors Address
+      description: This endpoint allows the soft deletion of a single address record associated with a specific investor. Primary addresses cannot be deleted unless another address is promoted to primary.
+      operationId: removeInvestorAddress
+      parameters:
+        - name: investorId
+          in: path
+          description: Investor ID
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: addressId
+          in: path
+          description: Address ID
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Address deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Address deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+  
   /accounts:
     
     post:
@@ -1491,7 +1793,7 @@ paths:
         Once the account has been created, the product, account type, and currencies cannot be modified. The number and type of related investors permitted for an account varies depending on the product type.
         
         
-        The SS&C Hubwise Account ID returned in the response uniquely identifies the account and must be used for subsequent account maintenance operations.
+        The SS&C Wealth Platform Account ID returned in the response uniquely identifies the account and must be used for subsequent account maintenance operations.
         
         
         New accounts are created in a PENDING status. To activate the account, the account activation endpoint must be called once all required account endpoints have been called (for example Bank Accounts, Money Movements, Transfers, Fees, and Relationships).
@@ -1531,7 +1833,7 @@ paths:
                     "baseCurrency": "GBP",
                     "adviserId": "E001428",
                     "marketSettlementCurrency": "GBP",
-                    "name": "Mr Hub Wise Person",
+                    "name": "Mr John Doe",
                     "model": {
                       "id": "HW000001984",
                       "providerId": "DFM0001",
@@ -1584,6 +1886,9 @@ paths:
                       "providerId": "DFM0001",
                       "date": "2026-01-01"
                     },
+                    "currentYearSubscription" : {
+                      "amountNotTransfered": 8003.07
+                    },
                     "declarations": [
                       {
                         "adviserId": "E273053",
@@ -1611,7 +1916,7 @@ paths:
                     "adviserId": "E273053",
                     "baseCurrency": "GBP",
                     "marketSettlementCurrency": "GBP",
-                    "name": "Mr Hubwise Person",
+                    "name": "Mr John Doe",
                     "externalReferences":
                       [
                         {
@@ -1654,6 +1959,49 @@ paths:
                         }
                       ]
                   }
+              Ex4: 
+                summary: Add a JISA account
+                value:
+                  {
+                    "productId": "JIS",
+                    "type": "ADVISED",
+                    "adviserId": "E008615",
+                    "baseCurrency": "GBP",
+                    "marketSettlementCurrency": "GBP",
+                    "name": "YAYAH JISA",
+                    "investors": [
+                      {
+                        "id": "HW000547564",
+                        "relationship": "OWNER"
+                      },
+                      {
+                        "id": "HW000547522",
+                        "relationship": "REGISTERED_CONTACT"
+                      }
+                    ],
+                    "model": {
+                        "id": "HW000000090",
+                        "providerId": "HUBWISE",
+                        "date": "2020-04-28"
+                      },
+                    "declarations": [
+                       {
+                        "adviserId": "E273053",
+                        "templateId": "TARGET_MARKET",
+                        "acknowledgement": true
+                      },
+                      {
+                        "adviserId": "E008615",
+                        "templateId": "JISA_ACKNOWLEDGEMENT",
+                        "acknowledgement": true
+                      },
+                      {
+                        "adviserId": "E008615",
+                        "templateId": "JISA_NOT_IN_WRITING",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
       responses:
         "201":
           description: Account created successfully.
@@ -1677,7 +2025,7 @@ paths:
                       "status": "PENDING",
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hub Wise Person",
+                      "name": "Mr John Doe",
                       "model": {
                         "id": "HW000001984",
                         "providerId": "DFM0001",
@@ -1697,7 +2045,7 @@ paths:
                       ]
                     }
                 Ex2:
-                  summary: ISA account added
+                  summary: ISA account created
                   value: 
                     {
                       "id": "HW04003259A",
@@ -1721,31 +2069,17 @@ paths:
                           "relationship": "OWNER"
                         } 
                       ],
+                      "currentYearSubscription" : {
+                        "amountNotTransfered": 8003.07
+                      },
                       "model": {
                         "id": "DF000000001",
                         "providerId": "DFM0001",
                         "date": "2026-01-01"
-                      },
-                      "declarations": [
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "TARGET_MARKET",
-                          "acknowledgement": true
-                        },
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "ISA_ACKNOWLEDGEMENT",
-                          "acknowledgement": true
-                        },
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "ISA_NOT_IN_WRITING",
-                          "acknowledgement": true
-                        }
-                      ]
+                      }
                     }
                 Ex3:
-                  summary: Add a SIPP account
+                  summary: SIPP account created
                   value:
                     {
                       "id": "HW04003260A",
@@ -1756,7 +2090,7 @@ paths:
                       "status": "PENDING", 
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hubwise Person",
+                      "name": "Mr John Doe",
                       "externalReferences":
                         [
                           {
@@ -1784,20 +2118,43 @@ paths:
                           "id": "HW000000090",
                           "providerId": "HUBWISE",
                           "date": "2020-04-28"
-                        },
-                      "declarations":
+                        }
+                    }
+                Ex4: 
+                  summary: JISA account created
+                  value:
+                    {
+                      "id": "HW04003260A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
+                      "productId": "JIS",
+                      "type": "ADVISED",
+                      "status": "PENDING", 
+                      "baseCurrency": "GBP",
+                      "marketSettlementCurrency": "GBP",
+                      "name": "YAYAH JISA",
+                      "externalReferences":
                         [
                           {
-                            "adviserId": "E273053",
-                            "templateId": "TARGET_MARKET",
-                            "acknowledgement": true
+                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "provider": "CRM"
                           },
-                          {
-                            "templateId": "SIPP_ACKNOWLEDGEMENT",
-                            "adviserId": "E273053",
-                            "acknowledgement": true
-                          }
-                        ]
+                        ],
+                      "investors": [
+                        {
+                          "id": "HW000547564",
+                          "relationship": "OWNER"
+                        },
+                        {
+                          "id": "HW000547522",
+                          "relationship": "REGISTERED_CONTACT"
+                        }
+                      ],
+                      "model": {
+                          "id": "HW000000090",
+                          "providerId": "HUBWISE",
+                          "date": "2020-04-28"
+                        }
                     }
         "400":
           description: Bad request
@@ -1830,7 +2187,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -1859,7 +2216,7 @@ paths:
                       "status": "ACTIVE",
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hub Wise Person",
+                      "name": "Mr John Doe",
                       "model": {
                         "id": "HW000001984",
                         "providerId": "DFM0001",
@@ -1933,7 +2290,7 @@ paths:
                       "status": "SUSPENDED", 
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hubwise Person",
+                      "name": "Mr John Doe",
                       "externalReferences":
                         [
                           {
@@ -2003,7 +2360,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2018,9 +2375,9 @@ paths:
               Ex1:
                 summary: Update accounts name
                 value:
-                 {
+                  {
                     "name": "Mr Sam John James-Smith"
-                 }
+                  }
               
       responses:
         "200":
@@ -2075,7 +2432,7 @@ paths:
         Creates a new bank account and associates it with an existing investment account.
 
 
-        This endpoint creates GBP and non GBP retail and business bank details. The bank details  are linked to a specified SS&C Hubwise Account ID and SS&C Hubwise Investor ID(s) or SS&C Hubwise Third Party ID(s) and validated.
+        This endpoint creates GBP and non GBP retail and business bank details. The bank details  are linked to a specified SS&C Wealth Platform Account ID and SS&C Wealth Platform Investor ID(s) or SS&C Wealth Platform Third Party ID(s) and validated.
 
 
         The investment account must exist before a bank account can be created and associated with it.
@@ -2085,7 +2442,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2105,6 +2462,7 @@ paths:
                     "number": "87654321",
                     "sortCode": "309894",
                     "holders": [{ "id": "HWI04003219" }],
+                    "primary": true,
                     "declarations": [
                       {
                         "adviserId": "E121191",
@@ -2120,6 +2478,7 @@ paths:
                     "name": "Jane Doe",
                     "number": "87654321",
                     "sortCode": "309894",
+                    "primary": true,
                     "holders": [
                         { "id": "HWI04003219" }, 
                         { "id": "HWI04003220" }
@@ -2162,6 +2521,7 @@ paths:
                     "iban": "DE75512108001245126199",
                     "bicSwift": "DEUTDEFF",
                     "holders": [{ "id": "HWI04003219" }],
+                    "primary": false,
                     "declarations": [
                       {
                         "adviserId": "E121191",
@@ -2194,6 +2554,7 @@ paths:
                     "name": "Jane Doe Enterprises LTD",
                     "number": "87654321",
                     "sortCode": "309894",
+                    "primary": true,
                     "holders": [
                       {
                         "id": "HW00013200A"
@@ -2341,7 +2702,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2473,7 +2834,7 @@ paths:
         A single request can include multiple movements, such as a combination of regular and lump-sum contributions or contributions and withdrawals.
         
         
-        The SS&C Hubwise Movement ID returned in the response uniquely identifies the movement record.
+        The SS&C Wealth Platform Movement ID returned in the response uniquely identifies the movement record.
         
         
         The account record and bank details must exist before creating money movements.
@@ -2482,7 +2843,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -2508,7 +2869,7 @@ paths:
                           "amount": 15000,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "includeNonDailyAssets": false,
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "bank": {
@@ -2536,7 +2897,7 @@ paths:
                           "amount": 1200,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "reference": "HW04003258A-DD",
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "bank": {
@@ -2573,7 +2934,7 @@ paths:
                           "amount": 15000,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "thirdPartyId": "1",
                         "bank": {
@@ -2601,7 +2962,7 @@ paths:
                           "amount": 1200,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "bank": {
                           "number": "50220369",
@@ -2633,7 +2994,7 @@ paths:
                           "amount": 15000,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "reference": "HW04003258A-WD",
                         "investmentInstruction": "INVEST_IN_MODEL",
                         "includeNonDailyAssets": true,
@@ -2650,7 +3011,7 @@ paths:
                           "amount": 1200,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "reference": "HW04003258A-WD",
                         "bank": {
                           "number": "50220369",
@@ -2675,7 +3036,7 @@ paths:
                         "type": "UFPLS",
                         "payer": "SELF",
                         "frequency": "ONE_OFF",
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "isMaximum": true,
                         "bank": {
                           "number": "50220369",
@@ -2687,11 +3048,6 @@ paths:
                       {
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
-                        "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E121191",
-                        "templateId": "DRAWDOWN_INCOME",
                         "acknowledgement": true
                       }
                     ]
@@ -2709,7 +3065,7 @@ paths:
                           "amount": 97000,
                           "currency": "GBP"
                         },
-                        "startDate": "2026-02-02",
+                        "nextDate": "2026-02-02",
                         "bank": {
                           "number": "50220369",
                           "sortCode": "700125"
@@ -2725,11 +3081,6 @@ paths:
                       {
                         "adviserId": "E121191",
                         "templateId": "AMENDMENT_CONSENT",
-                        "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E121191",
-                        "templateId": "DRAWDOWN_INCOME",
                         "acknowledgement": true
                       }
                     ]
@@ -2765,7 +3116,7 @@ paths:
                             "amount": 15000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "includeNonDailyAssets": false,
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -2801,7 +3152,7 @@ paths:
                             "amount": 120,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-DD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": false,
@@ -2840,7 +3191,7 @@ paths:
                             "amount": 15000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "thirdPartyId": "1",
                           "bank": {
@@ -2876,7 +3227,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "reference",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -2909,7 +3260,7 @@ paths:
                             "amount": 15000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-WD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": true,
@@ -2931,7 +3282,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-WD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -2955,7 +3306,7 @@ paths:
                           "type": "UFPLS",
                           "payer": "SELF",
                           "frequency": "ONE_OFF",
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "isMaximum": true,
                           "bank": {
                             "number": "50220369",
@@ -2982,7 +3333,7 @@ paths:
                             "amount": 97000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "bank": {
                             "number": "50220369",
                             "sortCode": "700125"
@@ -3027,7 +3378,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -3063,7 +3414,7 @@ paths:
                             "amount": 15000,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": true,
                           "bank": {
@@ -3099,7 +3450,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-DD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -3150,7 +3501,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -3158,7 +3509,7 @@ paths:
           example: HW00013451A
         - name: moneyMovementId
           in: path
-          description: Unique SS&C Hubwise Money Movement identifier
+          description: Unique SS&C Wealth Platform Money Movement identifier
           required: true
           schema:
             type: string
@@ -3264,7 +3615,7 @@ paths:
                             "amount": 1500,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-DD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": false,
@@ -3303,7 +3654,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "HW04003258A-DD",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "includeNonDailyAssets": false,
@@ -3342,7 +3693,7 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "startDate": "2026-02-02",
+                          "nextDate": "2026-02-02",
                           "reference": "reference",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "bank": {
@@ -3374,13 +3725,13 @@ paths:
        Required information includes the Investment Account ID and the Provider ID.
        
        
-       Both full and partial transfers are supported. Partial transfers are identified by setting the is partial flag to true. For partial in-specie transfers, additional information must be provided to SS&C Hubwise.
+       Both full and partial transfers are supported. Partial transfers are identified by setting the is partial flag to true. For partial in-specie transfers, additional information must be provided to SS&C Wealth Platform.
       
       
        Additional rules include:
       
       
-       1.	The plan reference must match the ceding provider’s format.
+       1.	The plan reference must match the ceding provider's format.
        
        
        2.	The plan type field is mandatory for ISA, JISA, and pension transfers.
@@ -3402,7 +3753,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -3418,40 +3769,40 @@ paths:
                 summary: Create a full ISA cash transfer in for an ISA
                 value: 
                   {
-                  "transfers": [
-                    {
-                      "type": "CASH",
-                      "isPartial": false,
-                      "investmentInstruction": "INVEST_IN_MODEL",
-                      "value": {
-                        "amount": 15000,
-                        "currency": "GBP"
-                      },
-                      "currentYearSubscription": {
-                        "amount": 10000,
-                        "startDate": "2025-05-01"
-                      },
-                      "fee": {
-                        "amount": 50,
-                      },
-                      "plan": {
-                        "reference": "896546",
-                        "holderName": "Mr Hub Wise Person",
-                        "type": "STOCKS_AND_SHARES"
-                      },
-                      "provider": {
-                        "id": "HW009"
+                    "transfers": [
+                      {
+                        "type": "CASH",
+                        "isPartial": false,
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "value": {
+                          "amount": 15000,
+                          "currency": "GBP"
+                        },
+                        "currentYearSubscription": {
+                          "amount": 10000,
+                          "startDate": "2025-05-01"
+                        },
+                        "fee": {
+                          "amount": 50
+                        },
+                        "plan": {
+                          "reference": "896546",
+                          "holderName": "Mr John Doe",
+                          "type": "STOCKS_AND_SHARES"
+                        },
+                        "provider": {
+                          "id": "HW009"
+                        }
                       }
-                    }
-                  ],
-                  "declarations": [
-                    {
-                      "adviserId": "E008469",
-                      "templateId": "TRANSFER_IN",
-                      "acknowledgement": true
-                    }
-                  ]
-                }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E008469",
+                        "templateId": "TRANSFR_IN",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
               Ex2:
                 summary: Create a full SIPP Cash Transfer In
                 value: 
@@ -3471,7 +3822,7 @@ paths:
                         },
                         "plan": {
                           "reference": "896547",
-                          "holderName": "Mr Hub Wise Person",
+                          "holderName": "Mr John Doe",
                           "type": "SIPP"
                         },
                         "provider": {
@@ -3482,7 +3833,7 @@ paths:
                     "declarations": [
                       {
                         "adviserId": "E008469",
-                        "templateId": "TRANSFER_IN",
+                        "templateId": "TRANSFR_IN",
                         "acknowledgement": true
                       }
                     ]
@@ -3491,44 +3842,35 @@ paths:
                 summary: Create a partial GIA inspecie transfer in
                 value: 
                   {
-                  "transfers": [
-                    {
-                      "type": "INSPECIE",
-                      "isPartial": true,
-                      "investmentInstruction": "INVEST_IN_MODEL",
-                      "value": {
-                        "amount": 90000,
-                        "currency": "GBP"
-                      },
-                      "fee": {
-                        "amount": 50
-                      },
-                      "plan": {
-                        "reference": "896548",
-                        "holderName": "Mr Hub Wise Person"
-                      },
-                      "provider": {
-                        "id": "HW009",
-                        "name": "Standard Life",
-                        "address": {
-                          "line1": "Standard Life House",
-                          "line2": "30 Lothian Road",
-                          "line3": "Edinburgh",
-                          "line4": "EH1 2DH",
-                          "postCode": "EH1 2DH"
+                    "transfers": [
+                      {
+                        "type": "INSPECIE",
+                        "isPartial": true,
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "value": {
+                          "amount": 90000,
+                          "currency": "GBP"
+                        },
+                        "fee": {
+                          "amount": 50
+                        },
+                        "plan": {
+                          "reference": "896548",
+                          "holderName": "Mr John Doe"
+                        },
+                        "provider": {
+                          "id": "HW009"
                         }
                       }
-                    }
-                  ],
-                  "declarations": [
-                    {
-                      "adviserId": "E008469",
-                      "templateId": "TRANSFER_IN",
-                      "acknowledgement": true
-                    }
-                  ]
-                }
-        required: true
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E008469",
+                        "templateId": "TRANSFR_IN",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
       responses:
         "200":
           description: Transfers created successfully
@@ -3572,7 +3914,7 @@ paths:
                           },
                           "plan": {
                             "reference": "896546",
-                            "holderName": "Mr Hub Wise Person",
+                            "holderName": "Mr John Doe",
                             "type": "STOCKS_AND_SHARES"
                           },
                           "provider": {
@@ -3590,13 +3932,6 @@ paths:
                               "email": "platforms_transfers_out@standardlife.com"
                             }
                           }
-                        }
-                      ],
-                      "declarations": [
-                        {
-                          "adviserId": "E008469",
-                          "templateId": "TRANSFER_IN",
-                          "acknowledgement": true
                         }
                       ]
                     }
@@ -3630,7 +3965,7 @@ paths:
                         },
                         "plan": {
                           "reference": "896547",
-                          "holderName": "Mr Hub Wise Person",
+                          "holderName": "Mr John Doe",
                           "type": "SIPP"
                         },
                         "provider": {
@@ -3648,13 +3983,6 @@ paths:
                             "email": "platforms_transfers_out@standardlife.com"
                           }
                         }
-                      }
-                    ],
-                    "declarations": [
-                      {
-                        "adviserId": "E008469",
-                        "templateId": "TRANSFER_IN",
-                        "acknowledgement": true
                       }
                     ]
                   }
@@ -3686,7 +4014,7 @@ paths:
                         },
                         "plan": {
                           "reference": "896548",
-                          "holderName": "Mr Hub Wise Person"
+                          "holderName": "Mr John Doe"
                         },
                         "provider": {
                           "id": "HW009",
@@ -3703,13 +4031,6 @@ paths:
                             "email": "platforms_transfers_out@standardlife.com"
                           }
                         }
-                      }
-                    ],
-                    "declarations": [
-                      {
-                        "adviserId": "E008469",
-                        "templateId": "TRANSFER_IN",
-                        "acknowledgement": true
                       }
                     ]
                   }
@@ -3744,7 +4065,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -3793,7 +4114,7 @@ paths:
                           },
                           "plan": {
                             "reference": "896546",
-                            "holderName": "Mr Hub Wise Person",
+                            "holderName": "Mr John Doe",
                             "type": "STOCKS_AND_SHARES"
                           },
                           "provider": {
@@ -3837,7 +4158,7 @@ paths:
                           },
                           "plan": {
                             "reference": "896547",
-                            "holderName": "Mr Hub Wise Person",
+                            "holderName": "Mr John Doe",
                             "type": "SIPP"
                           },
                           "provider": {
@@ -3879,7 +4200,7 @@ paths:
                           },
                           "plan": {
                             "reference": "896548",
-                            "holderName": "Mr Hub Wise Person"
+                            "holderName": "Mr John Doe"
                           },
                           "provider": {
                             "id": "HW009",
@@ -3959,7 +4280,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4084,13 +4405,6 @@ paths:
                               ]
                             }
                           }
-                        ],
-                        "declarations": [
-                          {
-                            "templateId": "AMENDMENT_CONSENT",
-                            "adviserId": "E008469",
-                            "acknowledgement": true
-                          }
                         ]
                       }
                 Ex2:
@@ -4114,13 +4428,6 @@ paths:
                         "invoiceMinimumAmount": 123.45,
                         "invoiceMaximumAmount": 9999.99
                       }
-                    ],
-                    "declarations": [
-                      {
-                        "templateId": "AMENDMENT_CONSENT",
-                        "adviserId": "E008469",
-                        "acknowledgement": true
-                      }
                     ]
                   }
                 Ex3:
@@ -4141,13 +4448,6 @@ paths:
                         "method": "IN_ADVANCE",
                         "invoiceFrequency": "ONE_OFF",
                         "period": "ONE_OFF",
-                      }
-                    ],
-                    "declarations": [
-                      {
-                        "templateId": "AMENDMENT_CONSENT",
-                        "adviserId": "E008469",
-                        "acknowledgement": true
                       }
                     ]
                   }
@@ -4183,7 +4483,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4314,7 +4614,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4322,7 +4622,7 @@ paths:
           example: HW04003259A
         - name: feeId
           in: path
-          description: Unique SS&C Hubwise Fee identifier
+          description: Unique SS&C Wealth Platform Fee identifier
           required: true
           schema:
             type: string
@@ -4396,7 +4696,7 @@ paths:
         - Accounts
       summary: Add or update an income option on an investment account
       description: >-
-        An adviser should be able to manage how investment income for an investment account is handled by Hubwise. 
+        An adviser should be able to manage how investment income for an investment account is handled by SS&C Wealth Platform. 
 
         The income for an account can be:
 
@@ -4411,7 +4711,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4532,7 +4832,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           required: true
           schema:
             type: string
@@ -4561,7 +4861,7 @@ paths:
                       "status": "ACTIVE",
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hub Wise Person",
+                      "name": "Mr John Doe",
                       "model": {
                         "id": "HW000001984",
                         "providerId": "DFM0001",
@@ -4640,7 +4940,7 @@ paths:
                       "status": "ACTIVE", 
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
-                      "name": "Mr Hubwise Person",
+                      "name": "Mr John Doe",
                       "externalReferences":
                         [
                           {
@@ -4705,6 +5005,886 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /accounts/{accountId}/third-parties:
+
+    post:
+      tags:
+        - Accounts
+      summary: Create Third Parties on an account
+      description: >-
+        Allows you to add third parties linked to a SS&C Wealth Platform Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
+
+        
+        Three types of third parties are supported:
+        
+         - Beneficiaries - only use this operation if no beneficiaries already exist on the account; otherwise, use the Replace Beneficiaries operation instead
+         
+         - Power of Attorney - can be used to add the first or additional entries
+         
+         - Employers - only use this endpoint if no employer is already linked as only one employer third-party is permitted per account
+         
+        
+        A single request can contain multiple third parties of different types, provided they all relate to the same investment account.
+        
+        
+        An investment account must already exist before adding third parties, and the Investment Account ID must be provided as a required path parameter.
+      operationId: createThirdParties
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartiesHeader"
+            examples:
+              Ex1:
+                summary: Add an Employer 
+                value: 
+                  {
+                    "thirdParties": [
+                      {
+                        "type": "EMPLOYER",
+                        "companyName": "Bloxwich Engineering",
+                        "companyRegistration": "REGH78451",
+                        "contactDetails": {
+                          "email": "hr@bloxeng.co.uk",
+                          "phone": "01922712162"
+                        },
+                        "address": {
+                          "premisesIdentifier": "38",
+                          "line1": "Saunton Road",
+                          "line2": "Bloxwich",
+                          "town": "Walsall",
+                          "county": "West Midlands",
+                          "countryCode": "GB",
+                          "postCode": "WS3 3TS"
+                        }
+                      }
+                    ]
+                  }
+              Ex2:
+                summary: Add beneficiaries whose percentage adds up to 100
+                value:
+                  {
+                    "thirdParties": [
+                      {
+                        "type": "BENEFICIARY",
+                        "title": "MR",
+                        "firstName": "Ross",
+                        "surname": "Geller",
+                        "contactDetails": {
+                          "email": "rranson@gmail.com",
+                          "phone": "07724104725"
+                        },
+                        "beneficiaryDetails": {
+                          "dateOfBirth": "1981-04-11",
+                          "relationship": "Brother",
+                          "percentage": 60
+                        },
+                        "address": {
+                          "premisesIdentifier": "11",
+                          "line1": "Mallard Avenue",
+                          "line2": "Groby",
+                          "town": "Leicester",
+                          "county": "Leicestershire",
+                          "countryCode": "GB",
+                          "postCode": "LE6 0GR"
+                        }
+                      },
+                      {
+                        "type": "BENEFICIARY",
+                        "title": "MRS",
+                        "firstName": "Tracy",
+                        "surname": "King",
+                        "contactDetails": {
+                          "email": "tking@gmail.com",
+                          "phone": "07724104724"
+                        },
+                        "beneficiaryDetails": {
+                          "dateOfBirth": "1982-11-01",
+                          "relationship": "Sister",
+                          "percentage": 40
+                        },
+                        "address": {
+                          "premisesIdentifier": "14",
+                          "line1": "Eatock Way",
+                          "line2": "Westhoughton",
+                          "town": "Bolton",
+                          "county": "",
+                          "countryCode": "GB",
+                          "postCode": "BL5 2RB"
+                        }
+                      }
+                    ]
+                  }
+              Ex3:
+                summary: Add a power of attorney
+                value:
+                  {
+                    "thirdParties": [
+                      {
+                        "type": "POWER_OF_ATTORNEY",
+                        "title": "MR",
+                        "firstName": "Ray",
+                        "surname": "Ranson",
+                        "contactDetails": {
+                          "email": "rranson@gmail.com",
+                          "phone": "07724104725"
+                        },
+                        "address": {
+                          "premisesIdentifier": "12",
+                          "line1": "Bluebell Close",
+                          "town": "Kendal",
+                          "countryCode": "GB",
+                          "postCode": "LA9 7SH"
+                        }
+                      }
+                    ]
+                  }
+      responses:
+        "201":
+          description: Third parties created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartiesHeader"
+              examples:
+                Ex1:
+                  summary: Added an employer 
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "EMPLOYER",
+                          "companyName": "Bloxwich Engineering",
+                          "companyRegistration": "REGH78451",
+                          "contactDetails": {
+                            "email": "hr@bloxeng.co.uk",
+                            "phone": "01922712162"
+                          },
+                          "address": {
+                            "premisesIdentifier": "38",
+                            "line1": "Saunton Road",
+                            "line2": "Bloxwich",
+                            "town": "Walsall",
+                            "county": "West Midlands",
+                            "countryCode": "GB",
+                            "postCode": "WS3 3TS"
+                          }
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: Added beneficiaries
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 2,
+                          "type": "BENEFICIARY",
+                          "title": "MR",
+                          "firstName": "Ross",
+                          "surname": "Geller",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1981-04-11",
+                            "relationship": "Brother",
+                            "percentage": 60
+                          },
+                          "address": {
+                            "premisesIdentifier": "11",
+                            "line1": "Mallard Avenue",
+                            "line2": "Groby",
+                            "town": "Leicester",
+                            "county": "Leicestershire",
+                            "countryCode": "GB",
+                            "postCode": "LE6 0GR"
+                          }
+                        },
+                        {
+                          "id": 3,
+                          "type": "BENEFICIARY",
+                          "title": "MRS",
+                          "firstName": "Tracy",
+                          "surname": "King",
+                          "contactDetails": {
+                            "email": "tking@gmail.com",
+                            "phone": "07724104724"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1982-11-01",
+                            "relationship": "Sister",
+                            "percentage": 40
+                          },
+                          "address": {
+                            "premisesIdentifier": "14",
+                            "line1": "Eatock Way",
+                            "line2": "Westhoughton",
+                            "town": "Bolton",
+                            "county": "",
+                            "countryCode": "GB",
+                            "postCode": "BL5 2RB"
+                          }
+                        }
+                      ]
+                    }
+                Ex3:
+                  summary: Added a power of attorney
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "POWER_OF_ATTORNEY",
+                          "title": "MR",
+                          "firstName": "Ray",
+                          "surname": "Ranson",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "address": {
+                            "premisesIdentifier": "12",
+                            "line1": "Bluebell Close",
+                            "town": "Kendal",
+                            "countryCode": "GB",
+                            "postCode": "LA9 7SH"
+                          }
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    get:
+      tags:
+        - Accounts
+      summary: Get Third Parties on an account
+      description: >-
+        Returns third parties linked to an Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
+
+
+        Three types of third parties are supported:
+        
+         - Beneficiaries
+         
+         - Power of Attorney
+         
+         - Employers
+      operationId: retrieveThirdParties
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      responses:
+        "200":
+          description: Third parties retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartiesHeader"
+              examples:
+                Ex1:
+                  summary: The third parties against a SIPP account 
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "EMPLOYER",
+                          "companyName": "Bloxwich Engineering",
+                          "companyRegistration": "REGH78451",
+                          "contactDetails": {
+                            "email": "hr@bloxeng.co.uk",
+                            "phone": "01922712162"
+                          },
+                          "address": {
+                            "premisesIdentifier": "38",
+                            "line1": "Saunton Road",
+                            "line2": "Bloxwich",
+                            "town": "Walsall",
+                            "county": "West Midlands",
+                            "countryCode": "GB",
+                            "postCode": "WS3 3TS"
+                          }
+                        },
+                        {
+                          "id": 2,
+                          "type": "BENEFICIARY",
+                          "title": "MR",
+                          "firstName": "Ross",
+                          "surname": "Geller",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1981-04-11",
+                            "relationship": "Brother",
+                            "percentage": 60
+                          },
+                          "address": {
+                            "premisesIdentifier": "11",
+                            "line1": "Mallard Avenue",
+                            "line2": "Groby",
+                            "town": "Leicester",
+                            "county": "Leicestershire",
+                            "countryCode": "GB",
+                            "postCode": "LE6 0GR"
+                          }
+                        },
+                        {
+                          "id": 3,
+                          "type": "BENEFICIARY",
+                          "title": "MRS",
+                          "firstName": "Tracy",
+                          "surname": "King",
+                          "contactDetails": {
+                            "email": "tking@gmail.com",
+                            "phone": "07724104724"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1982-11-01",
+                            "relationship": "Sister",
+                            "percentage": 40
+                          },
+                          "address": {
+                            "premisesIdentifier": "14",
+                            "line1": "Eatock Way",
+                            "line2": "Westhoughton",
+                            "town": "Bolton",
+                            "county": "",
+                            "countryCode": "GB",
+                            "postCode": "BL5 2RB"
+                          }
+                        },
+                        {
+                          "id": 4,
+                          "type": "POWER_OF_ATTORNEY",
+                          "title": "MR",
+                          "firstName": "Ray",
+                          "surname": "Ranson",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "address": {
+                            "premisesIdentifier": "12",
+                            "line1": "Bluebell Close",
+                            "town": "Kendal",
+                            "countryCode": "GB",
+                            "postCode": "LA9 7SH"
+                          }
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    patch:
+      tags:
+        - Accounts
+      summary: Third Parties on an account
+      description: >-
+        Allows partial updates to existing third parties associated with a specified investment account.
+        
+        
+        This endpoint supports updates for third party types of beneficiary, power of attorney and employer. 
+        
+        
+        A single message can include multiple third parties, which may differ in type, as long as they all relate to the same investment account. 
+        
+        
+        Only the fields provided in the request payload will be updated. All omitted fields will remain unchanged. To remove an optional field this should be provided as null in the request payload.
+
+        This endpoint should be used to modify third parties associated with a specified investment account. The third party must already exist, and its identifier must be supplied in the request message. 
+
+        The supported changes are restricted to names, contact details and addresses. 
+        
+        
+        The endpoint does not support updates to the following:
+
+         - the third party type
+
+         - beneficiary details - DOB, relationship or percentage
+      operationId: modifyThirdParties
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartiesHeaderPatch"
+            examples:
+              Ex1:
+                summary: Update an employer company name 
+                value: 
+                  {
+                    "thirdParties": [
+                      {
+                        "id": 1,
+                        "companyName": "Bloxwich Engineering"
+                      }
+                    ]
+                  }
+              Ex2:
+                summary: Update the Power of Attorney's email and phone number
+                value:
+                  {
+                    "thirdParties": [
+                      {
+                        "id": 3,
+                        "contactDetails": {
+                          "email": "rranson@gmail.com",
+                          "phone": "07724104725"
+                        }
+                      }
+                    ]
+                  }      
+      responses:
+        "200":
+          description: Third parties updated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartiesHeader"
+              examples:
+                Ex1:
+                  summary: Employer company name updated. 
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "EMPLOYER",
+                          "companyName": "Bloxwich Engineering",
+                          "companyRegistration": "REGH78451",
+                          "contactDetails": {
+                            "email": "hr@bloxeng.co.uk",
+                            "phone": "01922712162"
+                          },
+                          "address": {
+                            "premisesIdentifier": "38",
+                            "line1": "Saunton Road",
+                            "line2": "Bloxwich",
+                            "town": "Walsall",
+                            "county": "West Midlands",
+                            "countryCode": "GB",
+                            "postCode": "WS3 3TS"
+                          }
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: Power of attorney's phone and email address updated.
+                  value:
+                    {
+                      "thirdParties": [
+                        {
+                          "id": 1,
+                          "type": "POWER_OF_ATTORNEY",
+                          "title": "MR",
+                          "firstName": "Ray",
+                          "surname": "Ranson",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "address": {
+                            "premisesIdentifier": "12",
+                            "line1": "Bluebell Close",
+                            "town": "Kendal",
+                            "countryCode": "GB",
+                            "postCode": "LA9 7SH"
+                          }
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    put:
+      tags:
+        - Accounts
+      summary: Update Beneficiaries on an account
+      description: >-
+        Supports full replacement of all third party beneficies associated with a specified pension account.
+
+
+        This endpoint is intended for pension accounts that already have one or more beneficiaries. The request must include the complete set of beneficiaries to be associated with the account. Any existing beneficiaries that should be retained must be included in the request, as the submitted list will replace the current set.
+
+
+        The endpoint should not be used to replace third party types other than beneficiaries.
+      operationId: replaceBeneficiaries
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartiesHeader"
+            examples:
+              Ex1:
+                summary: Replace the beneficiaries on an account 
+                value: 
+                  {
+                    "thirdParties": [
+                      {
+                        "type": "BENEFICIARY",
+                        "title": "MR",
+                        "firstName": "Ross",
+                        "surname": "Geller",
+                        "contactDetails": {
+                          "email": "rranson@gmail.com",
+                          "phone": "07724104725"
+                        },
+                        "beneficiaryDetails": {
+                          "dateOfBirth": "1981-04-11",
+                          "relationship": "Brother",
+                          "percentage": 60
+                        },
+                        "address": {
+                          "premisesIdentifier": "11",
+                          "line1": "Mallard Avenue",
+                          "line2": "Groby",
+                          "town": "Leicester",
+                          "county": "Leicestershire",
+                          "countryCode": "GB",
+                          "postCode": "LE6 0GR"
+                        }
+                      },
+                      {
+                        "type": "BENEFICIARY",
+                        "title": "MRS",
+                        "firstName": "Tracy",
+                        "surname": "King",
+                        "contactDetails": {
+                          "email": "tking@gmail.com",
+                          "phone": "07724104724"
+                        },
+                        "beneficiaryDetails": {
+                          "dateOfBirth": "1982-11-01",
+                          "relationship": "Sister",
+                          "percentage": 40
+                        },
+                        "address": {
+                          "premisesIdentifier": "14",
+                          "line1": "Eatock Way",
+                          "line2": "Westhoughton",
+                          "town": "Bolton",
+                          "county": "",
+                          "countryCode": "GB",
+                          "postCode": "BL5 2RB"
+                        }
+                      }
+                    ]
+                  }
+      responses:
+        "200":
+          description: Beneficiaries resplaced successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartiesHeader"
+              examples:
+                Ex1:
+                  summary: Beneficiaries on an account were replaced 
+                  value: 
+                    {
+                      "thirdParties": [
+                        {
+                          "type": "BENEFICIARY",
+                          "title": "MR",
+                          "firstName": "Ross",
+                          "surname": "Geller",
+                          "contactDetails": {
+                            "email": "rranson@gmail.com",
+                            "phone": "07724104725"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1981-04-11",
+                            "relationship": "Brother",
+                            "percentage": 60
+                          },
+                          "address": {
+                            "premisesIdentifier": "11",
+                            "line1": "Mallard Avenue",
+                            "line2": "Groby",
+                            "town": "Leicester",
+                            "county": "Leicestershire",
+                            "countryCode": "GB",
+                            "postCode": "LE6 0GR"
+                          }
+                        },
+                        {
+                          "type": "BENEFICIARY",
+                          "title": "MRS",
+                          "firstName": "Tracy",
+                          "surname": "King",
+                          "contactDetails": {
+                            "email": "tking@gmail.com",
+                            "phone": "07724104724"
+                          },
+                          "beneficiaryDetails": {
+                            "dateOfBirth": "1982-11-01",
+                            "relationship": "Sister",
+                            "percentage": 40
+                          },
+                          "address": {
+                            "premisesIdentifier": "14",
+                            "line1": "Eatock Way",
+                            "line2": "Westhoughton",
+                            "town": "Bolton",
+                            "county": "",
+                            "countryCode": "GB",
+                            "postCode": "BL5 2RB"
+                          }
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"      
+
+  /accounts/{accountId}/portfolio-adjustments:
+    
+    post:
+      tags:
+        - Accounts
+      summary: Create Third Parties on an account
+      description: >-
+        This endpoint is used to adjust portfolio holdings.
+
+        Two adjustment types are supported:
+
+          - Rebalancing restores a portfolio to its original target allocation after market movements have caused it to drift away from that mix.
+
+          - Switching changes the investment strategy 
+
+        A request message must include a single instruction to either rebalance an investment account or to change the investment strategy for that account.  Switch instructions must also include details of the new model portfolio.
+
+
+        An investment account must already exist before a portfolio adjustment can be instructed, and the Investment Account ID must be provided as a required path parameter.
+      operationId: createPortfolioAdjustments
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioAdjustment"
+            examples:
+              Ex1:
+                summary: Rebalance portfolio allocations 
+                value: 
+                  {
+                    "type": "REBALANCE",
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  } 
+              Ex2:
+                summary: Switch to a new Model
+                value:
+                  {
+                    "type": "SWITCH",
+                    "model": {
+                        "id": "DF000000001",
+                        "providerId": "DFM0001",
+                        "date": "2026-01-01"
+                      },
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+      responses:
+        "201":
+          description: Third parties created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortfolioAdjustment"
+              examples:
+                Ex1:
+                  summary: Rebalance portfolio allocations 
+                  value: 
+                    {
+                      "id": "00000153931",
+                      "accountId": "HW04121191A",
+                      "tenantId": "HUBWISE",
+                      "type": "REBALANCE"
+                    }
+                Ex2:
+                  summary: Switch to a new Model
+                  value:
+                    {
+                      "id": "00000153932",
+                      "accountId": "HW04003258A",
+                      "tenantId": "HUBWISE",
+                      "type": "SWITCH",
+                      "model": {
+                          "id": "DF000000001",
+                          "providerId": "DFM0001",
+                          "date": "2026-01-01"
+                        }
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
 components:
   
   parameters:
@@ -4736,6 +5916,7 @@ components:
       example: 5cc9dc98-c5a4-481d-bd3b-3c0d3af67c25
   
   schemas:
+    
     Error:
       type: object
       description: A standard error response.
@@ -4813,7 +5994,7 @@ components:
       properties:
         id:
           format: string
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           maxLength: 11
           minLength: 11
           type: string
@@ -4842,6 +6023,7 @@ components:
             - NON_UK_RESIDENT
             - AML
             - CLOSED_SUB_ACCOUNT
+            - XX3
           type: string
           readOnly: true
         activationDate:
@@ -4851,14 +6033,14 @@ components:
           readOnly: true
         tenantId:
           format: string
-          description: SS&C Hubwise tenant ID
+          description: SS&C Wealth Platform tenant ID
           maxLength: 7
           minLength: 7
           type: string
           readOnly: true
         productId:
           format: string
-          description: Unique SS&C Hubwise Product identifier
+          description: Unique SS&C Wealth Platform Product identifier
           maxLength: 3
           minLength: 3
           type: string
@@ -4872,7 +6054,7 @@ components:
           type: string
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -4899,7 +6081,7 @@ components:
           maxLength: 50
           minLength: 1
           type: string
-          example: Mr Hubwise Person
+          example: Mr John Doe
         externalReferences:
           type: array
           items:
@@ -4911,19 +6093,16 @@ components:
         pensionDetails:
           $ref: "#/components/schemas/AccountPension"
         model:
-          $ref: "#/components/schemas/ModelHeader"
+          $ref: "#/components/schemas/Model"
+        incomeOption:
+          $ref: "#/components/schemas/IncomeOption"
+        currentYearSubscription:
+          $ref: "#/components/schemas/AccountTransferSubscription"
         declarations:
           writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
-        bankAccounts:
-          readOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/BankAccount"
-        incomeOption:
-          $ref: "#/components/schemas/IncomeOption"
 
     AccountPatch:
       description: Account Patch Model
@@ -4936,7 +6115,7 @@ components:
           maxLength: 50
           minLength: 1
           type: string
-          example: Mr Hubwise Person
+          example: Mr John Doe
 
     ExternalReference:
       type: object
@@ -5020,7 +6199,6 @@ components:
         - line1
         - postCode
         - premisesIdentifier
-        - primary
         - town
       type: object
       properties:
@@ -5029,50 +6207,86 @@ components:
           description: Id
           format: int64
           readOnly: true
-          example: 1
         primary:
           type: boolean
           description: Primary
-          example: true
+          default: false
         premisesIdentifier:
           maxLength: 75
-          minLength: 0
           type: string
           description: Premises Identifier
           example: "12"
         line1:
           maxLength: 75
-          minLength: 0
           type: string
           description: Address line 1
           example: Rosewood Cottage
         line2:
           maxLength: 75
-          minLength: 0
           type: string
           description: Address line 2
           example: Elm Street
         town:
           maxLength: 75
-          minLength: 0
           type: string
           description: Town or city
           example: Hightown
         county:
           maxLength: 75
-          minLength: 0
           type: string
           description: County
           example: Lancashire
         postCode:
           maxLength: 12
-          minLength: 0
           type: string
           description: Postcode
           example: HT3 4AB
         countryCode:
           maxLength: 3
-          minLength: 0
+          type: string
+          description: Country code
+          example: GB
+
+    AddressPatch:
+      additionalProperties: false
+      type: object
+      properties:
+        primary:
+          type: boolean
+          description: Primary
+          default: false
+        premisesIdentifier:
+          maxLength: 75
+          type: string
+          description: Premises Identifier
+          example: "12"
+        line1:
+          maxLength: 75
+          type: string
+          description: Address line 1
+          example: Rosewood Cottage
+        line2:
+          maxLength: 75
+          type: string
+          description: Address line 2
+          example: Elm Street
+        town:
+          maxLength: 75
+          type: string
+          description: Town or city
+          example: Hightown
+        county:
+          maxLength: 75
+          type: string
+          description: County
+          example: Lancashire
+        postCode:
+          maxLength: 12
+          type: string
+          description: Postcode
+          example: HT3 4AB
+        countryCode:
+          maxLength: 3
           type: string
           description: Country code
           example: GB
@@ -5086,7 +6300,6 @@ components:
       properties:
         id:
           maxLength: 11
-          minLength: 0
           type: string
           description: The identifier of the investor holding the account. For third party account holders use the third party sequence number.
         thirdParty:
@@ -5134,7 +6347,7 @@ components:
           properties:
             accountId:
               format: string
-              description: Unique SS&C Hubwise Account identifier
+              description: Unique SS&C Wealth Platform Account identifier
               maxLength: 11
               minLength: 11
               type: string
@@ -5142,7 +6355,7 @@ components:
               example: HW00013451A
             tenantId:
               format: string
-              description: Unique SS&C Hubwise Tenant identifier
+              description: Unique SS&C Wealth Platform Tenant identifier
               maxLength: 7
               minLength: 7
               type: string
@@ -5150,7 +6363,7 @@ components:
               example: HUBWISE
             adviserId:
               format: string
-              description: Unique SS&C Hubwise Adviser identifier
+              description: Unique SS&C Wealth Platform Adviser identifier
               maxLength: 7
               minLength: 7
               readOnly: true
@@ -5178,6 +6391,9 @@ components:
                 - DELETED
                 - UNCHECKED
                 - WAITING_FOR_CUSTOMER
+            primary:
+              type: boolean
+              default: false
             holders:
               maxItems: 20
               minItems: 1
@@ -5196,13 +6412,27 @@ components:
       additionalProperties: false
       properties:
         templateId:
-          description: Unique SS&C Hubwise Template identifier
-          maxLength: 50
+          description: SS&C Wealth Platform declaration template identifier
           type: string
-          example: TEMPLATE_ID_VALUE
+          enum:
+            - AMENDMENT_CONSENT
+            - BANK_ACCT_VALIDATION
+            - CONFIRM_CORRESPONDENCES_CONSENT
+            - CONFIRM_VULNERABILITY_CONSENT
+            - DRAWDOWN_INCOME
+            - IFA_FCA_AUTH
+            - ISA_ACKNOWLEDGEMENT
+            - ISA_NOT_IN_WRITING
+            - JISA_ACKNOWLEDGEMENT
+            - JISA_NOT_IN_WRITING
+            - LEI_NOT_REQ
+            - LEI_VALID
+            - SIPP_ACKNOWLEDGEMENT
+            - TARGET_MARKET
+            - TRANSFR_IN
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier assigned to the declaration
+          description: Unique SS&C Wealth Platform Adviser identifier assigned to the declaration
           maxLength: 7
           minLength: 7
           type: string
@@ -5226,7 +6456,7 @@ components:
       properties:
         id:
           format: string
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           maxLength: 11
           minLength: 11
           type: string
@@ -5262,21 +6492,18 @@ components:
       properties:
         contactPhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Contact Phone
           format: string
           example: "01619465555"
         homePhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Home Phone
           format: string
           example: "01619464444"
         mobilePhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Mobile Phone
           format: string
@@ -5375,7 +6602,6 @@ components:
             - OTHER
         occupationOtherValue:
           maxLength: 50
-          minLength: 0
           type: string
           description: If the investors occupation is other this field is applicable and mandatory
           format: string
@@ -5440,7 +6666,6 @@ components:
             - OTHER
         industryOtherValue:
           maxLength: 50
-          minLength: 0
           type: string
           description: If the investors industry is other this field is applicable and mandatory
           format: string
@@ -5489,47 +6714,27 @@ components:
       additionalProperties: false
       properties:
         title:
-          maxLength: 15
-          type: string
-          description: The investors title
-          example: OTHER
-          enum:
-            - MR
-            - MASTER
-            - SIR
-            - MRS
-            - MISS
-            - MS
-            - PROF
-            - DR
-            - REV
-            - LORD
-            - LADY
-            - OTHER
+          $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
-          minLength: 0
           type: string
           description: If the investors title is other this field is applicable and mandatory
           format: string
           example: General
         firstName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors First Name
           format: string
           example: Sam
         middleName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Middle Name
           format: string
           example: John
         surname:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Surname
           format: string
@@ -5573,29 +6778,29 @@ components:
         notificationPreferences:
           $ref: "#/components/schemas/Notification"
 
+    Title:
+      type: string
+      enum:
+        - MR
+        - MASTER
+        - SIR
+        - MRS
+        - MISS
+        - MS
+        - PROF
+        - DR
+        - REV
+        - LORD
+        - LADY
+        - OTHER 
+    
     IndividualPatch:
       description: required if investor type is individual or court appointed deputy
       type: object
       additionalProperties: false
       properties:
         title:
-          maxLength: 15
-          type: string
-          description: The investors title
-          example: OTHER
-          enum:
-            - MR
-            - MASTER
-            - SIR
-            - MRS
-            - MISS
-            - MS
-            - PROF
-            - DR
-            - REV
-            - LORD
-            - LADY
-            - OTHER
+          $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
           minLength: 0
@@ -5715,7 +6920,7 @@ components:
         id:
           maxLength: 11
           type: string
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           format: string
           readOnly: true
           example: HWI04003219
@@ -5723,7 +6928,7 @@ components:
           maxLength: 7
           minLength: 0
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -5731,7 +6936,7 @@ components:
           maxLength: 7
           minLength: 0
           type: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           format: string
           example: E007290
         type:
@@ -5790,16 +6995,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Address"
-        vulnerabilities:
-          readOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/Vulnerability"
-        correspondences:
-          readOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/VulnerabilityCorrespondence"
         declarations:
           writeOnly: true
           type: array
@@ -5810,68 +7005,6 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id:
-          maxLength: 11
-          type: string
-          description: Unique SS&C Hubwise Investor identifier
-          format: string
-          readOnly: true
-          example: HWI04003219
-        tenantId:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: Unique SS&C Hubwise Tenant identifier
-          format: string
-          readOnly: true
-          example: HUBWISE
-        adviserId:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: Unique SS&C Hubwise Adviser identifier
-          format: string
-          example: E007290
-        type:
-          type: string
-          description: The type of investor
-          example: INDIVIDUAL
-          enum:
-            - INDIVIDUAL
-            - COURT_APPOINTED_DEPUTY
-            - CORPORATE
-            - BARE_TRUST
-            - VULNERABLE_PERSON_TRUST
-            - PARENT_TRUST
-            - DISCRETIONARY_TRUST
-            - INTEREST_IN_POSSESSION_TRUST
-            - NON_UK_RESIDENT_TRUST
-            - ACCUMULATION_TRUST
-            - MIXED_TRUST
-            - SETTLOR_INTERESTED_TRUST
-            - WILL_TRUST
-        status:
-          type: string
-          description: The current status of the investor
-          readOnly: true
-          example: NEW
-          enum:
-            - NEW
-            - DELETED
-            - INCEPTED
-            - SUSPENDED
-            - FROZEN
-            - DECEASED
-            - PENDING
-            - PRE_AML
-            - REFERRED
-            - FLD_AML
-            - INTENTION_TO_CLOSE
-            - WAITING_AML_DOCUMENTATION
-            - CLOSED
-            - ARCHIVED
-            - NON_UK_RESIDENT
-            - FAS
         externalReferences:
           type: array
           items:
@@ -5904,13 +7037,12 @@ components:
       properties:
         id:
           type: integer
-          description: SS&C Hubwise Investor Nationalities identifier
+          description: SS&C Wealth Platform Investor Nationalities identifier
           format: int64
           readOnly: true
           example: 1
         countryCode:
           maxLength: 3
-          minLength: 0
           type: string
           description: Country Code
           format: String
@@ -5942,13 +7074,12 @@ components:
       properties:
         id:
           type: integer
-          description: SS&C Hubwise Investor Tax Residencies identifier
+          description: SS&C Wealth Platform Investor Tax Residencies identifier
           format: int64
           readOnly: true
           example: 1
         countryCode:
           maxLength: 3
-          minLength: 0
           type: string
           description: Country Code
           format: String
@@ -5960,14 +7091,12 @@ components:
           example: true
         tin:
           maxLength: 35
-          minLength: 0
           type: string
           description: Taxpayer Identification Number (validated for UK), mandatory for an adult individual or court appointed deputy
           format: String
           example: AC123456C
         lei:
           maxLength: 35
-          minLength: 0
           type: string
           description: Legal Entity Identifier (validated via GLEIF), mandatory for a corporate or trust unless exception
           format: String
@@ -5990,7 +7119,7 @@ components:
           items:
             $ref: "#/components/schemas/Taxation"
 
-    ModelHeader:
+    Model:
       description: Investment model linked to the account
       required:
         - id
@@ -5999,7 +7128,7 @@ components:
       properties:
         id:
           format: string
-          description: Unique SS&C Hubwise Model identifier
+          description: Unique SS&C Wealth Platform Model identifier
           maxLength: 11
           minLength: 11
           type: string
@@ -6007,7 +7136,7 @@ components:
         providerId:
           format: string
           description: >-
-            Unique SS&C Hubwise tenant ID for the model owner. If not provided the tenantId
+            Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId
             against the token will be used.
           maxLength: 7
           minLength: 7
@@ -6029,12 +7158,11 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
         tenantId:
           maxLength: 7
-          minLength: 0
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -6058,12 +7186,11 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
         tenantId:
           maxLength: 7
-          minLength: 0
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -6108,7 +7235,7 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
 
     Vulnerability:
       required:
@@ -6136,19 +7263,25 @@ components:
             firm should communicate with or support the investor
           example: ARRANGE_WRITTEN_CONFIRMATION_OF_ANY_DISCUSSIONS
           enum:
+            - ALLOW_EXTRA_TIME_FOR_CUSTOMER_TO_ANSWER_PHONE
             - ARRANGE_WRITTEN_CONFIRMATION_OF_ANY_DISCUSSIONS
             - CLIENT_UNABLE_TO_USE_INTERNET
+            - COLOURED_PAPER_BLUE
+            - COLOURED_PAPER_CREAM
+            - COLOURED_PAPER_LILAC
+            - COLOURED_PAPER_YELLOW
+            - DO_NOT_OUTBOUND_CALL
             - EMPATHY_NEEDED_FOR_CUSTOMER
             - ENGLISH_LANGUAGE_SUPPORT_REQUIRED
+            - EXTRA_TIME_REQUIRED_TO_RESPOND_OR_COMPLETE_TASKS
             - LITERACY_OR_NUMERACY_SUPPORT_NEEDED
+            - NONE_REQUIRED
             - ONLINE_SUPPORT_NEEDED
-            - DO_NOT_OUTBOUND_CALL
-            - USE_SIMPLIFIED_LANGUAGE
             - SPEAK_LOUDLY_AND_CLEARLY
             - SPEAK_SLOWLY_FOR_CLIENT
-            - NONE_REQUIRED
+            - UNABLE_TO_COMPLETE_SECURITY_ALONE
+            - USE_SIMPLIFIED_LANGUAGE
             - VARIED_CORRESPONDENCE_FORMAT
-            - ERROR
         startDate:
           type: string
           description: Vulnerabilities start date (any date). Defaulted to current date if not provided.
@@ -6163,7 +7296,7 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
 
     FeesHeader:
       required:
@@ -6190,28 +7323,28 @@ components:
       properties:
         id:
           format: int64
-          description: SS&C Hubwise Account Fee identifier
+          description: SS&C Wealth Platform Account Fee identifier
           maximum: 99999
           minimum: 0
           type: integer
           readOnly: true
           example: 1
         accountId:
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           maxLength: 11
           minLength: 11
           type: string
           readOnly: true
           example: HW00013451A
         adviserId:
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           maxLength: 7
           minLength: 7
           type: string
           readOnly: true
           example: E000139
         tenantId:
-          description: Unique SS&C Hubwise Tennant identifier
+          description: Unique SS&C Wealth Platform Tennant identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -6239,9 +7372,8 @@ components:
           type: string
           readOnly: true
         code:
-          description: Unique SS&C Hubwise Fee identifier
+          description: Unique SS&C Wealth Platform Fee identifier
           maxLength: 6
-          minLength: 0
           type: string
           example: AFGVCD
         amount:
@@ -6350,7 +7482,6 @@ components:
         description:
           description: The name of the fee
           maxLength: 35
-          minLength: 0
           type: string
           readOnly: true
           example: Adviser Annual Tiered Fee
@@ -6468,13 +7599,13 @@ components:
       properties:
         id:
           format: int64
-          description: SS&C Hubwise Movement identifier
+          description: SS&C Wealth Platform Movement identifier
           type: integer
           readOnly: true
           example: 2
         accountId:
           format: string
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           maxLength: 11
           minLength: 11
           type: string
@@ -6482,7 +7613,7 @@ components:
           example: HW00013451A
         tenantId:
           format: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -6490,7 +7621,7 @@ components:
           example: HUBWISE
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           maxLength: 7
           minLength: 7
           readOnly: true
@@ -6553,11 +7684,10 @@ components:
             - ONE_OFF
           type: string
           example: ONE_OFF
-        startDate:
+        nextDate:
           format: date
           description: >-
-            The intended start date of the money movement. The available dates will depend on the
-            type of movement and the contribution method.
+            The initial date or next date for the money movement. 
           type: string
           example: "2025-01-22"
         endDate:
@@ -6592,7 +7722,7 @@ components:
           type: string
           example: INVEST_IN_MODEL
         thirdPartyId:
-          description: SS&C Hubwise third party identifier
+          description: SS&C Wealth Platform third party identifier
           maxLength: 2
           minLength: 1
           type: string
@@ -6769,7 +7899,7 @@ components:
           type: string
         copyP45Provided:
           description: >-
-            Where any drawdown event is selected, then we require a copy of the investor’s P45 to
+            Where any drawdown event is selected, then we require a copy of the investor's P45 to
             ensure we have the correct Tax Code.
           default: false
           type: boolean
@@ -6782,18 +7912,15 @@ components:
           example: FP161234567890A
 
     SourceOfFunding:
-      description: This provides details explaining the source of funds. Only applicable for one off self contributions
+      description: This provides details explaining the source of funds. Only applicable for one-off self contributions for retail accounts.
       type: object
       additionalProperties: false
       properties:
         id:
-          format: int64
           description: Unique identifier for the source of fund record.
           maximum: 99999
-          minimum: 0
           type: integer
           readOnly: true
-          example: 0
         type:
           description: the Source of Fund type for one off contributions
           enum:
@@ -6949,19 +8076,19 @@ components:
       properties:
         id:
           format: int64
-          description: SS&C Hubwise transfer identifier
+          description: SS&C Wealth Platform transfer identifier
           type: integer
           readOnly: true
           example: 0
         accountId:
-          description: Unique SS&C Hubwise Account identifier
+          description: Unique SS&C Wealth Platform Account identifier
           maxLength: 11
           minLength: 11
           type: string
           readOnly: true
           example: HW00013451A
         tenantId:
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -6969,7 +8096,7 @@ components:
           example: HUBWISE
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           maxLength: 7
           minLength: 7
           type: string
@@ -7040,19 +8167,28 @@ components:
 
     AccountTransferSubscription:
       additionalProperties: false
-      description: Subscription details for an ISA transfer
+      description: | 
+        Subscription details for an ISA or JISA. Applies to:
+        
+          - Transfers in, to record the transfered amount
+          - Investment account, to record the amount not tranferred. 
       type: object
       properties:
-        amount:
-          format: double
-          description: The current tax year ISA or JISA subscriptions being transferred
-          type: number
-          example: 15000
         startDate:
           format: date
-          description: The first date of the ISA or JISA subscribtion in the current tax year
+          description: The first date of the ISA or JISA subscribtion in the current tax year.
           type: string
           example: "2025-04-15"
+        amount:
+          format: double
+          description: The current tax year ISA or JISA subscriptions being transferred. Only applicable to transfers, not the investment account.
+          type: number
+          example: 15000
+        amountNotTransfered:
+          format: double
+          description: The current tax year ISA or JISA subscriptions being transferred. Only applicable to the investment account, not transfers.
+          type: number
+          example: 15000
 
     AccountTransferPlan:
       additionalProperties: false
@@ -7075,7 +8211,7 @@ components:
           maxLength: 70
           minLength: 1
           type: string
-          example: Hubwise Person
+          example: James Holden
         type:
           description: >-
             The type of ISA, JISA and pension plan being transfered. This field is only relevant
@@ -7110,7 +8246,7 @@ components:
       type: object
       properties:
         id:
-          description: Unique SS&C Hubwise authorised provider identifier
+          description: Unique SS&C Wealth Platform authorised provider identifier
           maxLength: 10
           minLength: 1
           type: string
@@ -7145,28 +8281,24 @@ components:
         line2:
           description: Address line 2
           maxLength: 75
-          minLength: 0
           type: string
           readOnly: true
           example: "4 Exchange Quay, Salford Quay"
         line3:
           description: Address line 3
           maxLength: 75
-          minLength: 0
           type: string
           readOnly: true
           example: 15 Dalkeith Road
         line4:
           description: Address line 4
           maxLength: 75
-          minLength: 0
           type: string
           readOnly: true
           example: Edinburgh
         line5:
           description: Address line 5
           maxLength: 75
-          minLength: 0
           type: string
           readOnly: true
         postCode:
@@ -7176,6 +8308,195 @@ components:
           type: string
           readOnly: true
           example: M5 3EE
+
+    ThirdPartiesHeader:
+      type: object
+      additionalProperties: false
+      required:
+        - thirdParties
+      properties:
+        thirdParties:    
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/ThirdParty"
+
+    ThirdParty:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - BENEFICIARY
+            - EMPLOYER
+            - POWER_OF_ATTORNEY
+        title:
+          $ref: "#/components/schemas/Title"
+        firstName:
+          type: string
+          maxLength: 30
+        surname:
+          type: string
+          maxLength: 25
+        contactDetails:
+          type: object
+          additionalProperties: false
+          required:
+            - phone
+            - email
+          properties:
+            phone:
+              type: string
+              maxLength: 25
+            email:
+              type: string
+              maxLength: 50
+        beneficiaryDetails:
+          type: object
+          additionalProperties: false
+          required:
+            - relationship
+            - percentage
+          properties:
+            relationship:
+              type: string
+              maxLength: 30
+            percentage:
+              type: number
+              maximum: 100
+            dateOfBirth:
+              type: string
+              format: date
+        companyName:
+          type: string
+          maxLength: 50
+        companyRegistration:
+          type: string
+          maxLength: 10
+        address:
+          $ref: "#/components/schemas/Address"
+          
+    ThirdPartiesHeaderPatch:
+      type: object
+      additionalProperties: false
+      required:
+        - thirdParties
+      properties:
+        thirdParties:    
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/ThirdPartyPatch"
+
+    ThirdPartyPatch:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+        title:
+          $ref: "#/components/schemas/Title"
+        firstName:
+          type: string
+          maxLength: 30
+        surname:
+          type: string
+          maxLength: 25
+        contactDetails:
+          type: object
+          additionalProperties: false
+          required:
+            - phone
+            - email
+          properties:
+            phone:
+              type: string
+              maxLength: 25
+            email:
+              type: string
+              maxLength: 50
+        companyName:
+          type: string
+          maxLength: 50
+        companyRegistration:
+          type: string
+          maxLength: 10
+        address:
+          $ref: "#/components/schemas/AddressPatch"
+
+    DeletedInfo:
+      type: object
+      description: Information once a delete operation is performed.
+      additionalProperties: false
+      properties:
+        records:
+          maxLength: 3
+          type: integer
+          description: Number of records deleted during the delete operation
+          readOnly: true
+          example: 2
+        accountId:
+          maxLength: 11
+          type: string
+          description: Account for which the action is being called.
+          format: string
+          readOnly: true
+          example: HW00013451A
+        ids:
+          type: array
+          description: The ids that were deleted.
+          readOnly: true
+          items:
+            type: integer
+            description: List of ids which are being deleted.
+            readOnly: true
+
+    PortfolioAdjustment:
+      type: object
+      additionalProperties: false
+      required: 
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - SWITCH
+            - REBALANCE
+        id:
+          description: SS&C Wealth Platform transfer identifier
+          maxLength: 15
+          minLength: 1
+          type: string
+          readOnly: true
+          example: "0006737647"
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier
+          maxLength: 11
+          minLength: 11
+          type: string
+          readOnly: true
+          example: HW00013451A
+        tenantId:
+          description: Unique SS&C Wealth Platform Tenant identifier
+          maxLength: 7
+          minLength: 7
+          type: string
+          readOnly: true
+          example: HUBWISE
+        model:
+          $ref: '#/components/schemas/Model'
+        declarations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Declaration'
 
   examples:
     400-BadRequest:
