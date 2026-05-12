@@ -1,6 +1,6 @@
 # Wesleyan API specification v0.3
 
-## Changelog 0.3.1
+## Changelog 0.8.3
 
  - Renamed SS&C Hubwise -> SS&C Wealth Platform
  - Added a set of new vulnerability service levels
