@@ -1,8 +1,8 @@
 openapi: 3.0.1
 info:
-  title: SS&C Hubwise API
-  version: 0.3.0-Wesleyan
-  description: API Contract to integrate with SS&C Hubwise
+  title: SS&C Wealth Platform API
+  version: 0.3.1-wesleyan
+  description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
   - url: "https://rest-qd.hubwise.co.uk"
@@ -10,7 +10,6 @@ servers:
 
 tags:
   - name: Investors 
-    #description: Enables the management of Hubwise investors, including characteristics of vulnerability.
 
 security:
   - bearer-token: []
@@ -34,7 +33,7 @@ paths:
         This endpoint should be used when creating new investor records. An investor can have a maximum of 10 addresses, 5 nationalities, and 5 tax residencies.
         
         
-        The SS&C Hubwise Investor ID returned in the response payload uniquely identifies the investor and must be used for all subsequent investor maintenance and account creation operations.
+        The SS&C Wealth Platform Investor ID returned in the response payload uniquely identifies the investor and must be used for all subsequent investor maintenance and account creation operations.
         
         
         The endpoint must be called once for each investor record to be created.
@@ -182,7 +181,7 @@ paths:
                         },
                         {
                           "adviserId": "E273053",
-                          "templateId": "LEI_NOT_REQ",
+                          "templateId": "LEI_VALID",
                           "acknowledgement": true
                         }
                       ]
@@ -246,8 +245,71 @@ paths:
                         },
                         {
                           "adviserId": "E273053",
+                          "templateId": "LEI_VALID",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
+              Ex4:
+                summary: Corporate investor but LEI not provided
+                value:
+                  {
+                    "adviserId": "E273053",
+                    "type": "CORPORATE",
+                    "externalReferences":
+                      [
+                        {
+                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "provider": "CRM Name"
+                        }
+                      ],
+                    "corporate":
+                      {
+                        "legalName": "Silver Oak Holdings Ltd",
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "primary": true,
+                                  "countryCode": "GB"
+                                }
+                              ]
+                          },
+                        "contactDetails":
+                          {
+                            "contactPhone": "01619887766",
+                            "homePhone": "01619887777",
+                            "mobilePhone": "07799123456",
+                            "email": "info@silveroakholdings.co.uk"
+                          },
+                        "notificationPreferences":
+                          { "disableEmails": false, "disableSms": false }
+                      },
+                    "addresses":
+                      [
+                        {
+                          "premisesIdentifier": "15",
+                          "line1": "Maple House",
+                          "line2": "Business Park Avenue",
+                          "town": "Northford",
+                          "county": "Westshire",
+                          "countryCode": "GB",
+                          "postCode": "NF12 8XY",
+                          "primary": true
+                        }
+                      ],
+                    "declarations":
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "IFA_FCA_AUTH",
+                          "acknowledgement": true
+                        },
+                        {
+                          "adviserId": "E273053",
                           "templateId": "LEI_NOT_REQ",
-                          "acknowledgement": false
+                          "acknowledgement": true
                         }
                       ]
                   }
@@ -274,7 +336,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo",
+                            "provider": "CRM",
                           },
                         ],
                       "individual":
@@ -345,7 +407,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "trust":
@@ -386,7 +448,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "corporate":
@@ -427,6 +489,18 @@ paths:
                           }
                         ]
                     }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -448,7 +522,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -476,7 +550,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "individual":
@@ -555,7 +629,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "trust":
@@ -596,7 +670,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo"
+                            "provider": "CRM"
                           }
                         ],
                       "corporate":
@@ -654,6 +728,8 @@ paths:
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -661,17 +737,13 @@ paths:
       tags:
         - Investors
       summary: Updates an investor
-      description: | 
-        Allows the modification of some of the investor details. 
-        
-        
-        Implements [JSON Merge Patch](https://www.rfc-editor.org/rfc/rfc7386) to apply the modification.
+      description: Allows the modification of some of the investor details. 
       operationId: modifyInvestor
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -700,12 +772,13 @@ paths:
                       }
                   }
               Ex2:
-                summary: Update investor address 
+                summary: Update investor address with ID 1
                 value:
                   {
                     "addresses":
                       [
                         {
+                          "id": 1,
                           "premisesIdentifier": "14",
                           "line1": "Rosewood Cottage",
                           "line2": "Elm Street",
@@ -755,6 +828,74 @@ paths:
                         }
                       ]
                   }
+              Ex5:
+                summary: Add a new external reference
+                description: Add a new external reference for the SomeCRM system.
+                value:
+                  {
+                    "externalReferences":
+                      [
+                        {
+                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "provider": "CRM"
+                        },
+                        {
+                          "reference": "6878768XX66",
+                          "provider": "SomeCRM"
+                        }
+                      ]
+                  }
+              Ex6:
+                summary: Remove an external references
+                value:
+                  {
+                    "externalReferences": [
+                      {
+                        "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                        "provider": "CRM"
+                      }
+                    ]
+                  }
+              Ex7:
+                summary: Update corporate investor email
+                value:
+                  {
+                    "corporate":
+                      {
+                        "contactDetails":
+                          {
+                            "email": "info@silveroakholdings.com"
+                          }
+                      }
+                  }
+              Ex8: 
+                summary: Add corporate investor LEI
+                value:
+                  {
+                    "corporate":
+                      {
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "primary": true,
+                                  "countryCode": "GB",
+                                  "lei": "GB619465555"
+                                }
+                              ]
+                          }
+                      },
+                    "declarations": 
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "LEI_VALID",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
+              
       responses:
         "200":
           description: Invesstor modified successfully
@@ -777,7 +918,7 @@ paths:
                         [
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "Curo",
+                            "provider": "CRM",
                           },
                         ],
                       "individual":
@@ -837,7 +978,27 @@ paths:
                           }
                         ]
                     }
-        
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /investors/{investorId}/vulnerabilities:
     
     post:
@@ -848,7 +1009,7 @@ paths:
         Creates one or more characteristics of vulnerability records for an existing investor.
 
 
-        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Hubwise Investor ID generated during investor creation.
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
 
 
         This endpoint should be used when creating new vulnerability records against an existing investor. Each record must include the vulnerability characteristic and its associated service level. If a start date is not provided, it will default to the current date.
@@ -864,7 +1025,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -968,7 +1129,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1016,6 +1177,18 @@ paths:
                       "tenantId": "HUBWISE",
                       "vulnerabilities": []
                     }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1034,7 +1207,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1138,7 +1311,7 @@ paths:
         Creates one or more correspondence preference records for an existing investor.
         
         
-        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Hubwise Investor ID generated during investor creation.
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
         
         
         This endpoint should be used when creating new correspondence records against an existing investor. Each correspondence record must be provided in the request. If a start date is not supplied, it will default to the current date.
@@ -1154,7 +1327,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1255,7 +1428,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1301,6 +1474,18 @@ paths:
                       "tenantId": "HUBWISE",
                       "correspondences": []
                     }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1319,7 +1504,7 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
           in: path
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           required: true
           schema:
             type: string
@@ -1411,6 +1596,182 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /investors/{investorId}/taxations/{taxationId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors Taxation
+      description: This endpoint allows the hard deletion of a single taxation record associated with a specific investor. Primary taxations cannot be deleted unless another taxation is promoted to primary.
+      operationId: removeInvestorTaxation
+      parameters:
+        - name: investorId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: taxationId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Taxation deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Taxation deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /investors/{investorId}/nationalities/{nationalityId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors nationality
+      description: This endpoint allows the hard deletion of a single nationality record associated with a specific investor. Primary nationalities cannot be deleted unless another nationality is promoted to primary. Nationalities cannot be deleted for Corporates and Trusts.
+      operationId: removeInvestorNationality
+      parameters:
+        - name: investorId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: nationalityId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Nationality deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Nationality deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /investors/{investorId}/addresses/{addressId}:
+    
+    delete:
+      tags:
+        - Investors
+      summary: Delete an Investors Address
+      description: This endpoint allows the soft deletion of a single address record associated with a specific investor. Primary addresses cannot be deleted unless another address is promoted to primary.
+      operationId: removeInvestorAddress
+      parameters:
+        - name: investorId
+          in: path
+          description: Investor ID
+          required: true
+          schema:
+            type: string
+          example: HWI04003219
+        - name: addressId
+          in: path
+          description: Address ID
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Address deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedInfo'
+              examples:
+                Ex1:
+                  summary: Address deleted
+                  value:
+                    {
+                      "records": 1,
+                      "accountId": "HW00013451A",
+                      "ids": [1]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
 components:
   
   parameters:
@@ -1442,6 +1803,7 @@ components:
       example: 5cc9dc98-c5a4-481d-bd3b-3c0d3af67c25
   
   schemas:
+    
     Error:
       type: object
       description: A standard error response.
@@ -1503,7 +1865,7 @@ components:
           type: string
           maxLength: 2000
           description: Detailed message about the request validation failure.
-
+   
     ExternalReference:
       type: object
       required:
@@ -1533,7 +1895,6 @@ components:
         - line1
         - postCode
         - premisesIdentifier
-        - primary
         - town
       type: object
       properties:
@@ -1542,50 +1903,42 @@ components:
           description: Id
           format: int64
           readOnly: true
-          example: 1
         primary:
           type: boolean
           description: Primary
-          example: true
+          default: false
         premisesIdentifier:
           maxLength: 75
-          minLength: 0
           type: string
           description: Premises Identifier
           example: "12"
         line1:
           maxLength: 75
-          minLength: 0
           type: string
           description: Address line 1
           example: Rosewood Cottage
         line2:
           maxLength: 75
-          minLength: 0
           type: string
           description: Address line 2
           example: Elm Street
         town:
           maxLength: 75
-          minLength: 0
           type: string
           description: Town or city
           example: Hightown
         county:
           maxLength: 75
-          minLength: 0
           type: string
           description: County
           example: Lancashire
         postCode:
           maxLength: 12
-          minLength: 0
           type: string
           description: Postcode
           example: HT3 4AB
         countryCode:
           maxLength: 3
-          minLength: 0
           type: string
           description: Country code
           example: GB
@@ -1595,13 +1948,27 @@ components:
       additionalProperties: false
       properties:
         templateId:
-          description: Unique SS&C Hubwise Template identifier
-          maxLength: 50
+          description: SS&C Wealth Platform declaration template identifier
           type: string
-          example: TEMPLATE_ID_VALUE
+          enum:
+            - AMENDMENT_CONSENT
+            - BANK_ACCT_VALIDATION
+            - CONFIRM_CORRESPONDENCES_CONSENT
+            - CONFIRM_VULNERABILITY_CONSENT
+            - DRAWDOWN_INCOME
+            - IFA_FCA_AUTH
+            - ISA_ACKNOWLEDGEMENT
+            - ISA_NOT_IN_WRITING
+            - JISA_ACKNOWLEDGEMENT
+            - JISA_NOT_IN_WRITING
+            - LEI_NOT_REQ
+            - LEI_VALID
+            - SIPP_ACKNOWLEDGEMENT
+            - TARGET_MARKET
+            - TRANSFR_IN
         adviserId:
           format: string
-          description: Unique SS&C Hubwise Adviser identifier assigned to the declaration
+          description: Unique SS&C Wealth Platform Adviser identifier assigned to the declaration
           maxLength: 7
           minLength: 7
           type: string
@@ -1638,21 +2005,18 @@ components:
       properties:
         contactPhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Contact Phone
           format: string
           example: "01619465555"
         homePhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Home Phone
           format: string
           example: "01619464444"
         mobilePhone:
           maxLength: 20
-          minLength: 0
           type: string
           description: Mobile Phone
           format: string
@@ -1703,7 +2067,6 @@ components:
             - OTHER
         occupationOtherValue:
           maxLength: 50
-          minLength: 0
           type: string
           description: If the investors occupation is other this field is applicable and mandatory
           format: string
@@ -1768,7 +2131,6 @@ components:
             - OTHER
         industryOtherValue:
           maxLength: 50
-          minLength: 0
           type: string
           description: If the investors industry is other this field is applicable and mandatory
           format: string
@@ -1817,47 +2179,27 @@ components:
       additionalProperties: false
       properties:
         title:
-          maxLength: 15
-          type: string
-          description: The investors title
-          example: OTHER
-          enum:
-            - MR
-            - MASTER
-            - SIR
-            - MRS
-            - MISS
-            - MS
-            - PROF
-            - DR
-            - REV
-            - LORD
-            - LADY
-            - OTHER
+          $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
-          minLength: 0
           type: string
           description: If the investors title is other this field is applicable and mandatory
           format: string
           example: General
         firstName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors First Name
           format: string
           example: Sam
         middleName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Middle Name
           format: string
           example: John
         surname:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Surname
           format: string
@@ -1901,29 +2243,29 @@ components:
         notificationPreferences:
           $ref: "#/components/schemas/Notification"
 
+    Title:
+      type: string
+      enum:
+        - MR
+        - MASTER
+        - SIR
+        - MRS
+        - MISS
+        - MS
+        - PROF
+        - DR
+        - REV
+        - LORD
+        - LADY
+        - OTHER 
+    
     IndividualPatch:
       description: required if investor type is individual or court appointed deputy
       type: object
       additionalProperties: false
       properties:
         title:
-          maxLength: 15
-          type: string
-          description: The investors title
-          example: OTHER
-          enum:
-            - MR
-            - MASTER
-            - SIR
-            - MRS
-            - MISS
-            - MS
-            - PROF
-            - DR
-            - REV
-            - LORD
-            - LADY
-            - OTHER
+          $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
           minLength: 0
@@ -2043,7 +2385,7 @@ components:
         id:
           maxLength: 11
           type: string
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
           format: string
           readOnly: true
           example: HWI04003219
@@ -2051,7 +2393,7 @@ components:
           maxLength: 7
           minLength: 0
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -2059,7 +2401,7 @@ components:
           maxLength: 7
           minLength: 0
           type: string
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
           format: string
           example: E007290
         type:
@@ -2118,16 +2460,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Address"
-        vulnerabilities:
-          readOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/Vulnerability"
-        correspondences:
-          readOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/VulnerabilityCorrespondence"
         declarations:
           writeOnly: true
           type: array
@@ -2138,68 +2470,6 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id:
-          maxLength: 11
-          type: string
-          description: Unique SS&C Hubwise Investor identifier
-          format: string
-          readOnly: true
-          example: HWI04003219
-        tenantId:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: Unique SS&C Hubwise Tenant identifier
-          format: string
-          readOnly: true
-          example: HUBWISE
-        adviserId:
-          maxLength: 7
-          minLength: 0
-          type: string
-          description: Unique SS&C Hubwise Adviser identifier
-          format: string
-          example: E007290
-        type:
-          type: string
-          description: The type of investor
-          example: INDIVIDUAL
-          enum:
-            - INDIVIDUAL
-            - COURT_APPOINTED_DEPUTY
-            - CORPORATE
-            - BARE_TRUST
-            - VULNERABLE_PERSON_TRUST
-            - PARENT_TRUST
-            - DISCRETIONARY_TRUST
-            - INTEREST_IN_POSSESSION_TRUST
-            - NON_UK_RESIDENT_TRUST
-            - ACCUMULATION_TRUST
-            - MIXED_TRUST
-            - SETTLOR_INTERESTED_TRUST
-            - WILL_TRUST
-        status:
-          type: string
-          description: The current status of the investor
-          readOnly: true
-          example: NEW
-          enum:
-            - NEW
-            - DELETED
-            - INCEPTED
-            - SUSPENDED
-            - FROZEN
-            - DECEASED
-            - PENDING
-            - PRE_AML
-            - REFERRED
-            - FLD_AML
-            - INTENTION_TO_CLOSE
-            - WAITING_AML_DOCUMENTATION
-            - CLOSED
-            - ARCHIVED
-            - NON_UK_RESIDENT
-            - FAS
         externalReferences:
           type: array
           items:
@@ -2232,13 +2502,12 @@ components:
       properties:
         id:
           type: integer
-          description: SS&C Hubwise Investor Nationalities identifier
+          description: SS&C Wealth Platform Investor Nationalities identifier
           format: int64
           readOnly: true
           example: 1
         countryCode:
           maxLength: 3
-          minLength: 0
           type: string
           description: Country Code
           format: String
@@ -2270,13 +2539,12 @@ components:
       properties:
         id:
           type: integer
-          description: SS&C Hubwise Investor Tax Residencies identifier
+          description: SS&C Wealth Platform Investor Tax Residencies identifier
           format: int64
           readOnly: true
           example: 1
         countryCode:
           maxLength: 3
-          minLength: 0
           type: string
           description: Country Code
           format: String
@@ -2288,14 +2556,12 @@ components:
           example: true
         tin:
           maxLength: 35
-          minLength: 0
           type: string
           description: Taxpayer Identification Number (validated for UK), mandatory for an adult individual or court appointed deputy
           format: String
           example: AC123456C
         lei:
           maxLength: 35
-          minLength: 0
           type: string
           description: Legal Entity Identifier (validated via GLEIF), mandatory for a corporate or trust unless exception
           format: String
@@ -2317,7 +2583,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Taxation"
-    
+
     CorrespondenceHeader:
       required:
         - correspondences
@@ -2328,12 +2594,11 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
         tenantId:
           maxLength: 7
-          minLength: 0
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -2357,12 +2622,11 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Investor identifier
+          description: Unique SS&C Wealth Platform Investor identifier
         tenantId:
           maxLength: 7
-          minLength: 0
           type: string
-          description: Unique SS&C Hubwise Tenant identifier
+          description: Unique SS&C Wealth Platform Tenant identifier
           format: string
           readOnly: true
           example: HUBWISE
@@ -2407,7 +2671,7 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
 
     Vulnerability:
       required:
@@ -2435,19 +2699,25 @@ components:
             firm should communicate with or support the investor
           example: ARRANGE_WRITTEN_CONFIRMATION_OF_ANY_DISCUSSIONS
           enum:
+            - ALLOW_EXTRA_TIME_FOR_CUSTOMER_TO_ANSWER_PHONE
             - ARRANGE_WRITTEN_CONFIRMATION_OF_ANY_DISCUSSIONS
             - CLIENT_UNABLE_TO_USE_INTERNET
+            - COLOURED_PAPER_BLUE
+            - COLOURED_PAPER_CREAM
+            - COLOURED_PAPER_LILAC
+            - COLOURED_PAPER_YELLOW
+            - DO_NOT_OUTBOUND_CALL
             - EMPATHY_NEEDED_FOR_CUSTOMER
             - ENGLISH_LANGUAGE_SUPPORT_REQUIRED
+            - EXTRA_TIME_REQUIRED_TO_RESPOND_OR_COMPLETE_TASKS
             - LITERACY_OR_NUMERACY_SUPPORT_NEEDED
+            - NONE_REQUIRED
             - ONLINE_SUPPORT_NEEDED
-            - DO_NOT_OUTBOUND_CALL
-            - USE_SIMPLIFIED_LANGUAGE
             - SPEAK_LOUDLY_AND_CLEARLY
             - SPEAK_SLOWLY_FOR_CLIENT
-            - NONE_REQUIRED
+            - UNABLE_TO_COMPLETE_SECURITY_ALONE
+            - USE_SIMPLIFIED_LANGUAGE
             - VARIED_CORRESPONDENCE_FORMAT
-            - ERROR
         startDate:
           type: string
           description: Vulnerabilities start date (any date). Defaulted to current date if not provided.
@@ -2462,7 +2732,34 @@ components:
           type: string
           maxLength: 14
           readOnly: true
-          description: Unique SS&C Hubwise Adviser identifier
+          description: Unique SS&C Wealth Platform Adviser identifier
+
+    DeletedInfo:
+      type: object
+      description: Information once a delete operation is performed.
+      additionalProperties: false
+      properties:
+        records:
+          maxLength: 3
+          type: integer
+          description: Number of records deleted during the delete operation
+          readOnly: true
+          example: 2
+        accountId:
+          maxLength: 11
+          type: string
+          description: Account for which the action is being called.
+          format: string
+          readOnly: true
+          example: HW00013451A
+        ids:
+          type: array
+          description: The ids that were deleted.
+          readOnly: true
+          items:
+            type: integer
+            description: List of ids which are being deleted.
+            readOnly: true
 
   examples:
     400-BadRequest:
