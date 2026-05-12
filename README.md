@@ -1,6 +1,6 @@
 # hw-api-specs
 
-Changelog for next API spec version
+Changelog for v0.8.3 API spec 
 
  - Added third party relationships
  - Added primary bank account flag
@@ -9,10 +9,35 @@ Changelog for next API spec version
  - Renamed startDate -> nextDate for movements
  - Added XX3 account status
  - Removed declarations from responses
- - Removed "Mr Hubwise Person" in examples
- - Removed provider name and adress in create transfer request examples
+ - Removed provider name and address in create transfer request example
  - Renamed SS&C Hubwise -> SS&C Wealth Platform
  - Fixed JISA examples
  - Added investor subresource delete endpoints
- - Updated money movements declarations to spec
  - Updated the investor patch examples
+ - Added new investor vulnerability service levels 
+ - Added portfolio adjustments endpoint
+ - Added LEI_VALID declaration for corporate and trust investors
+ - Added enum for declarations
+
+Changelog for v0.8.1 API spec
+
+ - Added missing responses and fixed advisorId -> adviserId
+ - Income options HWIT-8413 and HWIT-8679
+ - Declarations are now write only not read only
+ - API spec version number to 0.8
+ - Removed vulnerability info from GET investor response
+ - Removed bank accounts from GET account response
+ - Added GET bank accounts endpoint (HWIT-8411)
+ - Consolidate API specs so we have only one
+ - reordered the endpoints to be in a logical order
+ - remove investor vulnerabilities and correspondences deletes
+ - resolve money movement PATCH example 2
+ - Add PATCH money movements
+ - Add PATCH fees
+ - Added PATCH account
+ - HWIT-7844: add full withdrawals
+ - fixed a typo in the decscriptions
+ - HWIT-8550: Rename completed to status in fees endpoints
+ - added source of funds
+ - Added PATCH investor and PUT vulnerability and PUT correspondences
+ - read-only decs and reinstated vulnerabilities on investor model

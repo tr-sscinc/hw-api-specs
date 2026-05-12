@@ -182,7 +182,7 @@ paths:
                         },
                         {
                           "adviserId": "E273053",
-                          "templateId": "LEI_NOT_REQ",
+                          "templateId": "LEI_VALID",
                           "acknowledgement": true
                         }
                       ]
@@ -246,8 +246,71 @@ paths:
                         },
                         {
                           "adviserId": "E273053",
+                          "templateId": "LEI_VALID",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
+              Ex4:
+                summary: Corporate investor but LEI not provided
+                value:
+                  {
+                    "adviserId": "E273053",
+                    "type": "CORPORATE",
+                    "externalReferences":
+                      [
+                        {
+                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "provider": "CRM Name"
+                        }
+                      ],
+                    "corporate":
+                      {
+                        "legalName": "Silver Oak Holdings Ltd",
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "primary": true,
+                                  "countryCode": "GB"
+                                }
+                              ]
+                          },
+                        "contactDetails":
+                          {
+                            "contactPhone": "01619887766",
+                            "homePhone": "01619887777",
+                            "mobilePhone": "07799123456",
+                            "email": "info@silveroakholdings.co.uk"
+                          },
+                        "notificationPreferences":
+                          { "disableEmails": false, "disableSms": false }
+                      },
+                    "addresses":
+                      [
+                        {
+                          "premisesIdentifier": "15",
+                          "line1": "Maple House",
+                          "line2": "Business Park Avenue",
+                          "town": "Northford",
+                          "county": "Westshire",
+                          "countryCode": "GB",
+                          "postCode": "NF12 8XY",
+                          "primary": true
+                        }
+                      ],
+                    "declarations":
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "IFA_FCA_AUTH",
+                          "acknowledgement": true
+                        },
+                        {
+                          "adviserId": "E273053",
                           "templateId": "LEI_NOT_REQ",
-                          "acknowledgement": false
+                          "acknowledgement": true
                         }
                       ]
                   }
@@ -805,6 +868,33 @@ paths:
                             "email": "info@silveroakholdings.com"
                           }
                       }
+                  }
+              Ex8: 
+                summary: Add corporate investor LEI
+                value:
+                  {
+                    "corporate":
+                      {
+                        "territorialProfile":
+                          {
+                            "taxResidencies":
+                              [
+                                {
+                                  "primary": true,
+                                  "countryCode": "GB",
+                                  "lei": "GB619465555"
+                                }
+                              ]
+                          }
+                      },
+                    "declarations": 
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "LEI_VALID",
+                          "acknowledgement": true
+                        }
+                      ]
                   }
               
       responses:
@@ -5354,7 +5444,7 @@ paths:
     patch:
       tags:
         - Accounts
-      summary: Update Third Parties on an account
+      summary: Third Parties on an account
       description: >-
         Allows partial updates to existing third parties associated with a specified investment account.
         
@@ -5377,7 +5467,7 @@ paths:
          - the third party type
 
          - beneficiary details - DOB, relationship or percentage
-      operationId: updateThirdParties
+      operationId: modifyThirdParties
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
@@ -5673,6 +5763,128 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"      
 
+  /accounts/{accountId}/portfolio-adjustments:
+    
+    post:
+      tags:
+        - Accounts
+      summary: Create Third Parties on an account
+      description: >-
+        This endpoint is used to adjust portfolio holdings.
+
+        Two adjustment types are supported:
+
+          - Rebalancing restores a portfolio to its original target allocation after market movements have caused it to drift away from that mix.
+
+          - Switching changes the investment strategy 
+
+        A request message must include a single instruction to either rebalance an investment account or to change the investment strategy for that account.  Switch instructions must also include details of the new model portfolio.
+
+
+        An investment account must already exist before a portfolio adjustment can be instructed, and the Investment Account ID must be provided as a required path parameter.
+      operationId: createPortfolioAdjustments
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioAdjustment"
+            examples:
+              Ex1:
+                summary: Rebalance portfolio allocations 
+                value: 
+                  {
+                    "type": "REBALANCE",
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  } 
+              Ex2:
+                summary: Switch to a new Model
+                value:
+                  {
+                    "type": "SWITCH",
+                    "model": {
+                        "id": "DF000000001",
+                        "providerId": "DFM0001",
+                        "date": "2026-01-01"
+                      },
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+      responses:
+        "201":
+          description: Third parties created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortfolioAdjustment"
+              examples:
+                Ex1:
+                  summary: Rebalance portfolio allocations 
+                  value: 
+                    {
+                      "id": "00000153931",
+                      "accountId": "HW04121191A",
+                      "tenantId": "HUBWISE",
+                      "type": "REBALANCE"
+                    }
+                Ex2:
+                  summary: Switch to a new Model
+                  value:
+                    {
+                      "id": "00000153932",
+                      "accountId": "HW04003258A",
+                      "tenantId": "HUBWISE",
+                      "type": "SWITCH",
+                      "model": {
+                          "id": "DF000000001",
+                          "providerId": "DFM0001",
+                          "date": "2026-01-01"
+                        }
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
 components:
   
   parameters:
@@ -5881,7 +6093,7 @@ components:
         pensionDetails:
           $ref: "#/components/schemas/AccountPension"
         model:
-          $ref: "#/components/schemas/ModelHeader"
+          $ref: "#/components/schemas/Model"
         incomeOption:
           $ref: "#/components/schemas/IncomeOption"
         currentYearSubscription:
@@ -6200,10 +6412,24 @@ components:
       additionalProperties: false
       properties:
         templateId:
-          description: Unique SS&C Wealth Platform Template identifier
-          maxLength: 50
+          description: SS&C Wealth Platform declaration template identifier
           type: string
-          example: TEMPLATE_ID_VALUE
+          enum:
+            - AMENDMENT_CONSENT
+            - BANK_ACCT_VALIDATION
+            - CONFIRM_CORRESPONDENCES_CONSENT
+            - CONFIRM_VULNERABILITY_CONSENT
+            - DRAWDOWN_INCOME
+            - IFA_FCA_AUTH
+            - ISA_ACKNOWLEDGEMENT
+            - ISA_NOT_IN_WRITING
+            - JISA_ACKNOWLEDGEMENT
+            - JISA_NOT_IN_WRITING
+            - LEI_NOT_REQ
+            - LEI_VALID
+            - SIPP_ACKNOWLEDGEMENT
+            - TARGET_MARKET
+            - TRANSFR_IN
         adviserId:
           format: string
           description: Unique SS&C Wealth Platform Adviser identifier assigned to the declaration
@@ -6893,7 +7119,7 @@ components:
           items:
             $ref: "#/components/schemas/Taxation"
 
-    ModelHeader:
+    Model:
       description: Investment model linked to the account
       required:
         - id
@@ -8232,6 +8458,45 @@ components:
             type: integer
             description: List of ids which are being deleted.
             readOnly: true
+
+    PortfolioAdjustment:
+      type: object
+      additionalProperties: false
+      required: 
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - SWITCH
+            - REBALANCE
+        id:
+          description: SS&C Wealth Platform transfer identifier
+          maxLength: 15
+          minLength: 1
+          type: string
+          readOnly: true
+          example: "0006737647"
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier
+          maxLength: 11
+          minLength: 11
+          type: string
+          readOnly: true
+          example: HW00013451A
+        tenantId:
+          description: Unique SS&C Wealth Platform Tenant identifier
+          maxLength: 7
+          minLength: 7
+          type: string
+          readOnly: true
+          example: HUBWISE
+        model:
+          $ref: '#/components/schemas/Model'
+        declarations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Declaration'
 
   examples:
     400-BadRequest:
