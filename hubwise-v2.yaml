@@ -6111,7 +6111,7 @@ paths:
         required: true
       responses:
         "201":
-          description: Money Movement(s) created successfully or redirect
+          description: Investment Instructions created successfully or redirect
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
@@ -6125,6 +6125,9 @@ paths:
                   value:
                           {
                             "instructionsUrn": 00000001234,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
                             "requestStatus": "NEW",
                             "instructions": [
                               {
@@ -6163,6 +6166,9 @@ paths:
                   value:
                           {
                             "instructionsUrn": 00000002345,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
                             "requestStatus": "NEW",
                             "instructions": [
                               {
@@ -6200,6 +6206,9 @@ paths:
                   value:
                           {
                             "instructionsUrn": 00000000988,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
                             "requestStatus": "NEW",
                             "instructions": [
                               {
@@ -6224,6 +6233,9 @@ paths:
                   value:
                           {
                             "instructionsUrn": 00000004988,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
                             "requestStatus": "NEW",
                             "instructions": [
                               {
@@ -6308,6 +6320,9 @@ paths:
                   value:
                           {
                             "instructionsUrn": 00000004068,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
                             "requestStatus": "NEW",
                             "instructions": [
                               {
@@ -7436,6 +7451,30 @@ components:
           type: integer
           readOnly: true
           example: 00000134513
+        accountId:
+          format: string
+          description: Unique SS&C Wealth Platform Account identifier
+          maxLength: 11
+          minLength: 11
+          type: string
+          readOnly: true
+          example: HW00013451A
+        tenantId:
+          format: string
+          description: Unique SS&C Wealth Platform Tenant identifier
+          maxLength: 7
+          minLength: 7
+          type: string
+          readOnly: true
+          example: HUBWISE
+        adviserId:
+          format: string
+          description: Unique SS&C Wealth Platform Adviser identifier
+          maxLength: 7
+          minLength: 7
+          readOnly: true
+          type: string
+          example: E273053
         requestStatus:
           description: The status of the overall request
           enum:
@@ -7466,30 +7505,6 @@ components:
           type: integer
           readOnly: true
           example: 2
-        accountId:
-          format: string
-          description: Unique SS&C Wealth Platform Account identifier
-          maxLength: 11
-          minLength: 11
-          type: string
-          readOnly: true
-          example: HW00013451A
-        tenantId:
-          format: string
-          description: Unique SS&C Wealth Platform Tenant identifier
-          maxLength: 7
-          minLength: 7
-          type: string
-          readOnly: true
-          example: HUBWISE
-        adviserId:
-          format: string
-          description: Unique SS&C Wealth Platform Adviser identifier
-          maxLength: 7
-          minLength: 7
-          readOnly: true
-          type: string
-          example: E273053
         tradeStatus:
           description: The status of the individual investment instruction
           enum:
