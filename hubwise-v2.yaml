@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.3
+  version: 0.8.4
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:

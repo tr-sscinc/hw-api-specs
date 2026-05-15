@@ -1,5 +1,10 @@
 # hw-api-specs
 
+Changelog for v0.8.4 API spec
+
+ - Added investment instructions endpoint
+  
+
 Changelog for v0.8.3 API spec 
 
  - Added third party relationships
