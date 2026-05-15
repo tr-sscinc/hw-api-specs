@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.3
+  version: 0.8.4
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -5884,6 +5884,504 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
+ 
+  /accounts/{accountId}/investment-instructions:
+    
+    post:
+      tags:
+        - Accounts
+      summary: Create investment instructions on an account
+      description: |
+        Allows investors, or advisers on their behalf, to create bespoke investment instructions for their accounts, outside of the standard Hubwise model based structure. 
+
+        The endpoint allows buys, sells and/or switch instructions and also allows these to be specified as monetary amounts, quantities or in the case of sells and switches, as percentages of current holdings. 
+        
+        1. Purchases can be specified by either a monetary amount using the action type of “Invest” or a quantity e.g. units or shares using an action type of “Buy”
+
+        2. Sales can be specified as a monetary amount, a “Redemption” or as quantity or percentages (of current holdings) using the action type “Sell”
+
+        3. Switches, are the target side of associated Sells or Redemptions and are instructed as a percentage of proceeds of those instructions.
+
+        Each request payload can contain multiple individual instructions. For example, a request may contain multiple stand-alone instructions, or it might contain a combination of sell/redemption and switch instructions, using the proceeds of sales to switch into one or more alternative instruments. Existing SS&C Hubwise sequencing and synchronised settlement routines will determine the order execution, there is no requirement for the requester to specify a sequence.
+
+        There needs to be enough available cash, stock/units to action all of the requested instructions in a request payload, otherwise the whole request will be rejected and none of the instructions will be actioned.
+        
+        The SS&C Wealth Platform Instruction ID returned in the response uniquely identifies the investment instruction record.
+      operationId: createInvestmentInstructions
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvestmentInstructions"
+            examples:
+              Ex1:
+                summary: create two purchase instructions, one a buy as quantity of an instrument and the other an Invest, as a monetary
+                value: 
+                      {
+                        "instructions": [
+                            {
+                              "action": "BUY",
+                              "requestedBy": "XO",
+                              "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                              },
+                              "orderDetails": {
+                                "quantity": 1250.123456
+                              }
+                            },
+                            {
+                              "action": "INVEST",
+                              "requestedBy": "XO",
+                              "instrumentDetails": {
+                              "isin": "GB00B4L5A675",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                              },      
+                              "orderDetails": {
+                                "amount": 12500.0,
+                                "currency": "GBP"
+                              }
+                            }
+                          ]
+                        }
+              Ex2:
+                summary: Specfies two instructions to sell, one as a quantity of units/stock and one as a percentage of current holdings.
+                value:
+                      {
+                        "instructions": [
+                          {
+                            "action": "SELL",
+                            "requestedBy": "CLIENT",
+                            "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },          
+                            "orderDetails": {
+                              "percentage": 25
+                            }
+                          },
+                          {
+                            "action": "SELL",
+                            "requestedBy": "CLIENT",
+                            "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },          
+                            "orderDetails": {
+                              "quantity": 1000.000
+                            }
+                          }    
+                        ]
+                      }
+              Ex3:
+                summary: Specifies a Redemption, a sale specified as a monetary amount.
+                value:
+                      {
+                        "instructions": [
+                          {
+                            "action": "REDEMPTION",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },          
+                            "orderDetails": {
+                              "amount": 1000.00,
+                              "currency": "GBP"
+                            }
+                          }
+                        ]
+                      }
+              Ex4:
+                summary: A switch instruction, specify sales as monetary amounts (Redemptions) with reinvestment of the proceeds split across two new instruments.
+                value:
+                      {
+                        "instructions": [
+                          {
+                            "action": "REDEMPTION",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },          
+                            "orderDetails": {
+                              "amount": 10000.0,
+                              "currency": "GBP"
+                            }
+                          },
+                          {
+                            "action": "REDEMPTION",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                            "isin": "GB00B3L2U883",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },        
+                            "orderDetails": {
+                              "amount": 10000.0,
+                              "currency": "GBP"
+                            }
+                          },
+                          {
+                            "action": "REDEMPTION",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                            "isin": "GB00B3A3I098",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },        
+                            "orderDetails": {
+                              "amount": 10000.0,
+                              "currency": "GBP"
+                            }
+                          },
+                          {
+                            "action": "SWITCH",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                            "isin": "GB00B4L5A675",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },        
+                            "orderDetails": {
+                              "percentage": 25
+                            }
+                          },
+                          {
+                            "action": "SWITCH",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                            "isin": "GB00B4A2C604",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },        
+                            "orderDetails": {
+                              "percentage": 75
+                            }
+                          }
+                        ]
+                      }
+              Ex5:
+                summary: A switch, with the sale specified as a quantity and the reinvestment of the proceeds into a single new instrument.
+                value:
+                      {
+                        "instructions": [
+                          {
+                            "action": "SELL",
+                            "requestedBy": "DFM",
+                            "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },    
+                            "orderDetails": {
+                              "quantity": 3000.0
+                            }
+                          },
+                          {
+                            "action": "SWITCH",
+                            "requestedBy": "DFM",
+                            "instrumentDetails": {
+                            "isin": "GB00B4L5A675",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                            },          
+                            "orderDetails": {
+                              "percentage": 100
+                            }
+                          }
+                        ]
+                      }
+        required: true
+      responses:
+        "201":
+          description: Investment Instructions created successfully or redirect
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvestmentInstructions"
+              examples: 
+                Ex1:
+                  summary: Created two purchase instructions, one a buy as quantity of an instrument and the other an Invest, as a monetary value
+                  value:
+                          {
+                            "instructionsUrn": 00000001234,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
+                            "requestStatus": "NEW",
+                            "instructions": [
+                              {
+                                "id": 1,
+                                "action": "BUY",
+                                "requestedBy": "XO",
+                                "instrumentDetails": {
+                                "isin": "GB00B4L5Y983",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },  
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "quantity": 1250.123456
+                                }
+                              },
+                              {
+                                "id": 2,
+                                "action": "INVEST",
+                                "requestedBy": "XO",
+                                "instrumentDetails": {
+                                "isin": "GB00B4L5Y983",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },  
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "amount": 12500.0,
+                                  "currency": "GBP"
+                                }
+                              }
+                            ]
+                          }
+                Ex2:
+                  summary: Created two sell instructions, one specified as a quantity of units/stock and one as a percentage of current holdings.
+                  value:
+                          {
+                            "instructionsUrn": 00000002345,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
+                            "requestStatus": "NEW",
+                            "instructions": [
+                              {
+                                "id": 1,
+                                "action": "SELL",
+                                "requestedBy": "CLIENT",
+                                "instrumentDetails": {
+                                  "isin": "GB00B4L5Y983",
+                                  "exchange": "XLON",
+                                  "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "percentage": 25
+                                }
+                              },
+                              {
+                                "id": 2,
+                                "action": "SELL",
+                                "requestedBy": "CLIENT",
+                                "instrumentDetails": {
+                                  "isin": "GB00B4L5Y983",
+                                  "exchange": "XLON",
+                                  "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "quantity": 1000.0
+                                }
+                              }
+                            ]
+                          }
+                Ex3:
+                  summary: Created a single redemption instruction. 
+                  value:
+                          {
+                            "instructionsUrn": 00000000988,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
+                            "requestStatus": "NEW",
+                            "instructions": [
+                              {
+                                "id": 1,
+                                "action": "REDEMPTION",
+                                "requestedBy": "XO",
+                                "instrumentDetails": {
+                                "isin": "GB00B4L5Y983",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },  
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "amount": 1000.00,
+                                  "currency": "GBP"
+                                }
+                              }
+                            ]
+                          }
+                Ex4:
+                  summary: Created a switch reqest, involving three sales as monetary amounts and the reinvestment of the proceeds into two new instruments.
+                  value:
+                          {
+                            "instructionsUrn": 00000004988,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
+                            "requestStatus": "NEW",
+                            "instructions": [
+                              {
+                                "id": 1,
+                                "action": "REDEMPTION",
+                                "requestedBy": "XO",
+                                "instrumentDetails": {
+                                "isin": "GB00B4L5Y983",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW", 
+                                "orderDetails": {
+                                  "amount": 10000.0,
+                                  "currency": "GBP"
+                                }
+                              },
+                              {
+                                "id": 2,
+                                "action": "REDEMPTION",
+                                "requestedBy": "XO",
+                                "instrumentDetails": {
+                                "isin": "GB00B3L2U883",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "amount": 10000.0,
+                                  "currency": "GBP"
+                                }
+                              },
+                              {
+                                "id": 3,
+                                "action": "REDEMPTION",
+                                "requestedBy": "XO",
+                                "instrumentDetails": {
+                                "isin": "GB00B3A3I098",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "amount": 10000.0,
+                                  "currency": "GBP"
+                                }
+                              },
+                              {
+                                "id": 4,
+                                "action": "SWITCH",
+                                "requestedBy": "XO",
+                                "instrumentDetails": {
+                                "isin": "GB00B4L5A675",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "currency": "GBP",
+                                  "percentage": 25
+                                }
+                              },
+                              {
+                                "id": 5,
+                                "action": "SWITCH",
+                                "requestedBy": "XO",
+                                "instrumentDetails": {
+                                "isin": "GB00B4A2C604",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "currency": "GBP",
+                                  "percentage": 75
+                                }
+                              }
+                            ]
+                          }
+                Ex5:
+                  summary: Created a simple switch, selling one instrument and reinvesting the proceeds in another.
+                  value:
+                          {
+                            "instructionsUrn": 00000004068,
+                            "accountId": "HW00013451A",
+                            "tenantId": "HUBWISE",
+                            "adviserId": "E273053",
+                            "requestStatus": "NEW",
+                            "instructions": [
+                              {
+                                "id": 1,
+                                "action": "SELL",
+                                "requestedBy": "DFM",
+                                "instrumentDetails": {
+                                "isin": "GB00B4L5Y983",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW",
+                                "orderDetails": {
+                                  "quantity": 3000.000
+                                }
+                              },
+                              {
+                                "id": 2,
+                                "action": "SWITCH",
+                                "requestedBy": "DFM",      
+                                "instrumentDetails": {
+                                "isin": "GB00B4L5A675",
+                                "exchange": "XLON",
+                                "marketSettlementCurrency": "GBP"
+                                },
+                                "tradeStatus": "NEW",  
+                                "orderDetails": {
+                                  "percentage": 100
+                                }
+                              }
+                            ]
+                          }
+      
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+    
+
+
+
+
+
 
 components:
   
@@ -6909,6 +7407,150 @@ components:
         notificationPreferences:
           $ref: "#/components/schemas/Notification"
 
+
+    InstrumentDetails:
+      required:
+        - isin
+        - exchange
+        - marketSettlementCurrency
+      description: The details of the investment instrument being bought or sold in an investment instruction
+      type: object
+      additionalProperties: false
+      properties:
+        isin:
+          maxLength: 12
+          minLength: 12
+          type: string
+          description: The ISIN identifier for the chosen investment instrument. Must be combined with valid exchange AND marketSettlementCurrency to uniquely identify the instrument. The instrument must be available on the requester's Buy List.
+          example: GB0002405495
+        exchange:
+          maxLength: 4
+          minLength: 4          
+          type: string 
+          description: The exchange market identifier code (MIC) on which the instrument is traded. 
+          example: XLON
+        marketSettlementCurrency:
+          maxLength: 3
+          minLength: 3          
+          type: string 
+          description: The currency in which the specified  instrument is traded. 
+          example: GBP  
+
+    InvestmentInstructions:
+      description: Investment Instructions outside of a standard Model Portfolio
+      required:
+        - instructions
+      type: object
+      additionalProperties: false
+      properties:
+        instructionsUrn:
+          format: integer 
+          description: Unique Request identifier
+          maxLength: 11
+          minLength: 11
+          type: integer
+          readOnly: true
+          example: 00000134513
+        accountId:
+          format: string
+          description: Unique SS&C Wealth Platform Account identifier
+          maxLength: 11
+          minLength: 11
+          type: string
+          readOnly: true
+          example: HW00013451A
+        tenantId:
+          format: string
+          description: Unique SS&C Wealth Platform Tenant identifier
+          maxLength: 7
+          minLength: 7
+          type: string
+          readOnly: true
+          example: HUBWISE
+        adviserId:
+          format: string
+          description: Unique SS&C Wealth Platform Adviser identifier
+          maxLength: 7
+          minLength: 7
+          readOnly: true
+          type: string
+          example: E273053
+        requestStatus:
+          description: The status of the overall request
+          enum:
+            - NEW
+            - FAILED
+          type: string
+          readOnly: true
+          example: NEW
+        instructions:
+          type: array
+          description: An array of investment instructions.
+          items:
+            $ref: "#/components/schemas/InvestmentInstruction"
+
+    InvestmentInstruction:
+      description: Investment Instructions outside of a standard Model Portfolio
+      required:
+        - action
+        - requestedBy
+        - instrumentDetails
+        - orderDetails
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          format: int64
+          description: SS&C Wealth Platform Instruction identifier
+          type: integer
+          readOnly: true
+          example: 2
+        tradeStatus:
+          description: The status of the individual investment instruction
+          enum:
+            - NEW
+            - FAILED
+          type: string
+          readOnly: true
+          example: NEW  
+        action:
+          description: >-
+            The type of investment instruction to action against the account;
+            <ul>
+            <li>BUY: Purchases a specified quantity (units/shares) of an instrument.</li>
+            <li>INVEST: Buy a specified monetary amount of an instrument.</li>
+            <li>SELL: Sell a quantity or percentage of an individual stock item.</li>
+            <li>REDEMPTION: Sell a specified monetary amount of an individual stock item.</li>
+            <li>SWITCH: Used to identify the target side of a switch. Specified as a percentage to reinvest.</li>
+            </ul>
+          enum:
+            - BUY
+            - INVEST
+            - SELL
+            - REDEMPTION
+            - SWITCH
+          type: string
+          example: REDEMPTION
+        requestedBy:
+          description: >-
+            Who is the decision maker in regards to this request, used for Transaction Reporting and/or downstream processing
+            <ul>
+            <li>DFM: A Discretionary Manager making a decision either ad-hoc or by algorithm e.g. rebalance</li>
+            <li>CLIENT: An Advised Client. Client makes the ultimate decision to proceed, but on the basis of advice received.</li>
+            <li>XO: An Execution Only Client. No Adviser involvement, the client is making the decision and providing the instruction(s)</li>
+            </ul>
+          enum:
+            - DFM
+            - CLIENT
+            - XO
+          type: string
+          example: XO
+        instrumentDetails:
+          $ref: "#/components/schemas/InstrumentDetails" 
+        orderDetails:
+          $ref: "#/components/schemas/OrderDetails" 
+
+
     Investor:
       required:
         - addresses
@@ -7066,6 +7708,38 @@ components:
           description: A flag to disable sms notifications. If not provided it will default to enabled.
           format: Boolean
           example: false
+
+    OrderDetails:
+      type: object
+      additionalProperties: false
+      properties:
+        quantity:
+          type: number
+          description: The quantity of the instrument the requester wants to BUY or SELL
+          format: number
+          maxLength: 15
+          minLength: 1 
+          example: 1000
+        amount:
+          type: number
+          description: The monetary amount of the instrument, in the specified currency, the requester wants to INVEST or REDEEM
+          maxLength: 15
+          minLength: 1 
+          example: 10000
+        currency:
+          type: string
+          description: The currency in which to perform the instruction. Must match the base currency of the account.
+          format: string
+          maxLength: 3
+          minLength: 3
+          example: USD
+        percentage:
+          type: integer
+          description: The percentage of the instrument the requester want to sell or re-invest as the proceeds or sells or redemptions. Only whole percentages accepted.
+          format: integer
+          maxLength: 3
+          minLength: 1 
+          example: 50
 
     Taxation:
       type: object
