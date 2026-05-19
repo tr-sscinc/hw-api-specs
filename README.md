@@ -3,7 +3,7 @@
 Changelog for v0.8.4 API spec
 
  - Added investment instructions endpoint
-  
+ - Added non-pension illustrations endpoint
 
 Changelog for v0.8.3 API spec 
 

@@ -11,6 +11,7 @@ servers:
 tags:
   - name: Investors 
   - name: Accounts 
+  - name: Illustrations
 
 security:
   - bearer-token: []
@@ -6377,7 +6378,406 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
     
+  /non-pension-illustrations:
 
+    post:
+      tags:
+        - Illustrations
+      summary: Create an Illustration for non pension products
+      description: |
+        Creates an illustration based on the supplied scenario.
+
+
+        Illustration rules:
+
+
+        - If `accountId` is null or omitted, an anonymous illustration is generated and `illustrationDetails` is mandatory.
+        
+        - If `accountId` is provided, a non-anonymous illustration is generated and `illustrationDetails` becomes optional.
+        
+        - `illustrationDetails` may still be supplied for non-anonymous illustrations to override or amend account data for the scenario.
+        
+        - For anonymous illustrations, at least one money movement in or transfer must be supplied to generate an illustration.
+        
+        - For anonymous illustrations, `illustrationDetails.account.productId` is mandatory.
+        
+        - For anonymous ISA or JISA illustrations, `investors.dateOfBirth` is mandatory.
+        
+        - For anonymous illustrations, either `illustrationDetails.model` or `illustrationDetails.assets` must be supplied.
+        
+        - For non-anonymous illustrations, `model` and `assets` are optional.
+
+
+        Money movement rules:
+
+        - For anonymous illustrations, `moneyMovements.id` and `moneyMovements.action` must be blank.
+        
+        - For non-anonymous illustrations, `moneyMovements.action` must be supplied.
+        
+        - For non-anonymous illustrations, `moneyMovements.id` must be supplied when `action` is `AMEND` or `REMOVE`.
+        
+        - For non-anonymous illustrations, `moneyMovements.id` must be blank when `action` is `ADD`.
+
+
+        Fee rules:
+
+        - For anonymous illustrations, `fees.id` and `fees.action` must be blank.
+
+        - For non-anonymous illustrations, `fees.id` must be supplied when `action` is `AMEND` or `REMOVE`.
+
+        - For non-anonymous illustrations, `fees.id` must be blank when `action` is `ADD`.
+
+
+        Transfer rules:
+
+        - For anonymous illustrations, `transfers.id` and `transfers.action` must be blank.
+
+        - For non-anonymous illustrations, `transfers.action` must be supplied.
+
+        - For non-anonymous illustrations, `transfers.id` must be blank when `action` is `ADD`.
+
+        - For non-anonymous illustrations, only `ADD` is supported for transfers; `AMEND` and `REMOVE` are not supported.
+
+      operationId: createNonPensionIllustration
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: generateData
+          in: query
+          required: false
+          schema:
+            type: boolean
+            enum: [true, false]
+            default: true
+          description: Indicates whether illustration data should be generated.
+        - name: generateDocument
+          in: query
+          required: false
+          schema:
+            type: boolean
+            enum: [true, false]
+            default: true
+          description: Indicates whether an illustration document should be generated.
+        
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IllustrationNPRequest"
+            examples:
+              Ex1:
+                summary: Generate a anonymous Illustration for non pension product with model
+                value:
+                  {
+                    "illustrationDetails": {
+                      "account": {
+                        "productId": "HIS"
+                      },
+                      "investors": [
+                        {
+                          "dateOfBirth": "1990-05-15"
+                        }
+                      ],
+                      "model": {
+                        "id": "HW000000090",
+                        "providerId": "HUBWISE",
+                        "date": "2020-04-28"
+                      },
+                      "moneyMovements": [
+                        {
+                          "id": 1,
+                          "action":"ADD",
+                          "type": "CONTRIBUTIONS",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP",
+                            "crystallised": 0
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "id": 2,
+                          "action":"ADD",
+                          "type": "ADVISER_ANNUAL",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28"
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "id":1,
+                          "action":"ADD",
+                          "type": "CASH",
+                          "isPartial": false,
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP",
+                            "crystallised": 0
+                          },
+                          "currentYearSubscription": {
+                            "amount": 10000,
+                            "startDate": "2025-05-01"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ],
+                      "projectionConfig": {
+                        "startDate": "2025-06-01",
+                        "endDate": "2035-06-01",
+                        "feeGroupValueOutsideAccount": 25000
+                      }
+                    }
+                  }
+              Ex2:
+                summary: Generate a anonymous Illustration for non pension product with assets
+                value:
+                  {
+                      "illustrationDetails": {
+                      "account": {
+                        "productId": "HIS"
+                      },
+                      "investors": [
+                        {
+                          "dateOfBirth": "1990-05-15"
+                        }
+                      ],
+                      "assets": {
+                            "type": "STANDARD",
+                            "allocation": [
+                              {
+                                "modelId": "HW000000045",
+                                "providerId": "HUBWISE",
+                                "date": "2020-04-28",
+                                "percentage": 60
+                              },
+                              {
+                                "modelId": "DFM00000078",
+                                "providerId": "DFM0001",
+                                "date": "2024-07-05",
+                                "percentage": 40
+                              }
+                            ]
+                      },
+                      "moneyMovements": [
+                        {
+                          "id":1,
+                          "action":"ADD",
+                          "type": "CONTRIBUTIONS",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP",
+                            "crystallised": 0
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "id":1,
+                          "action":"ADD",
+                          "type": "ADVISER_ANNUAL",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28"
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "id":1,
+                          "action":"ADD",
+                          "type": "CASH",
+                          "isPartial": false,
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP",
+                            "crystallised": 0
+                          },
+                          "currentYearSubscription": {
+                            "amount": 10000,
+                            "startDate": "2025-05-01"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ],
+                      "projectionConfig": {
+                        "startDate": "2025-06-01",
+                        "endDate": "2035-06-01",
+                        "feeGroupValueOutsideAccount": 25000
+                      }
+                    }
+                  }
+              Ex3:
+                summary: Generate a non anonymous Illustration for non pension with no changes
+                value:
+                  {
+                    "accountId":"HW000000108"
+                  }
+              Ex4:
+                summary: Generate a non anonymous Illustration for non pension product with add/amend/remove changes
+                value:
+                  {
+                    "accountId":"HW000000108",
+                    "illustrationDetails": {
+                      "moneyMovements": [
+                        {
+                          "id":5,
+                          "action":"AMEND",
+                          "type": "CONTRIBUTIONS",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP",
+                            "crystallised": 0
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        },
+                        {
+                          "id":1,
+                          "action":"REMOVE",
+                          "type": "CONTRIBUTIONS",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP",
+                            "crystallised": 0
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        },
+                        {
+                          "id":1,
+                          "action":"ADD",
+                          "type": "CONTRIBUTIONS",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP",
+                            "crystallised": 0
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "id":1,
+                          "action":"ADD",
+                          "type": "ADVISER_ANNUAL",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28"
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "id":1,
+                          "action":"ADD",
+                          "type": "CASH",
+                          "isPartial": false,
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP",
+                            "crystallised": 0
+                          },
+                          "currentYearSubscription": {
+                            "amount": 10000,
+                            "startDate": "2025-05-01"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ],
+                      "projectionConfig": {
+                        "startDate": "2025-06-01",
+                        "endDate": "2035-06-01",
+                        "feeGroupValueOutsideAccount": 25000
+                      }
+                    }
+                  }
+              
+              
+      responses:
+        "201":
+          description: Illustration generated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IllustrationNPResponse"
 
 
 
@@ -9171,6 +9571,691 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Declaration'
+
+    DrawdownAnnuityBasis:
+      type: object
+      description: Drawdown annuity basis request model
+      properties:
+        frequency:
+          type: string
+          description: Annuity Frequency
+          example: MONTHLY
+          default: MONTHLY
+          enum:
+            - ANNUALLY
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - ONE_OFF
+
+        guaranteedPeriod:
+          type: integer
+          format: int32
+          description: Guaranteed period(whole number only)
+          example: 5
+          default: 5
+
+        spousePercentage:
+          type: number
+          description: Spouse percentage
+          maximum: 100
+          example: 50
+          default: 50
+
+        changeIndex:
+          type: string
+          description: Change index
+          example: Fixed
+          default: Fixed
+
+        changePercentage:
+          type: number
+          description: Change percentage
+          maximum: 100
+          example: 0
+          default: 0
+
+    ProjectionConfig:
+      type: object
+      properties:
+        investmentYears:
+          type: integer
+          format: int32
+          description: Number of investment years
+          minimum: 1
+          maximum: 100
+          example: 10
+          default: 10
+
+        drawdownAnnuityBasis:
+          $ref: '#/components/schemas/DrawdownAnnuityBasis'
+
+        retirementAge:
+          type: integer
+          format: int32
+          description: Retirement Age
+          maximum: 100
+          example: 65
+
+        vatRate:
+          type: number
+          description: Vat rate
+          readOnly: true
+
+        inflationToApply:
+          type: number
+          description: Inflation to apply
+          readOnly: true
+
+        taxRate:
+          type: number
+          description: Tax rate
+          readOnly: true
+
+    IllustrationInstrument:
+      type: object
+      description: Asset and model allocation details used for the illustration scenario.
+      properties:
+        type:
+          type: string
+          enum:
+            - MULTIPLE_INVESTMENT_STRATEGY
+            - STANDARD
+          example: MULTIPLE_INVESTMENT_STRATEGY
+        allocation:
+          type: array
+          items:
+            type: object
+            properties:
+              allocationPercentage:
+                type: number
+                example: 35
+              isin:
+                type: string
+                example: GB0000000KL1
+              currency:
+                type: string
+                description: Market currency
+                enum:
+                  - USD
+                  - GBP
+                  - EUR
+                example: GBP
+              exchange:
+                type: string
+                example: XLON
+              modelId:
+                type: string
+                example: HW000000045
+              providerId:
+                type: string
+                example: HUBWISE
+              date:
+                format: date
+                description: The date against the model. If not provided the latest date will be selected.
+                type: string
+                example: "2020-04-28"
+              percentage:
+                type: number
+                example: 60
+
+    Instrument:
+      type: object
+      description: >
+        Instrument request model.
+        Either 'model' OR 'instruments' should be provided, not both.
+        If 'model' is supplied, it overrides instrument-based portfolio construction.
+      required:
+        - allocationPercentage
+        - currency
+        - exchange
+        - isin
+
+      properties:
+        allocationPercentage:
+          type: number
+          description: Allocation percentage
+          example: 30.75
+
+        isin:
+          type: string
+          minLength: 0
+          maxLength: 12
+          description: ISIN code
+          example: GB00B012T521
+
+        currency:
+          type: string
+          description: Market currency
+          enum:
+            - USD
+            - GBP
+            - EUR
+          example: GBP
+
+        exchange:
+          type: string
+          description: Exchange
+          enum:
+            - XLON
+            - TGAT
+            - UNQU
+          example: XLON
+
+    IllustrationNPAccountMovement:
+      description: money movements in and out of an account
+      required:
+        - action
+      type: object
+      additionalProperties: false
+      properties:
+      
+        id:
+          format: int64
+          description: SS&C Hubwise movement identifier.
+          type: integer
+          example: 2
+      
+        action:
+          $ref: "#/components/schemas/IllustrationAction"
+        
+        type:
+          description: >-
+            The type of money movement being specified, the API can support payments into and out
+            of the account. Withdrawals are only valid for non pension products. UFPLS,
+            FLEXI_ACCESS_INCOME, FLEXI_ACCESS_PCLS are only valid for pension products.
+          enum:
+            - CONTRIBUTIONS
+            - WITHDRAWALS
+            - UFPLS
+            - FLEXI_ACCESS_INCOME
+            - FLEXI_ACCESS_PCLS
+          type: string
+          example: CONTRIBUTIONS
+        
+        payer:
+          description: >-
+            Whether the payment is being made by the individual owner(s) of the account or an
+            employer on their behalf. Employer contributions are only applicable to pension
+            products. Defaulted to SELF if not provided.
+          enum:
+            - SELF
+            - EMPLOYER
+          type: string
+          example: SELF
+        frequency:
+          description: >-
+            The frequency of this specific money movement. One Off Direct Debit contributions are
+            not supported. Single Withdrawals are not supported at onboarding, but can be added
+            once the account is active.
+          enum:
+            - ANNUALLY
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - ONE_OFF
+          type: string
+          example: ONE_OFF
+        nextDate:
+          format: date
+          description: >-
+            The intended start date of the money movement. The available dates will depend on the
+            type of movement and the contribution method.
+          type: string
+          example: "2025-01-22"
+        endDate:
+          format: date
+          description: >-
+            The date on which the movement is intended to cease, this would be used, for example,
+            for regular withdrawals or drawdown arrangements.
+          type: string
+        
+        investmentInstruction:
+          description: >-
+            The choice of whether to invest immediately into a model or hold in cash for a
+            contribution.
+          enum:
+            - LEAVE_IN_CASH
+            - INVEST_IN_MODEL
+          type: string
+          example: INVEST_IN_MODEL
+        
+        value:
+          $ref: "#/components/schemas/Value"
+        
+        fee:
+          $ref: "#/components/schemas/MovementFee"  
+    
+    IllustrationAccountFee:
+      description: Fees associated to the account
+      required:
+        - action
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: SS&C Hubwise fee identifier.
+          example: 1
+        action:
+          $ref: "#/components/schemas/IllustrationAction"
+        type:
+          type: string
+          enum:
+            - ADVISER_ANNUAL
+            - ADVISER_INITIAL
+            - ADVISER_ONE_OFF
+            - PORTFOLIO_MANAGEMENT
+            - INVESTMENT_SERVICE
+            - DISCRETIONARY_MANAGEMENT_ANNUAL
+          example: ADVISER_ANNUAL
+        code:
+          type: string
+          maxLength: 6
+          minLength: 0
+          example: AFGVCD
+        amount:
+          type: number
+          example: 1000
+        percentage:
+          type: number
+          example: 0.12
+        currency:
+          type: string
+          example: GBP
+        vatIncluded:
+          type: boolean
+          example: true
+        startDate:
+          type: string
+          format: date
+          example: "2025-04-28"
+        endDate:
+          type: string
+          format: date
+          example: "2027-04-28"
+
+    IllustrationAccountTransfer:
+      description: Subset of transfer fields supported for IllustrationScenarioB.
+      type: object
+      additionalProperties: false
+      required:
+        - action
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: SS&C Hubwise transfer identifier.
+          minimum: 0
+          maximum: 99999
+          example: 1
+        action:
+          allOf:
+            - $ref: "#/components/schemas/IllustrationAction"
+          description: Action to be performed on the transfer.
+        type:
+          type: string
+          enum:
+            - CASH
+            - IN_SPECIE
+          example: CASH
+        isPartial:
+          type: boolean
+          example: false
+        investmentInstruction:
+          type: string
+          enum:
+            - INVEST_IN_MODEL
+            - LEAVE_IN_CASH
+          example: INVEST_IN_MODEL
+        value:
+          $ref: "#/components/schemas/Value"
+        currentYearSubscription:
+          type: object
+          additionalProperties: false
+          properties:
+            amount:
+              type: number
+              example: 10000
+            startDate:
+              type: string
+              format: date
+              example: "2025-05-01"
+        fee:
+          $ref: "#/components/schemas/TransferFee"    
+              
+    IllustrationAction:
+      description: Action to be performed.
+      type: string
+      enum:
+        - ADD
+        - REMOVE
+        - AMEND
+      example: ADD
+
+    ProjectionConfigNP:
+      type: object
+      description: Non-pension projection configuration settings.
+      properties:
+
+        startDate:
+          type: string
+          format: date
+          description: Projection start date.
+          example: "2025-01-01"
+
+        endDate:
+          type: string
+          format: date
+          description: Projection end date.
+          example: "2035-01-01"
+
+        feeGroupValueOutsideAccount:
+          type: number
+          description: Fee group value held outside the account.
+          example: 25000.00
+
+        isaContributionsTaxYearToDate:
+          type: number
+          description: Current year subscription completed on ISA account. Applicable only for ISA products.
+          example: 2500.00
+    
+    IllustrationNPRequest:
+      type: object
+      properties:
+        accountId:
+           type: string
+           nullable: true
+           example: "ACC123456"
+           description: Account identifier used for generating a non-anonymous illustration.
+          
+        illustrationDetails:
+          type: object
+          description: Request to generate a non-pension illustration.
+          properties:
+
+            account:
+              type: object
+              description: |
+                    Account details for the illustration.
+                    
+              properties:
+                productId:
+                  description: Product identifier for the illustration.
+                  type: string
+                  example: GIA
+
+            investors:
+              type: array
+              description: |
+                Investor details.
+              items:
+                type: object
+                properties:
+                  dateOfBirth:
+                    type: string
+                    format: date
+                    example: "2000-10-10"
+                    description: Investor date of birth.
+            
+            model:
+              allOf:
+                - $ref: "#/components/schemas/Model"
+              description: Model details used for the illustration scenario.
+                          
+            assets:
+              $ref: "#/components/schemas/IllustrationInstrument"
+
+            moneyMovements:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationNPAccountMovement"
+                description: Money movements in and out of the account.
+            
+            fees:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationAccountFee"
+                description: Fees associated to the account.
+
+            transfers:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationAccountTransfer"
+                description: |
+                  Transfer into the account.
+
+            projectionConfig:
+              $ref: "#/components/schemas/ProjectionConfigNP"
+
+    IllustrationNPResponse:
+      type: object
+      properties:
+        message:
+          type: object
+          properties:
+            result:
+              type: object
+              properties:
+                illustrationResults:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/IllustrationResult'
+
+            document:
+              $ref: '#/components/schemas/IllustrationDocument'  
+    
+    IllustrationResult:
+      type: object
+      properties:
+        projectionType:
+          type: string
+          description: Indicates whether the illustration class is new or existing.
+          enum:
+            - NEW
+            - EXISTING
+          example: NEW
+          x-enum-descriptions:
+            - New
+            - Existing
+
+        summary:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationSummary'
+
+        reductionInYield:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReductionInYield'
+
+        deductions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Deduction'
+
+        adviserFees:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdviserFee'
+
+    IllustrationSummary:
+      type: object
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - LOW
+            - MEDIUM
+            - HIGH
+          example: MEDIUM
+          x-enum-descriptions:
+            - Low
+            - Medium
+            - High
+
+        periodStartDate:
+          type: string
+          format: date
+          example: "2026-01-01"
+
+        periodEndDate:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        openingFundValue:
+          type: number
+          format: double
+          example: 10000
+
+        newFundInvestment:
+          type: number
+          format: double
+          example: 500
+
+        totalIncome:
+          type: number
+          format: double
+          example: 200
+
+        totalIncomeToDate:
+          type: number
+          format: double
+          example: 200
+
+        closingFundValue:
+          type: number
+          format: double
+          example: 10700
+
+    ReductionInYield:
+      type: object
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        growthRatePercentage:
+          type: number
+          format: double
+          example: 5.0
+
+        reductionInYieldPercentage:
+          type: number
+          format: double
+          example: 1.2
+
+    Deduction:
+      type: object
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        date:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        year:
+          type: integer
+          example: 1
+
+        isProjectionEnd:
+          type: boolean
+          example: false
+
+        inflowToDate:
+          type: number
+          format: double
+          example: 1000
+
+        outflowToDate:
+          type: number
+          format: double
+          example: 200
+
+        actualDeductionsToDate:
+          type: number
+          format: double
+          example: 150
+
+        effectOfDeductionsToDate:
+          type: number
+          format: double
+          example: 75
+
+        yearEndValue:
+          type: number
+          format: double
+          example: 12000
+
+        yearEndValueWithoutCharges:
+          type: number
+          format: double
+          example: 12300
+
+        yearEndValueAfterProductCharges:
+          type: number
+          format: double
+          example: 11900
+
+    AdviserFee:
+      type: object
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        date:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        year:
+          type: integer
+          example: 1
+
+        isProjectionEnd:
+          type: boolean
+          example: false
+
+        initialAdviserFees:
+          type: number
+          format: double
+          example: 250
+
+        ongoingAdviserFees:
+          type: number
+          format: double
+          example: 100
+
+    IllustrationDocument:
+      type: object
+      properties:
+        pdfData:
+          type: string
+          format: byte
+          description: Base64 encoded PDF document.
+
+        totalPages:
+          type: integer
+          example: 12
 
   examples:
     400-BadRequest:
