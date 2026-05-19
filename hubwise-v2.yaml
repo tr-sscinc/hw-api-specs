@@ -6767,7 +6767,6 @@ paths:
                     }
                   }
               
-              
       responses:
         "201":
           description: Illustration generated successfully.
@@ -6778,9 +6777,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/IllustrationNPResponse"
-
-
-
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
 
 
 components:
@@ -9575,6 +9591,7 @@ components:
     DrawdownAnnuityBasis:
       type: object
       description: Drawdown annuity basis request model
+      additionalProperties: false
       properties:
         frequency:
           type: string
@@ -9617,6 +9634,7 @@ components:
 
     ProjectionConfig:
       type: object
+      additionalProperties: false
       properties:
         investmentYears:
           type: integer
@@ -9655,6 +9673,7 @@ components:
     IllustrationInstrument:
       type: object
       description: Asset and model allocation details used for the illustration scenario.
+      additionalProperties: false
       properties:
         type:
           type: string
@@ -9701,6 +9720,7 @@ components:
 
     Instrument:
       type: object
+      additionalProperties: false
       description: >
         Instrument request model.
         Either 'model' OR 'instruments' should be provided, not both.
@@ -9830,6 +9850,7 @@ components:
       description: Fees associated to the account
       required:
         - action
+      additionalProperties: false
       properties:
         id:
           type: integer
@@ -9925,6 +9946,7 @@ components:
               
     IllustrationAction:
       description: Action to be performed.
+      additionalProperties: false
       type: string
       enum:
         - ADD
@@ -9935,6 +9957,7 @@ components:
     ProjectionConfigNP:
       type: object
       description: Non-pension projection configuration settings.
+      additionalProperties: false
       properties:
 
         startDate:
@@ -9961,6 +9984,7 @@ components:
     
     IllustrationNPRequest:
       type: object
+      additionalProperties: false
       properties:
         accountId:
            type: string
@@ -10032,6 +10056,7 @@ components:
 
     IllustrationNPResponse:
       type: object
+      additionalProperties: false
       properties:
         message:
           type: object
@@ -10049,6 +10074,7 @@ components:
     
     IllustrationResult:
       type: object
+      additionalProperties: false
       properties:
         projectionType:
           type: string
@@ -10083,6 +10109,7 @@ components:
 
     IllustrationSummary:
       type: object
+      additionalProperties: false
       properties:
         assumptionLevel:
           type: string
@@ -10133,6 +10160,7 @@ components:
 
     ReductionInYield:
       type: object
+      additionalProperties: false
       properties:
         assumptionLevel:
           type: string
@@ -10154,6 +10182,7 @@ components:
 
     Deduction:
       type: object
+      additionalProperties: false
       properties:
         assumptionLevel:
           type: string
@@ -10213,6 +10242,7 @@ components:
 
     AdviserFee:
       type: object
+      additionalProperties: false
       properties:
         assumptionLevel:
           type: string
@@ -10247,6 +10277,7 @@ components:
 
     IllustrationDocument:
       type: object
+      additionalProperties: false
       properties:
         pdfData:
           type: string
