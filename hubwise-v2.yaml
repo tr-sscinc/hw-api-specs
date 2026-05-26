@@ -5620,7 +5620,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ThirdPartiesHeader"
+              $ref: "#/components/schemas/ThirdPartiesHeaderPut"
             examples:
               Ex1:
                 summary: Replace the beneficiaries on an account 
@@ -9521,6 +9521,78 @@ components:
           maxLength: 10
         address:
           $ref: "#/components/schemas/AddressPatch"
+    
+    ThirdPartiesHeaderPut:
+      type: object
+      additionalProperties: false
+      required:
+        - thirdParties
+      properties:
+        thirdParties:    
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/ThirdPartyPut"
+
+    ThirdPartyPut:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - beneficiaryDetails
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - BENEFICIARY
+        title:
+          $ref: "#/components/schemas/Title"
+        firstName:
+          type: string
+          maxLength: 30
+        surname:
+          type: string
+          maxLength: 25
+        contactDetails:
+          type: object
+          additionalProperties: false
+          required:
+            - phone
+            - email
+          properties:
+            phone:
+              type: string
+              maxLength: 25
+            email:
+              type: string
+              maxLength: 50
+        beneficiaryDetails:
+          type: object
+          additionalProperties: false
+          required:
+            - relationship
+            - percentage
+          properties:
+            relationship:
+              type: string
+              maxLength: 30
+            percentage:
+              type: number
+              maximum: 100
+            dateOfBirth:
+              type: string
+              format: date
+        companyName:
+          type: string
+          maxLength: 50
+        companyRegistration:
+          type: string
+          maxLength: 10
+        address:
+          $ref: "#/components/schemas/Address"
 
     DeletedInfo:
       type: object
@@ -10289,6 +10361,7 @@ components:
           example: 12
 
   examples:
+    
     400-BadRequest:
       summary: Path parameter does not conform to API schema
       value:
