@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.4
+  version: 0.8.5
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -517,7 +517,18 @@ paths:
       tags:
         - Investors
       summary: Retrieves an investor by ID
-      description: TBC
+      description: 
+        Retrieves the details of a specific investor record.
+
+
+        This endpoint supports the retrieval of Individual, Corporate, and Trust investors using their unique SS&C Wealth Platform Investor ID.
+        
+        
+        The response includes core profile information, contact details, one or more addresses, and one or more territorial profiles, along with type specific attributes relevant to the investor classification.
+        
+        
+        The endpoint must be called once for each investor record to be retrieved.
+           
       operationId: retrieveInvestor
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1124,7 +1135,18 @@ paths:
       tags:
         - Investors
       summary: Retrieves an investor's vulnerable Characteristics
-      description: TBC
+      description: 
+        Retrieves the characteristics of vulnerabilities for a specific investor record.
+
+
+        This endpoint supports the retrieval of one or more characteristics of vulnerabilities for Individual and Court Appointed Deputy investors using their unique SS&C Wealth Platform Investor ID.
+        
+        
+        The response includes the investors characteristics of vulnerabilities, along with the associated service level, start date, and expiry date. All vulnerabilities associated with the investor will be returned, regardless of their start date or expiry date.
+        
+
+        The endpoint must be called once for each investor record to be retrieved.  If the investor exists but has no characteristics of vulnerabilities, a valid response with empty collections will be returned.
+       
       operationId: retrieveInvestorVulnerabilities
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1423,7 +1445,18 @@ paths:
       tags:
         - Investors
       summary: Retrieves the correspondence preferences of an investor
-      description: TBC
+      description: 
+        Retrieves the correspondences of vulnerabilities for a specific investor record.
+
+
+        This endpoint supports the retrieval of one or more correspondences of vulnerabilities for Individual and Court Appointed Deputy investors using their unique SS&C Wealth Platform Investor ID.
+        
+        
+        The response includes the investors correspondences of vulnerabilities, along with the associated start date, and expiry date. All correspondences associated with the investor will be returned, regardless of their start date or expiry date.
+        
+
+        The endpoint must be called once for each investor record to be retrieved.  If the investor exists but has no correspondences of vulnerabilities, a valid response with empty collections will be returned.
+       
       operationId: retrieveInvestorCorresponsences
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -2181,7 +2214,18 @@ paths:
       tags:
         - Accounts
       summary: Retrieve an investment account by it's ID.
-      description: TBC
+      description: 
+        Retrieves the details of a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment account (GIA,ISA,JISA,SIPP,third party product) using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the core account information, related investors, linked investment model, income options and pension details (if applicable) for Individual, Corporate, Trust and Joint investors.
+        
+        
+        The endpoint must be called once for each investment account record to be retrieved.
+       
       operationId: retrieveAccount
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -2696,7 +2740,17 @@ paths:
       tags:
         - Accounts
       summary: Retrieves the bank accounts against an investment account.
-      description: TBC
+      description:
+        Retrieves the bank details against a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment accounts associated bank details using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the bank details, holders and status.
+        
+        
+        The endpoint must be called once for each investment accounts bank details to be retrieved.
       operationId: retrieveBankAccounts
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -3372,7 +3426,17 @@ paths:
       tags:
         - Accounts
       summary: Retrieves the money movements on an account
-      description: TBC
+      description:
+        Retrieves the money movements against a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment accounts money movements (contributions and withdrawals) using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the investors core movement information, such as the type of movement, payment method, frequency, and start and end dates. It also provides details of the associated bank account, any applicable fees, and where relevant to pension account types, any associated HMRC protection details.
+
+
+        The endpoint must be called once for each investment accounts money movements to be retrieved.
       operationId: retrieveAccountMovements
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4059,7 +4123,18 @@ paths:
       tags:
         - Accounts
       summary: Retrieves the transfers against an account
-      description: TBC
+      description: 
+        Retrieves the transfers against a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment accounts transfers (in and out) using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the transfer type, direction, status, amount, and contact details for the provider.
+
+
+        The endpoint must be called once for each investment accounts transfers to be retrieved.
+ 
       operationId: retrieveAccountTransfers
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4477,7 +4552,18 @@ paths:
       tags:
         - Accounts
       summary: Get account fees
-      description: TBC
+      description: 
+        Retrieves the account level fees against a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment accounts fees (e.g. Adviser Annual, Adviser One Off, Platform Fee, Product Fee) using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the fee details, status, next date, and band details if applicable.
+
+
+        The endpoint must be called once for each investment accounts account level fees to be retrieved.
+ 
       operationId: retrieveAccountFees
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -7010,7 +7096,7 @@ components:
           maxLength: 256
           minLength: 1
           type: string
-          description: email address for notifications
+          description: email address for notifications, optional if under 18 
           format: string
           example: john.doe@outlook.com
 
