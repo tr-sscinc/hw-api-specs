@@ -1,4 +1,9 @@
 # hw-api-specs
+Changelog for v0.8.5 API spec
+
+ - Added descriptions for the GET investor and account endpoints
+ - Updated investor email field description to be optional for childrem
+  
 
 Changelog for v0.8.5 API spec
 
