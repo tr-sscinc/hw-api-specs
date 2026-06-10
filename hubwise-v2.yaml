@@ -6468,11 +6468,6 @@ paths:
                   value:
                     errorCode: HWA-FEE-GROUP-001
                     message: The Group ID must be unique.
-                InvalidFeeType:
-                  summary: feeType is not one of the supported values
-                  value:
-                    errorCode: HWA-FEE-GROUP-003
-                    message: "Fee type 'UNKNOWN_TYPE' is invalid."
                 AccountNotEligibleOrMissing:
                   summary: An account does not exist or does not qualify for the requested fee type / fee code
                   value:
@@ -8673,9 +8668,18 @@ components:
           type: string
           example: SMITHSPLT01
         feeType:
-          description: >
-            The fee type associated with the group. Must be one of the supported values: `ADVISER_ANNUAL`, `ADVISER_INITIAL`, `ADVISER_ONE_OFF`, `PORTFOLIO_MANAGEMENT`, `INVESTMENT_SERVICE`, `PRODUCT_ANNUAL`, `PLATFORM_ANNUAL`, `PLATFORM_INITIAL`, `DISCRETIONARY_MANAGEMENT_ANNUAL`. An unrecognised value is rejected with `HWA-FEE-GROUP-003`. Must also match the fee qualification of every account being added.
+          description: The fee type associated with the group. Must match the fee qualification of every account being added.
           type: string
+          enum:
+            - ADVISER_ANNUAL
+            - ADVISER_INITIAL
+            - ADVISER_ONE_OFF
+            - PORTFOLIO_MANAGEMENT
+            - INVESTMENT_SERVICE
+            - PRODUCT_ANNUAL
+            - PLATFORM_ANNUAL
+            - PLATFORM_INITIAL
+            - DISCRETIONARY_MANAGEMENT_ANNUAL
           example: PLATFORM_ANNUAL
         feeCode:
           description: A fee code identifying an existing set of tiered rates. Must match the fee qualification of every account being added.
