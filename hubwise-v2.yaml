@@ -6391,22 +6391,10 @@ paths:
         A Fee Group is identified by a user-supplied `groupId` which must be unique per tenant. Each account added to the group must already exist, must qualify for the requested `feeType` and `feeCode`, must be denominated in GBP, and must not be soft-deleted.
 
 
-        The endpoint accepts an optional `testMode` query parameter. When `testMode=true`, the request is fully validated but the transaction is rolled back so no Fee Group is persisted; this allows callers to dry-run a request before committing.
-
-
         On success the response returns the persisted Fee Group with enriched account details (account name and product identifier).
       operationId: createFeeGroup
       parameters:
         - $ref: '#/components/parameters/Request-Id'
-        - name: testMode
-          in: query
-          description: >
-            When `true`, the request is validated and processed inside a transaction that is rolled back before the response is returned. No Fee Group is persisted. Defaults to `false`.
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: false
       requestBody:
         required: true
         content:
@@ -6604,9 +6592,6 @@ paths:
 
 
         For `add` operations, each account must exist, must qualify for the group's `feeType`/`feeCode`, must be denominated in GBP, and must not be soft-deleted. For `delete` operations, each account must currently be a member of the Fee Group.
-
-
-        The endpoint accepts an optional `testMode` query parameter. When `testMode=true`, the request is fully validated but the transaction is rolled back so no changes are persisted.
       operationId: modifyFeeGroup
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -6618,15 +6603,6 @@ paths:
             type: string
             maxLength: 11
           example: SMITHSPLT01
-        - name: testMode
-          in: query
-          description: >
-            When `true`, the request is validated and processed inside a transaction that is rolled back before the response is returned. No changes are persisted. Defaults to `false`.
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: false
       requestBody:
         required: true
         content:
@@ -6778,9 +6754,6 @@ paths:
 
 
         A Fee Group already in `INACTIVE` state cannot be deleted again — a second call returns 404 with `HWA-FEE-GROUP-006`.
-
-
-        The endpoint accepts an optional `testMode` query parameter. When `testMode=true`, the request is fully validated but the transaction is rolled back so no state change is persisted.
       operationId: deleteFeeGroup
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -6792,15 +6765,6 @@ paths:
             type: string
             maxLength: 11
           example: SMITHSPLT01
-        - name: testMode
-          in: query
-          description: >
-            When `true`, the request is validated and processed inside a transaction that is rolled back before the response is returned. The Fee Group is not actually deleted. Defaults to `false`.
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: false
       responses:
         "204":
           description: Fee Group deleted. No response body.
