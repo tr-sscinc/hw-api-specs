@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.5 API spec
+
+ - Added Fee Group endpoints (POST /fee-group, GET/PATCH/DELETE /fee-group/{groupId})
+
 Changelog for v0.8.4 API spec
 
  - Added investment instructions endpoint

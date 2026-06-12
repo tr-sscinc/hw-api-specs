@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.4
+  version: 0.8.5
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -9,8 +9,9 @@ servers:
     description: Pilot/UAT environment
 
 tags:
-  - name: Investors 
-  - name: Accounts 
+  - name: Investors
+  - name: Accounts
+  - name: Fee Groups
 
 security:
   - bearer-token: []
@@ -6376,12 +6377,433 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
+  /fee-groups:
+
+    post:
+      tags:
+        - Fee Groups
+      summary: Create a Fee Group
+      description: >
+        Creates a new Fee Group, linking one or more eligible investment accounts under a shared fee qualification (fee type and fee code).
 
 
+        A Fee Group is identified by a user-supplied `groupId` which must be unique per tenant. Each account added to the group must already exist, must qualify for the requested `feeType` and `feeCode`, must be denominated in GBP, and must not be soft-deleted.
 
 
+        On success the response returns the persisted Fee Group with enriched account details (account name and product identifier).
+      operationId: createFeeGroup
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFeeGroupRequest"
+            examples:
+              Ex1:
+                summary: Create a Fee Group with a single account
+                value:
+                  {
+                    "groupId": "SMITHSPLT01",
+                    "feeType": "PLATFORM_ANNUAL",
+                    "feeCode": "SA0001",
+                    "accounts": [
+                      { "id": "HW04003258A" }
+                    ]
+                  }
+              Ex2:
+                summary: Create a Fee Group with multiple accounts
+                value:
+                  {
+                    "groupId": "SMITHSADV01",
+                    "feeType": "ADVISER_ANNUAL",
+                    "feeCode": "AF0001",
+                    "accounts": [
+                      { "id": "HW04003258A" },
+                      { "id": "HW04003259B" },
+                      { "id": "HW04003260C" }
+                    ]
+                  }
+      responses:
+        "201":
+          description: Fee Group created.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeeGroupResponse"
+              examples:
+                Ex1:
+                  summary: Fee Group created with a single account
+                  value:
+                    {
+                      "groupId": "SMITHSPLT01",
+                      "status": "ACTIVE",
+                      "feeType": "PLATFORM_ANNUAL",
+                      "feeCode": "SA0001",
+                      "accounts": [
+                        {
+                          "id": "HW04003258A",
+                          "name": "Mr John Smith",
+                          "productId": "HIS"
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                DuplicateGroupId:
+                  summary: groupId already exists for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-001
+                    message: The Group ID must be unique.
+                AccountNotEligibleOrMissing:
+                  summary: An account does not exist or does not qualify for the requested fee type / fee code
+                  value:
+                    errorCode: HWA-FEE-GROUP-002
+                    message: "Account HW04003258A cannot be added to this Fee Group because it does not meet the required criteria."
+                NonGbpAccount:
+                  summary: An account base currency is not GBP
+                  value:
+                    errorCode: HWA-FEE-GROUP-007
+                    message: "Account HW04003258A cannot be added to a Fee Group because its base currency is not GBP."
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
 
+  /fee-groups/{feeGroupId}:
+
+    get:
+      tags:
+        - Fee Groups
+      summary: Retrieve a Fee Group by ID
+      description: >
+        Retrieves a Fee Group and its current member accounts using a case-sensitive exact match on `groupId`.
+
+
+        The response includes enriched member details (account name and product identifier). The Fee Group must belong to the authenticated tenant; cross-tenant lookups return 404.
+      operationId: retrieveFeeGroup
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: feeGroupId
+          in: path
+          description: User-supplied Fee Group identifier. Case-sensitive exact match.
+          required: true
+          schema:
+            type: string
+            maxLength: 11
+          example: SMITHSPLT01
+      responses:
+        "200":
+          description: Fee Group retrieved.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeeGroupResponse"
+              examples:
+                Ex1:
+                  summary: Active Fee Group with two member accounts
+                  value:
+                    {
+                      "groupId": "SMITHSPLT01",
+                      "status": "ACTIVE",
+                      "feeType": "PLATFORM_ANNUAL",
+                      "feeCode": "SA0001",
+                      "accounts": [
+                        {
+                          "id": "HW04003258A",
+                          "name": "Mr John Smith",
+                          "productId": "HIS"
+                        },
+                        {
+                          "id": "HW04003259B",
+                          "name": "Mrs Jane Smith",
+                          "productId": "HIS"
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          description: The Fee Group was not found.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NotFound:
+                  summary: groupId does not exist for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-004
+                    message: "Fee Group SMITHSPLT01 does not exist."
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    patch:
+      tags:
+        - Fee Groups
+      summary: Update a Fee Group
+      description: >
+        Adds or removes member accounts on an existing Fee Group. The request payload contains an `operations` array of `add` and/or `delete` actions.
+
+
+        Operations are applied in array order within a single transaction. If any operation fails, all prior operations in the same request are rolled back.
+
+
+        For `add` operations, each account must exist, must qualify for the group's `feeType`/`feeCode`, must be denominated in GBP, and must not be soft-deleted. For `delete` operations, each account must currently be a member of the Fee Group.
+      operationId: modifyFeeGroup
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: feeGroupId
+          in: path
+          description: User-supplied Fee Group identifier. Case-sensitive exact match.
+          required: true
+          schema:
+            type: string
+            maxLength: 11
+          example: SMITHSPLT01
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFeeGroupRequest"
+            examples:
+              Ex1:
+                summary: Add a single account
+                value:
+                  {
+                    "operations": [
+                      {
+                        "action": "add",
+                        "accounts": [
+                          { "id": "HW04003261D" }
+                        ]
+                      }
+                    ]
+                  }
+              Ex2:
+                summary: Remove a single account
+                value:
+                  {
+                    "operations": [
+                      {
+                        "action": "delete",
+                        "accounts": [
+                          { "id": "HW04003258A" }
+                        ]
+                      }
+                    ]
+                  }
+              Ex3:
+                summary: Combined add + delete in a single request
+                value:
+                  {
+                    "operations": [
+                      {
+                        "action": "delete",
+                        "accounts": [
+                          { "id": "HW04003258A" }
+                        ]
+                      },
+                      {
+                        "action": "add",
+                        "accounts": [
+                          { "id": "HW04003261D" },
+                          { "id": "HW04003262E" }
+                        ]
+                      }
+                    ]
+                  }
+      responses:
+        "200":
+          description: Fee Group updated.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeeGroupResponse"
+              examples:
+                Ex1:
+                  summary: Fee Group with updated members after add+delete
+                  value:
+                    {
+                      "groupId": "SMITHSPLT01",
+                      "status": "ACTIVE",
+                      "feeType": "PLATFORM_ANNUAL",
+                      "feeCode": "SA0001",
+                      "accounts": [
+                        {
+                          "id": "HW04003259B",
+                          "name": "Mrs Jane Smith",
+                          "productId": "HIS"
+                        },
+                        {
+                          "id": "HW04003261D",
+                          "name": "Mr Robert Smith",
+                          "productId": "HIS"
+                        },
+                        {
+                          "id": "HW04003262E",
+                          "name": "Ms Anna Smith",
+                          "productId": "HIS"
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NoOperations:
+                  summary: operations array is empty
+                  value:
+                    errorCode: HWA-FEE-GROUP-008
+                    message: 'At least one "add" or "delete" action is required.'
+                AccountNotEligibleOrMissing:
+                  summary: Account does not exist or does not qualify for the group's fee type / fee code
+                  value:
+                    errorCode: HWA-FEE-GROUP-002
+                    message: "Account HW04003261D cannot be added to this Fee Group because it does not meet the required criteria."
+                NonGbpAccount:
+                  summary: Account base currency is not GBP
+                  value:
+                    errorCode: HWA-FEE-GROUP-007
+                    message: "Account HW04003261D cannot be added to a Fee Group because its base currency is not GBP."
+                NotMember:
+                  summary: Account targeted for delete is not currently a member
+                  value:
+                    errorCode: HWA-FEE-GROUP-009
+                    message: "Account HW04003258A cannot be removed from this Fee Group as it is not currently a member."
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          description: The Fee Group was not found.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NotFound:
+                  summary: groupId does not exist for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-004
+                    message: "Fee Group SMITHSPLT01 does not exist."
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    delete:
+      tags:
+        - Fee Groups
+      summary: Delete a Fee Group
+      description: >
+        Soft-deletes a Fee Group by setting its status to `INACTIVE`. Member account links are retained but the group is no longer active.
+
+
+        A Fee Group already in `INACTIVE` state cannot be deleted again — a second call returns 404 with `HWA-FEE-GROUP-006`.
+      operationId: deleteFeeGroup
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: feeGroupId
+          in: path
+          description: User-supplied Fee Group identifier. Case-sensitive exact match.
+          required: true
+          schema:
+            type: string
+            maxLength: 11
+          example: SMITHSPLT01
+      responses:
+        "204":
+          description: Fee Group deleted. No response body.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          description: The Fee Group was not found or is already inactive.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NotFound:
+                  summary: groupId does not exist for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-005
+                    message: The Fee Group cannot be found.
+                AlreadyDeleted:
+                  summary: Fee Group is already inactive
+                  value:
+                    errorCode: HWA-FEE-GROUP-006
+                    message: This Fee Group has already been deleted.
+        "500":
+          $ref: "#/components/responses/500-ServerError"
 
 components:
   
@@ -8228,6 +8650,172 @@ components:
           description: The date the fee ends
           type: string
           example: "2025-05-28"
+
+    CreateFeeGroupRequest:
+      description: Request payload for creating a Fee Group.
+      required:
+        - groupId
+        - feeType
+        - feeCode
+        - accounts
+      type: object
+      additionalProperties: false
+      properties:
+        groupId:
+          description: User-supplied Fee Group identifier. Must be unique per tenant.
+          maxLength: 11
+          minLength: 1
+          type: string
+          example: SMITHSPLT01
+        feeType:
+          description: The fee type associated with the group. Must match the fee qualification of every account being added.
+          type: string
+          enum:
+            - ADVISER_ANNUAL
+            - ADVISER_INITIAL
+            - ADVISER_ONE_OFF
+            - PORTFOLIO_MANAGEMENT
+            - INVESTMENT_SERVICE
+            - PRODUCT_ANNUAL
+            - PLATFORM_ANNUAL
+            - PLATFORM_INITIAL
+            - DISCRETIONARY_MANAGEMENT_ANNUAL
+          example: PLATFORM_ANNUAL
+        feeCode:
+          description: A fee code identifying an existing set of tiered rates. Must match the fee qualification of every account being added.
+          maxLength: 6
+          minLength: 1
+          type: string
+          example: SA0001
+        accounts:
+          description: List of investment accounts to add to the Fee Group. At least one account is required.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/FeeGroupAccountRequest"
+
+    UpdateFeeGroupRequest:
+      description: Request payload for updating a Fee Group by adding and/or removing member accounts.
+      type: object
+      additionalProperties: false
+      properties:
+        operations:
+          description: An ordered list of add and/or delete operations. Operations are applied in array order within a single transaction. The server requires at least one operation; an empty or missing array is rejected with `HWA-FEE-GROUP-008`.
+          type: array
+          items:
+            $ref: "#/components/schemas/FeeGroupAction"
+
+    FeeGroupAction:
+      description: A single add or delete operation against a Fee Group.
+      required:
+        - action
+        - accounts
+      type: object
+      additionalProperties: false
+      properties:
+        action:
+          description: >-
+            The operation to perform on the listed accounts.
+            <ul>
+            <li>add: Adds the listed accounts to the Fee Group.</li>
+            <li>delete: Removes the listed accounts from the Fee Group.</li>
+            </ul>
+          enum:
+            - add
+            - delete
+          type: string
+          example: add
+        accounts:
+          description: The accounts targeted by this operation. At least one account is required.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/FeeGroupAccountRequest"
+
+    FeeGroupAccountRequest:
+      description: An account being referenced in a Fee Group create or update request.
+      required:
+        - id
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          description: Unique SS&C Wealth Platform Account identifier.
+          maxLength: 11
+          minLength: 1
+          type: string
+          example: HW04003258A
+
+    FeeGroupResponse:
+      description: A Fee Group and its current member accounts.
+      type: object
+      additionalProperties: false
+      properties:
+        groupId:
+          description: User-supplied Fee Group identifier.
+          maxLength: 11
+          type: string
+          readOnly: true
+          example: SMITHSPLT01
+        status:
+          description: The current status of the Fee Group.
+          enum:
+            - ACTIVE
+            - INACTIVE
+          type: string
+          readOnly: true
+          example: ACTIVE
+        feeType:
+          description: The fee type associated with the group.
+          enum:
+            - ADVISER_ANNUAL
+            - ADVISER_INITIAL
+            - ADVISER_ONE_OFF
+            - PORTFOLIO_MANAGEMENT
+            - INVESTMENT_SERVICE
+            - PRODUCT_ANNUAL
+            - PLATFORM_ANNUAL
+            - PLATFORM_INITIAL
+            - DISCRETIONARY_MANAGEMENT_ANNUAL
+          type: string
+          readOnly: true
+          example: PLATFORM_ANNUAL
+        feeCode:
+          description: The fee code identifying the set of tiered rates for this group.
+          maxLength: 6
+          type: string
+          readOnly: true
+          example: SA0001
+        accounts:
+          description: Member accounts of the Fee Group, with enriched details.
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/FeeGroupAccountResponse"
+
+    FeeGroupAccountResponse:
+      description: A member account of a Fee Group, including enriched details from the account master.
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          description: Unique SS&C Wealth Platform Account identifier.
+          maxLength: 11
+          type: string
+          readOnly: true
+          example: HW04003258A
+        name:
+          description: The account name.
+          maxLength: 50
+          type: string
+          readOnly: true
+          example: Mr John Smith
+        productId:
+          description: Unique SS&C Wealth Platform Product identifier.
+          maxLength: 3
+          type: string
+          readOnly: true
+          example: HIS
 
     MovementsHeader:
       required:
