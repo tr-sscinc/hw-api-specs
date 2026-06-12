@@ -6378,7 +6378,7 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
-  /fee-group:
+  /fee-groups:
 
     post:
       tags:
@@ -6487,7 +6487,7 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
-  /fee-group/{groupId}:
+  /fee-groups/{feeGroupId}:
 
     get:
       tags:
@@ -6501,7 +6501,7 @@ paths:
       operationId: retrieveFeeGroup
       parameters:
         - $ref: '#/components/parameters/Request-Id'
-        - name: groupId
+        - name: feeGroupId
           in: path
           description: User-supplied Fee Group identifier. Case-sensitive exact match.
           required: true
@@ -6590,7 +6590,7 @@ paths:
       operationId: modifyFeeGroup
       parameters:
         - $ref: '#/components/parameters/Request-Id'
-        - name: groupId
+        - name: feeGroupId
           in: path
           description: User-supplied Fee Group identifier. Case-sensitive exact match.
           required: true
@@ -6752,7 +6752,7 @@ paths:
       operationId: deleteFeeGroup
       parameters:
         - $ref: '#/components/parameters/Request-Id'
-        - name: groupId
+        - name: feeGroupId
           in: path
           description: User-supplied Fee Group identifier. Case-sensitive exact match.
           required: true
