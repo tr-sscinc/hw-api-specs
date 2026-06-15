@@ -9,7 +9,7 @@ Changelog for v0.8.6 API spec
 
 Changelog for v0.8.5 API spec
 
- - Added Fee Group endpoints 
+ - Added Fee Group endpoints (GET/POST/PATCH/DELETE)
 
 Changelog for v0.8.4 API spec
 
