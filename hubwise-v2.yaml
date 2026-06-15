@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.5
+  version: 0.8.6
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -56,7 +56,7 @@ paths:
                     "externalReferences":
                       [
                         {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "reference": "A9F3K7X2L8Q4M1Z",
                           "provider": "CRM Name"
                         }
                       ],
@@ -67,7 +67,7 @@ paths:
                         "firstName": "Sam",
                         "middleName": "John",
                         "surname": "Smith",
-                        "dateOfBirth": "2000-02-20",
+                        "dateOfBirth": "1970-02-20",
                         "gender": "MALE",
                         "maritalStatus": "MARRIED",
                         "incomeAndInvestment":
@@ -75,30 +75,41 @@ paths:
                             "occupation": "OTHER",
                             "occupationOtherValue": "Management Consultant",
                             "industry": "OTHER",
-                            "industryOtherValue": "Consulting Services",
+                            "industryOtherValue": "Consulting",
                             "annualIncome": "FROM_50K_TO_75K",
                             "investmentReason": "GROW_WEALTH",
                             "investmentAgreedInPerson": true
                           },
-                        "territorialProfile":
-                          {
-                            "nationalities":
-                              [{ "countryCode": "GB", "primary": true }],
-                            "taxResidencies":
-                              [
+                       "territorialProfile": {
+                            "nationalities": [
                                 {
-                                  "countryCode": "GB",
-                                  "tin": "AC123456C",
-                                  "primary": true
+                                    "countryCode": "GB",
+                                    "primary": true
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "primary": false
                                 }
-                              ]
-                          },
+                            ],
+                            "taxResidencies": [
+                                {
+                                    "countryCode": "GB",
+                                    "tin": "AC123456C",
+                                    "primary": true
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "tin": "912-34-5678",
+                                    "primary": false
+                                }
+                            ]
+                        },
                         "contactDetails":
                           {
                             "contactPhone": "01619465555",
                             "homePhone": "01619464444",
                             "mobilePhone": "07877156340",
-                            "email": "john.doe@outlook.com"
+                            "email": "sam.smith@outlook.com"
                           },
                         "notificationPreferences":
                           { "disableEmails": false, "disableSms": false }
@@ -114,6 +125,15 @@ paths:
                           "countryCode": "GB",
                           "postCode": "HT3 4AB",
                           "primary": true
+                        },
+                        {
+                            "premisesIdentifier": "87",
+                            "line1": "Birch Road",
+                            "town": "Downtown",
+                            "county": "Yorkshore",
+                            "countryCode": "GB",
+                            "postCode": "L6 4DE",
+                            "primary": false
                         }
                       ],
                     "declarations":
@@ -134,7 +154,7 @@ paths:
                     "externalReferences":
                       [
                         {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "reference": "7D2P8V6R1X9T4YB",
                           "provider": "CRM Name"
                         }
                       ],
@@ -196,7 +216,7 @@ paths:
                     "externalReferences":
                       [
                         {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "reference": "Q4M8Z1K7L3C9A2E",
                           "provider": "CRM Name"
                         }
                       ],
@@ -252,37 +272,27 @@ paths:
                       ]
                   }
               Ex4:
-                summary: Corporate investor but LEI not provided
+                summary: Investor is a trust and a LEI is not required
                 value:
                   {
                     "adviserId": "E273053",
-                    "type": "CORPORATE",
+                    "type": "BARE_TRUST",
                     "externalReferences":
                       [
                         {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "reference": "X5T9B2N8R6P4W1H",
                           "provider": "CRM Name"
                         }
                       ],
                     "corporate":
                       {
-                        "legalName": "Silver Oak Holdings Ltd",
-                        "territorialProfile":
-                          {
-                            "taxResidencies":
-                              [
-                                {
-                                  "primary": true,
-                                  "countryCode": "GB"
-                                }
-                              ]
-                          },
+                        "legalName": "M S Ltd",
                         "contactDetails":
                           {
                             "contactPhone": "01619887766",
                             "homePhone": "01619887777",
                             "mobilePhone": "07799123456",
-                            "email": "info@silveroakholdings.co.uk"
+                            "email": "info@msltd.co.uk"
                           },
                         "notificationPreferences":
                           { "disableEmails": false, "disableSms": false }
@@ -290,7 +300,7 @@ paths:
                     "addresses":
                       [
                         {
-                          "premisesIdentifier": "15",
+                          "premisesIdentifier": "16",
                           "line1": "Maple House",
                           "line2": "Business Park Avenue",
                           "town": "Northford",
@@ -314,7 +324,60 @@ paths:
                         }
                       ]
                   }
-
+              Ex5:
+                summary: Investor is a child
+                value:
+                  {
+                    "adviserId": "E273053",
+                    "type": "INDIVIDUAL",
+                    "externalReferences":
+                      [
+                        {
+                          "reference": "L1Z7Q8C3A5M9F2D",
+                          "provider": "CRM Name"
+                        }
+                      ],
+                    "individual": {
+                      "title": "MASTER",
+                      "firstName": "Tom",
+                      "middleName": "John",
+                      "surname": "Smith",
+                      "dateOfBirth": "2026-02-20",
+                      "gender": "MALE",
+                      "territorialProfile": {
+                          "nationalities": [
+                              {
+                                  "countryCode": "GB",
+                                  "primary": true
+                              }
+                          ]
+                      },
+                      "notificationPreferences": {
+                          "disableEmails": false,
+                          "disableSms": false
+                      }
+                  },
+                  "addresses": [
+                      {
+                          "premisesIdentifier": "12",
+                          "line1": "Rosewood Cottage",
+                          "line2": "Elm Street",
+                          "town": "Hightown",
+                          "county": "Lancashire",
+                          "countryCode": "GB",
+                          "postCode": "HT3 4AB",
+                          "primary": true
+                      }
+                  ],
+                    "declarations":
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "IFA_FCA_AUTH",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
       responses:
         "201":
           description: Investor created successfully.
@@ -330,13 +393,13 @@ paths:
                   summary: Investor is an individual
                   value:
                     {
-                      "id": "HWI04003219",
+                      "id": "HWI04003217",
                       "adviserId": "E273053",
                       "type": "INDIVIDUAL",
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "A9F3K7X2L8Q4M1Z",
                             "provider": "CRM",
                           },
                         ],
@@ -347,7 +410,7 @@ paths:
                           "firstName": "Sam",
                           "middleName": "John",
                           "surname": "Smith",
-                          "dateOfBirth": "2000-02-20",
+                          "dateOfBirth": "1970-02-20",
                           "gender": "MALE",
                           "maritalStatus": "MARRIED",
                           "incomeAndInvestment":
@@ -355,30 +418,41 @@ paths:
                               "occupation": "OTHER",
                               "occupationOtherValue": "Management Consultant",
                               "industry": "OTHER",
-                              "industryOtherValue": "Consulting Services",
+                              "industryOtherValue": "Consulting",
                               "annualIncome": "FROM_50K_TO_75K",
                               "investmentReason": "GROW_WEALTH",
                               "investmentAgreedInPerson": true
                             },
-                          "territorialProfile":
-                            {
-                              "nationalities":
-                                [{ "countryCode": "GB", "primary": true }],
-                              "taxResidencies":
-                                [
-                                  {
+                          "territorialProfile": {
+                            "nationalities": [
+                                {
+                                    "countryCode": "GB",
+                                    "primary": true
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "primary": false
+                                }
+                            ],
+                            "taxResidencies": [
+                                {
                                     "countryCode": "GB",
                                     "tin": "AC123456C",
                                     "primary": true
-                                  }
-                                ]
-                            },
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "tin": "912-34-5678",
+                                    "primary": false
+                                }
+                            ]
+                        },
                           "contactDetails":
                             {
                               "contactPhone": "01619465555",
                               "homePhone": "01619464444",
                               "mobilePhone": "07877156340",
-                              "email": "john.doe@outlook.com"
+                              "email": "sam.smith@outlook.com"
                             },
                           "notificationPreferences":
                             { "disableEmails": false, "disableSms": false }
@@ -394,6 +468,15 @@ paths:
                             "countryCode": "GB",
                             "postCode": "HT3 4AB",
                             "primary": true
+                          },
+                          {
+                              "premisesIdentifier": "87",
+                              "line1": "Birch Road",
+                              "town": "Downtown",
+                              "county": "Yorkshore",
+                              "countryCode": "GB",
+                              "postCode": "L6 4DE",
+                              "primary": false
                           }
                         ]
                     }
@@ -401,13 +484,13 @@ paths:
                   summary: Investor is a discretionary trust
                   value:
                     {
-                      "id": "HWI04003219",
+                      "id": "HWI04003218",
                       "adviserId": "E273054",
                       "type": "DISCRETIONARY_TRUST",
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "7D2P8V6R1X9T4YB",
                             "provider": "CRM"
                           }
                         ],
@@ -448,7 +531,7 @@ paths:
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "Q4M8Z1K7L3C9A2E",
                             "provider": "CRM"
                           }
                         ],
@@ -489,6 +572,94 @@ paths:
                             "primary": true
                           }
                         ]
+                    }
+                Ex4:
+                  summary: Investor is a trust and a LEI is not required
+                  value:
+                    {
+                      "id": "HWI04003220",
+                      "adviserId": "E273053",
+                      "type": "BARE_TRUST",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "X5T9B2N8R6P4W1H",
+                            "provider": "CRM Name"
+                          }
+                        ],
+                      "corporate":
+                        {
+                          "legalName": "M S Ltd",
+                          "contactDetails":
+                            {
+                              "contactPhone": "01619887766",
+                              "homePhone": "01619887777",
+                              "mobilePhone": "07799123456",
+                              "email": "info@msltd.co.uk"
+                            },
+                          "notificationPreferences":
+                            { "disableEmails": false, "disableSms": false }
+                        },
+                      "addresses":
+                        [
+                          {
+                            "premisesIdentifier": "16",
+                            "line1": "Maple House",
+                            "line2": "Business Park Avenue",
+                            "town": "Northford",
+                            "county": "Westshire",
+                            "countryCode": "GB",
+                            "postCode": "NF12 8XY",
+                            "primary": true
+                          }
+                        ]
+                    }
+                Ex5:
+                  summary: Investor is a child
+                  value:
+                    {
+                      "id": "HWI04003221",
+                      "adviserId": "E273053",
+                      "type": "INDIVIDUAL",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "L1Z7Q8C3A5M9F2D",
+                            "provider": "CRM Name"
+                          }
+                        ],
+                      "individual": {
+                        "title": "MASTER",
+                        "firstName": "Tom",
+                        "middleName": "John",
+                        "surname": "Smith",
+                        "dateOfBirth": "2026-02-20",
+                        "gender": "MALE",
+                        "territorialProfile": {
+                            "nationalities": [
+                                {
+                                    "countryCode": "GB",
+                                    "primary": true
+                                }
+                            ]
+                        },
+                        "notificationPreferences": {
+                            "disableEmails": false,
+                            "disableSms": false
+                        }
+                    },
+                    "addresses": [
+                        {
+                            "premisesIdentifier": "12",
+                            "line1": "Rosewood Cottage",
+                            "line2": "Elm Street",
+                            "town": "Hightown",
+                            "county": "Lancashire",
+                            "countryCode": "GB",
+                            "postCode": "HT3 4AB",
+                            "primary": true
+                        }
+                    ]
                     }
         "400":
           description: Bad request
@@ -555,15 +726,15 @@ paths:
                   summary: Investor is an individual
                   value:
                     {
-                      "id": "HWI04003219",
+                      "id": "HWI04003217",
                       "adviserId": "E273053",
                       "type": "INDIVIDUAL",
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "CRM"
-                          }
+                            "reference": "A9F3K7X2L8Q4M1Z",
+                            "provider": "CRM",
+                          },
                         ],
                       "individual":
                         {
@@ -572,7 +743,7 @@ paths:
                           "firstName": "Sam",
                           "middleName": "John",
                           "surname": "Smith",
-                          "dateOfBirth": "2000-02-20",
+                          "dateOfBirth": "1970-02-20",
                           "gender": "MALE",
                           "maritalStatus": "MARRIED",
                           "incomeAndInvestment":
@@ -580,41 +751,44 @@ paths:
                               "occupation": "OTHER",
                               "occupationOtherValue": "Management Consultant",
                               "industry": "OTHER",
-                              "industryOtherValue": "Consulting Services",
+                              "industryOtherValue": "Consulting",
                               "annualIncome": "FROM_50K_TO_75K",
                               "investmentReason": "GROW_WEALTH",
                               "investmentAgreedInPerson": true
                             },
-                          "territorialProfile":
-                            {
-                              "nationalities":
-                                [
-                                  { 
-                                    "countryCode": "GB", 
-                                    "primary": true 
-                                  }
-                                ],
-                              "taxResidencies":
-                                [
-                                  {
+                          "territorialProfile": {
+                            "nationalities": [
+                                {
+                                    "countryCode": "GB",
+                                    "primary": true
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "primary": false
+                                }
+                            ],
+                            "taxResidencies": [
+                                {
                                     "countryCode": "GB",
                                     "tin": "AC123456C",
                                     "primary": true
-                                  }
-                                ]
-                            },
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "tin": "912-34-5678",
+                                    "primary": false
+                                }
+                            ]
+                        },
                           "contactDetails":
                             {
                               "contactPhone": "01619465555",
                               "homePhone": "01619464444",
                               "mobilePhone": "07877156340",
-                              "email": "john.doe@outlook.com"
+                              "email": "sam.smith@outlook.com"
                             },
                           "notificationPreferences":
-                            { 
-                              "disableEmails": false, 
-                              "disableSms": false 
-                            }
+                            { "disableEmails": false, "disableSms": false }
                         },
                       "addresses":
                         [
@@ -627,6 +801,15 @@ paths:
                             "countryCode": "GB",
                             "postCode": "HT3 4AB",
                             "primary": true
+                          },
+                          {
+                              "premisesIdentifier": "87",
+                              "line1": "Birch Road",
+                              "town": "Downtown",
+                              "county": "Yorkshore",
+                              "countryCode": "GB",
+                              "postCode": "L6 4DE",
+                              "primary": false
                           }
                         ]
                     }
@@ -634,13 +817,13 @@ paths:
                   summary: Investor is a discretionary trust
                   value:
                     {
-                      "id": "HWI04003219",
+                      "id": "HWI04003218",
                       "adviserId": "E273054",
                       "type": "DISCRETIONARY_TRUST",
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "7D2P8V6R1X9T4YB",
                             "provider": "CRM"
                           }
                         ],
@@ -681,7 +864,7 @@ paths:
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "Q4M8Z1K7L3C9A2E",
                             "provider": "CRM"
                           }
                         ],
@@ -722,6 +905,94 @@ paths:
                             "primary": true
                           }
                         ]
+                    }
+                Ex4:
+                  summary: Investor is a trust and a LEI is not required
+                  value:
+                    {
+                      "id": "HWI04003220",
+                      "adviserId": "E273053",
+                      "type": "BARE_TRUST",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "X5T9B2N8R6P4W1H",
+                            "provider": "CRM Name"
+                          }
+                        ],
+                      "corporate":
+                        {
+                          "legalName": "M S Ltd",
+                          "contactDetails":
+                            {
+                              "contactPhone": "01619887766",
+                              "homePhone": "01619887777",
+                              "mobilePhone": "07799123456",
+                              "email": "info@msltd.co.uk"
+                            },
+                          "notificationPreferences":
+                            { "disableEmails": false, "disableSms": false }
+                        },
+                      "addresses":
+                        [
+                          {
+                            "premisesIdentifier": "16",
+                            "line1": "Maple House",
+                            "line2": "Business Park Avenue",
+                            "town": "Northford",
+                            "county": "Westshire",
+                            "countryCode": "GB",
+                            "postCode": "NF12 8XY",
+                            "primary": true
+                          }
+                        ]
+                    }
+                Ex5:
+                  summary: Investor is a child
+                  value:
+                    {
+                      "id": "HWI04003221",
+                      "adviserId": "E273053",
+                      "type": "INDIVIDUAL",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "L1Z7Q8C3A5M9F2D",
+                            "provider": "CRM Name"
+                          }
+                        ],
+                      "individual": {
+                        "title": "MASTER",
+                        "firstName": "Tom",
+                        "middleName": "John",
+                        "surname": "Smith",
+                        "dateOfBirth": "2026-02-20",
+                        "gender": "MALE",
+                        "territorialProfile": {
+                            "nationalities": [
+                                {
+                                    "countryCode": "GB",
+                                    "primary": true
+                                }
+                            ]
+                        },
+                        "notificationPreferences": {
+                            "disableEmails": false,
+                            "disableSms": false
+                        }
+                    },
+                    "addresses": [
+                        {
+                            "premisesIdentifier": "12",
+                            "line1": "Rosewood Cottage",
+                            "line2": "Elm Street",
+                            "town": "Hightown",
+                            "county": "Lancashire",
+                            "countryCode": "GB",
+                            "postCode": "HT3 4AB",
+                            "primary": true
+                        }
+                    ]
                     }
 
         "400":
@@ -815,60 +1086,6 @@ paths:
                       }
                   }
               Ex4:
-                summary: Remove corporate investor LEI, with "LEI Not Required" declaration
-                value:
-                  {
-                    "corporate":
-                      {
-                        "territorialProfile":
-                          {
-                            "taxResidencies":
-                              [
-                                {
-                                  "primary": true,
-                                  "countryCode": "GB"
-                                }
-                              ]
-                          }
-                      },
-                    "declarations": 
-                      [
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "LEI_NOT_REQ",
-                          "acknowledgement": true
-                        }
-                      ]
-                  }
-              Ex5:
-                summary: Add a new external reference
-                description: Add a new external reference for the SomeCRM system.
-                value:
-                  {
-                    "externalReferences":
-                      [
-                        {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                          "provider": "CRM"
-                        },
-                        {
-                          "reference": "6878768XX66",
-                          "provider": "SomeCRM"
-                        }
-                      ]
-                  }
-              Ex6:
-                summary: Remove an external references
-                value:
-                  {
-                    "externalReferences": [
-                      {
-                        "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                        "provider": "CRM"
-                      }
-                    ]
-                  }
-              Ex7:
                 summary: Update corporate investor email
                 value:
                   {
@@ -880,7 +1097,7 @@ paths:
                           }
                       }
                   }
-              Ex8: 
+              Ex5: 
                 summary: Add corporate investor LEI
                 value:
                   {
@@ -1225,6 +1442,18 @@ paths:
       tags:
         - Investors
       summary: Modify the vulnerable characteristics of an investor
+      description: >
+        Allows partial updates of one or more characteristics of vulnerability records for an existing investor.
+
+
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
+
+
+        All of the existing vulnerabilities data must be provided alongside any new or updated data when updating an investors vulnerabilities records. If an existing record is being updated, the expiry date is the only field that can be added or updated. New records can be provided as long as the vulnerability, service level and start date do not match an existing record. 
+
+
+        If vulnerability characteristics do not exist for the investor, the create endpoint must be used.
+
       operationId: modifyInvestorVulnerabilities
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1533,6 +1762,17 @@ paths:
       tags:
         - Investors
       summary: Modify an investor's correspondences
+      description: >
+        Allows partial updates of one or more correspondence preference records for an existing investor.
+
+
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
+
+
+        All of the existing correspondences data must be provided alongside any new or updated data when updating an investors correspondences records. If an existing record is being updated, the expiry date is the only field that can be added or updated. New records can be provided as long as the correspondence and start date do not match an existing record. 
+
+
+        If correspondence preferences do not exist for the investor, the create endpoint must be used.
       operationId: modifyInvestorCorrespondences
       parameters:
         - $ref: '#/components/parameters/Request-Id'
