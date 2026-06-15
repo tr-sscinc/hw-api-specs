@@ -1040,7 +1040,7 @@ paths:
               $ref: "#/components/schemas/InvestorPatch"
             examples:
               Ex1:
-                summary: Update investor phone number and notifications
+                summary: Update investor phone number and notification preferences
                 value:
                   {
                     "individual":
@@ -1056,26 +1056,25 @@ paths:
                       }
                   }
               Ex2:
-                summary: Update investor address with ID 1
+                summary: Update an investor's surname and main address
                 value:
                   {
-                    "addresses":
-                      [
-                        {
-                          "id": 1,
-                          "premisesIdentifier": "14",
-                          "line1": "Rosewood Cottage",
-                          "line2": "Elm Street",
-                          "town": "Hightown",
-                          "county": "Lancashire",
-                          "countryCode": "GB",
-                          "postCode": "HT1 4AB",
-                          "primary": true
-                        }
+                      "individual": {
+                          "surname": "NewSurname"
+                      },
+                      "addresses": [
+                          {
+                              "id": 1,
+                              "premisesIdentifier": "100",
+                              "line1": "New address",
+                              "town": "South Tess",
+                              "countryCode": "GB",
+                              "postCode": "M40 5PX"
+                          }
                       ]
                   }
               Ex3:
-                summary: Update corporate investor email
+                summary: Update the email address of a corporate investor
                 value:
                   {
                     "corporate":
@@ -1087,14 +1086,18 @@ paths:
                       }
                   }
               Ex4:
-                summary: Update corporate investor email
+                summary: Adds a new primary tax redsidence and makes the existing one secondary
                 value:
                   {
-                    "corporate":
-                      {
-                        "contactDetails":
-                          {
-                            "email": "info@silveroakholdings.com"
+                      "individual": {
+                          "territorialProfile": {
+                              "taxResidencies": [
+                                  {
+                                      "countryCode": "FR",
+                                      "primary": true,
+                                      "tin": "RE215032A"
+                                  }
+                              ]
                           }
                       }
                   }
