@@ -278,52 +278,49 @@ paths:
                   {
                     "adviserId": "E273053",
                     "type": "BARE_TRUST",
-                    "externalReferences":
-                      [
-                        {
-                          "reference": "X5T9B2N8R6P4W1H",
-                          "provider": "CRM Name"
-                        }
-                      ],
-                    "corporate":
+                    "externalReferences": [
                       {
-                        "legalName": "M S Ltd",
-                        "contactDetails":
-                          {
-                            "contactPhone": "01619887766",
-                            "homePhone": "01619887777",
-                            "mobilePhone": "07799123456",
-                            "email": "info@msltd.co.uk"
-                          },
-                        "notificationPreferences":
-                          { "disableEmails": false, "disableSms": false }
+                        "reference": "X5T9B2N8R6P4W1H",
+                        "provider": "CRM Name"
+                      }
+                    ],
+                    "corporate": {
+                      "legalName": "M S Ltd",
+                      "contactDetails": {
+                        "contactPhone": "01619887766",
+                        "homePhone": "01619887777",
+                        "mobilePhone": "07799123456",
+                        "email": "info@msltd.co.uk"
                       },
-                    "addresses":
-                      [
-                        {
-                          "premisesIdentifier": "16",
-                          "line1": "Maple House",
-                          "line2": "Business Park Avenue",
-                          "town": "Northford",
-                          "county": "Westshire",
-                          "countryCode": "GB",
-                          "postCode": "NF12 8XY",
-                          "primary": true
-                        }
-                      ],
-                    "declarations":
-                      [
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "IFA_FCA_AUTH",
-                          "acknowledgement": true
-                        },
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "LEI_NOT_REQ",
-                          "acknowledgement": true
-                        }
-                      ]
+                      "notificationPreferences": {
+                        "disableEmails": false,
+                        "disableSms": false
+                      }
+                    },
+                    "addresses": [
+                      {
+                        "premisesIdentifier": "16",
+                        "line1": "Maple House",
+                        "line2": "Business Park Avenue",
+                        "town": "Northford",
+                        "county": "Westshire",
+                        "countryCode": "GB",
+                        "postCode": "NF12 8XY",
+                        "primary": true
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "IFA_FCA_AUTH",
+                        "acknowledgement": true
+                      },
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "LEI_NOT_REQ",
+                        "acknowledgement": true
+                      }
+                    ]
                   }
               Ex5:
                 summary: Investor is a child
@@ -331,13 +328,12 @@ paths:
                   {
                     "adviserId": "E273053",
                     "type": "INDIVIDUAL",
-                    "externalReferences":
-                      [
-                        {
-                          "reference": "L1Z7Q8C3A5M9F2D",
-                          "provider": "CRM Name"
-                        }
-                      ],
+                    "externalReferences": [
+                      {
+                        "reference": "L1Z7Q8C3A5M9F2D",
+                        "provider": "CRM Name"
+                      }
+                    ],
                     "individual": {
                       "title": "MASTER",
                       "firstName": "Tom",
@@ -346,38 +342,37 @@ paths:
                       "dateOfBirth": "2026-02-20",
                       "gender": "MALE",
                       "territorialProfile": {
-                          "nationalities": [
-                              {
-                                  "countryCode": "GB",
-                                  "primary": true
-                              }
-                          ]
+                        "nationalities": [
+                          {
+                            "countryCode": "GB",
+                            "primary": true
+                          }
+                        ]
                       },
                       "notificationPreferences": {
-                          "disableEmails": false,
-                          "disableSms": false
+                        "disableEmails": false,
+                        "disableSms": false
                       }
-                  },
-                  "addresses": [
+                    },
+                    "addresses": [
                       {
-                          "premisesIdentifier": "12",
-                          "line1": "Rosewood Cottage",
-                          "line2": "Elm Street",
-                          "town": "Hightown",
-                          "county": "Lancashire",
-                          "countryCode": "GB",
-                          "postCode": "HT3 4AB",
-                          "primary": true
+                        "premisesIdentifier": "12",
+                        "line1": "Rosewood Cottage",
+                        "line2": "Elm Street",
+                        "town": "Hightown",
+                        "county": "Lancashire",
+                        "countryCode": "GB",
+                        "postCode": "HT3 4AB",
+                        "primary": true
                       }
-                  ],
-                    "declarations":
-                      [
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "IFA_FCA_AUTH",
-                          "acknowledgement": true
-                        }
-                      ]
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "IFA_FCA_AUTH",
+                        "acknowledgement": true
+                      }
+                    ]
                   }
       responses:
         "201":
@@ -397,89 +392,86 @@ paths:
                       "id": "HWI04003217",
                       "adviserId": "E273053",
                       "type": "INDIVIDUAL",
-                      "externalReferences":
-                        [
-                          {
-                            "reference": "A9F3K7X2L8Q4M1Z",
-                            "provider": "CRM",
-                          },
-                        ],
-                      "individual":
+                      "externalReferences": [
                         {
-                          "title": "OTHER",
-                          "titleOtherValue": "General",
-                          "firstName": "Sam",
-                          "middleName": "John",
-                          "surname": "Smith",
-                          "dateOfBirth": "1970-02-20",
-                          "gender": "MALE",
-                          "maritalStatus": "MARRIED",
-                          "incomeAndInvestment":
-                            {
-                              "occupation": "OTHER",
-                              "occupationOtherValue": "Management Consultant",
-                              "industry": "OTHER",
-                              "industryOtherValue": "Consulting",
-                              "annualIncome": "FROM_50K_TO_75K",
-                              "investmentReason": "GROW_WEALTH",
-                              "investmentAgreedInPerson": true
-                            },
-                          "territorialProfile": {
-                            "nationalities": [
-                                {
-                                    "countryCode": "GB",
-                                    "primary": true
-                                },
-                                {
-                                    "countryCode": "US",
-                                    "primary": false
-                                }
-                            ],
-                            "taxResidencies": [
-                                {
-                                    "countryCode": "GB",
-                                    "tin": "AC123456C",
-                                    "primary": true
-                                },
-                                {
-                                    "countryCode": "US",
-                                    "tin": "912-34-5678",
-                                    "primary": false
-                                }
-                            ]
+                          "reference": "A9F3K7X2L8Q4M1Z",
+                          "provider": "CRM"
+                        }
+                      ],
+                      "individual": {
+                        "title": "OTHER",
+                        "titleOtherValue": "General",
+                        "firstName": "Sam",
+                        "middleName": "John",
+                        "surname": "Smith",
+                        "dateOfBirth": "1970-02-20",
+                        "gender": "MALE",
+                        "maritalStatus": "MARRIED",
+                        "incomeAndInvestment": {
+                          "occupation": "OTHER",
+                          "occupationOtherValue": "Management Consultant",
+                          "industry": "OTHER",
+                          "industryOtherValue": "Consulting",
+                          "annualIncome": "FROM_50K_TO_75K",
+                          "investmentReason": "GROW_WEALTH",
+                          "investmentAgreedInPerson": true
                         },
-                          "contactDetails":
+                        "territorialProfile": {
+                          "nationalities": [
                             {
-                              "contactPhone": "01619465555",
-                              "homePhone": "01619464444",
-                              "mobilePhone": "07877156340",
-                              "email": "sam.smith@outlook.com"
-                            },
-                          "notificationPreferences":
-                            { "disableEmails": false, "disableSms": false }
-                        },
-                      "addresses":
-                        [
-                          {
-                            "premisesIdentifier": "12",
-                            "line1": "Rosewood Cottage",
-                            "line2": "Elm Street",
-                            "town": "Hightown",
-                            "county": "Lancashire",
-                            "countryCode": "GB",
-                            "postCode": "HT3 4AB",
-                            "primary": true
-                          },
-                          {
-                              "premisesIdentifier": "87",
-                              "line1": "Birch Road",
-                              "town": "Downtown",
-                              "county": "Yorkshore",
                               "countryCode": "GB",
-                              "postCode": "L6 4DE",
+                              "primary": true
+                            },
+                            {
+                              "countryCode": "US",
                               "primary": false
-                          }
-                        ]
+                            }
+                          ],
+                          "taxResidencies": [
+                            {
+                              "countryCode": "GB",
+                              "tin": "AC123456C",
+                              "primary": true
+                            },
+                            {
+                              "countryCode": "US",
+                              "tin": "912-34-5678",
+                              "primary": false
+                            }
+                          ]
+                        },
+                        "contactDetails": {
+                          "contactPhone": "01619465555",
+                          "homePhone": "01619464444",
+                          "mobilePhone": "07877156340",
+                          "email": "sam.smith@outlook.com"
+                        },
+                        "notificationPreferences": {
+                          "disableEmails": false,
+                          "disableSms": false
+                        }
+                      },
+                      "addresses": [
+                        {
+                          "premisesIdentifier": "12",
+                          "line1": "Rosewood Cottage",
+                          "line2": "Elm Street",
+                          "town": "Hightown",
+                          "county": "Lancashire",
+                          "countryCode": "GB",
+                          "postCode": "HT3 4AB",
+                          "primary": true
+                        },
+                        {
+                          "premisesIdentifier": "87",
+                          "line1": "Birch Road",
+                          "town": "Downtown",
+                          "county": "Yorkshore",
+                          "countryCode": "GB",
+                          "postCode": "L6 4DE",
+                          "primary": false
+                        }
+                      ]
                     }
                 Ex2:
                   summary: Investor is a discretionary trust
@@ -648,19 +640,19 @@ paths:
                             "disableEmails": false,
                             "disableSms": false
                         }
-                    },
-                    "addresses": [
-                        {
-                            "premisesIdentifier": "12",
-                            "line1": "Rosewood Cottage",
-                            "line2": "Elm Street",
-                            "town": "Hightown",
-                            "county": "Lancashire",
-                            "countryCode": "GB",
-                            "postCode": "HT3 4AB",
-                            "primary": true
-                        }
-                    ]
+                      },
+                      "addresses": [
+                          {
+                              "premisesIdentifier": "12",
+                              "line1": "Rosewood Cottage",
+                              "line2": "Elm Street",
+                              "town": "Hightown",
+                              "county": "Lancashire",
+                              "countryCode": "GB",
+                              "postCode": "HT3 4AB",
+                              "primary": true
+                          }
+                      ]
                     }
         "400":
           description: Bad request
@@ -730,89 +722,86 @@ paths:
                       "id": "HWI04003217",
                       "adviserId": "E273053",
                       "type": "INDIVIDUAL",
-                      "externalReferences":
-                        [
-                          {
-                            "reference": "A9F3K7X2L8Q4M1Z",
-                            "provider": "CRM",
-                          },
-                        ],
-                      "individual":
+                      "externalReferences": [
                         {
-                          "title": "OTHER",
-                          "titleOtherValue": "General",
-                          "firstName": "Sam",
-                          "middleName": "John",
-                          "surname": "Smith",
-                          "dateOfBirth": "1970-02-20",
-                          "gender": "MALE",
-                          "maritalStatus": "MARRIED",
-                          "incomeAndInvestment":
-                            {
-                              "occupation": "OTHER",
-                              "occupationOtherValue": "Management Consultant",
-                              "industry": "OTHER",
-                              "industryOtherValue": "Consulting",
-                              "annualIncome": "FROM_50K_TO_75K",
-                              "investmentReason": "GROW_WEALTH",
-                              "investmentAgreedInPerson": true
-                            },
-                          "territorialProfile": {
-                            "nationalities": [
-                                {
-                                    "countryCode": "GB",
-                                    "primary": true
-                                },
-                                {
-                                    "countryCode": "US",
-                                    "primary": false
-                                }
-                            ],
-                            "taxResidencies": [
-                                {
-                                    "countryCode": "GB",
-                                    "tin": "AC123456C",
-                                    "primary": true
-                                },
-                                {
-                                    "countryCode": "US",
-                                    "tin": "912-34-5678",
-                                    "primary": false
-                                }
-                            ]
+                          "reference": "A9F3K7X2L8Q4M1Z",
+                          "provider": "CRM"
+                        }
+                      ],
+                      "individual": {
+                        "title": "OTHER",
+                        "titleOtherValue": "General",
+                        "firstName": "Sam",
+                        "middleName": "John",
+                        "surname": "Smith",
+                        "dateOfBirth": "1970-02-20",
+                        "gender": "MALE",
+                        "maritalStatus": "MARRIED",
+                        "incomeAndInvestment": {
+                          "occupation": "OTHER",
+                          "occupationOtherValue": "Management Consultant",
+                          "industry": "OTHER",
+                          "industryOtherValue": "Consulting",
+                          "annualIncome": "FROM_50K_TO_75K",
+                          "investmentReason": "GROW_WEALTH",
+                          "investmentAgreedInPerson": true
                         },
-                          "contactDetails":
+                        "territorialProfile": {
+                          "nationalities": [
                             {
-                              "contactPhone": "01619465555",
-                              "homePhone": "01619464444",
-                              "mobilePhone": "07877156340",
-                              "email": "sam.smith@outlook.com"
-                            },
-                          "notificationPreferences":
-                            { "disableEmails": false, "disableSms": false }
-                        },
-                      "addresses":
-                        [
-                          {
-                            "premisesIdentifier": "12",
-                            "line1": "Rosewood Cottage",
-                            "line2": "Elm Street",
-                            "town": "Hightown",
-                            "county": "Lancashire",
-                            "countryCode": "GB",
-                            "postCode": "HT3 4AB",
-                            "primary": true
-                          },
-                          {
-                              "premisesIdentifier": "87",
-                              "line1": "Birch Road",
-                              "town": "Downtown",
-                              "county": "Yorkshore",
                               "countryCode": "GB",
-                              "postCode": "L6 4DE",
+                              "primary": true
+                            },
+                            {
+                              "countryCode": "US",
                               "primary": false
-                          }
-                        ]
+                            }
+                          ],
+                          "taxResidencies": [
+                            {
+                              "countryCode": "GB",
+                              "tin": "AC123456C",
+                              "primary": true
+                            },
+                            {
+                              "countryCode": "US",
+                              "tin": "912-34-5678",
+                              "primary": false
+                            }
+                          ]
+                        },
+                        "contactDetails": {
+                          "contactPhone": "01619465555",
+                          "homePhone": "01619464444",
+                          "mobilePhone": "07877156340",
+                          "email": "sam.smith@outlook.com"
+                        },
+                        "notificationPreferences": {
+                          "disableEmails": false,
+                          "disableSms": false
+                        }
+                      },
+                      "addresses": [
+                        {
+                          "premisesIdentifier": "12",
+                          "line1": "Rosewood Cottage",
+                          "line2": "Elm Street",
+                          "town": "Hightown",
+                          "county": "Lancashire",
+                          "countryCode": "GB",
+                          "postCode": "HT3 4AB",
+                          "primary": true
+                        },
+                        {
+                          "premisesIdentifier": "87",
+                          "line1": "Birch Road",
+                          "town": "Downtown",
+                          "county": "Yorkshore",
+                          "countryCode": "GB",
+                          "postCode": "L6 4DE",
+                          "primary": false
+                        }
+                      ]
                     }
                 Ex2:
                   summary: Investor is a discretionary trust
@@ -981,19 +970,19 @@ paths:
                             "disableEmails": false,
                             "disableSms": false
                         }
-                    },
-                    "addresses": [
-                        {
-                            "premisesIdentifier": "12",
-                            "line1": "Rosewood Cottage",
-                            "line2": "Elm Street",
-                            "town": "Hightown",
-                            "county": "Lancashire",
-                            "countryCode": "GB",
-                            "postCode": "HT3 4AB",
-                            "primary": true
-                        }
-                    ]
+                      },
+                      "addresses": [
+                          {
+                              "premisesIdentifier": "12",
+                              "line1": "Rosewood Cottage",
+                              "line2": "Elm Street",
+                              "town": "Hightown",
+                              "county": "Lancashire",
+                              "countryCode": "GB",
+                              "postCode": "HT3 4AB",
+                              "primary": true
+                          }
+                      ]
                     }
 
         "400":
