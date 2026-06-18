@@ -1054,6 +1054,7 @@ paths:
                       "addresses": [
                           {
                               "id": 1,
+                              "primary": true,
                               "premisesIdentifier": "100",
                               "line1": "New address",
                               "town": "South Tess",
@@ -7430,8 +7431,19 @@ components:
           type: string
           example: "2020-04-28"
 
+    AddressWithPrimaryFlag:
+      allOf:
+        - $ref: "#/components/schemas/Address"
+        - type: object
+          required:
+            - primary
+          properties:
+            primary:
+              type: boolean
+              description: Primary
+              default: false
+    
     Address:
-      additionalProperties: false
       required:
         - countryCode
         - line1
@@ -7445,10 +7457,6 @@ components:
           description: Id
           format: int64
           readOnly: true
-        primary:
-          type: boolean
-          description: Primary
-          default: false
         premisesIdentifier:
           maxLength: 75
           type: string
@@ -7488,11 +7496,12 @@ components:
     AddressPatch:
       additionalProperties: false
       type: object
+      required:
+        - primary
       properties:
         primary:
           type: boolean
           description: Primary
-          default: false
         premisesIdentifier:
           maxLength: 75
           type: string
@@ -8376,7 +8385,7 @@ components:
           minItems: 0
           type: array
           items:
-            $ref: "#/components/schemas/Address"
+            $ref: "#/components/schemas/AddressWithPrimaryFlag"
         declarations:
           writeOnly: true
           type: array
@@ -8402,7 +8411,7 @@ components:
           minItems: 0
           type: array
           items:
-            $ref: "#/components/schemas/Address"
+            $ref: "#/components/schemas/AddressWithPrimaryFlag"
         declarations:
           writeOnly: true
           type: array
@@ -8442,12 +8451,12 @@ components:
           type: boolean
           description: A flag to disable email notifications. If not provided it will default to enabled.
           format: Boolean
-          example: false
+          default: false
         disableSms:
           type: boolean
           description: A flag to disable sms notifications. If not provided it will default to enabled.
           format: Boolean
-          example: false
+          default: false
 
     OrderDetails:
       type: object
@@ -8485,6 +8494,9 @@ components:
       type: object
       description: the investors taxation. TIN to be provided for adult type individual and court appointed deputy. LEI to be provided for corporated and trusts without an exception.
       additionalProperties: false
+      required:
+        - countryCode
+        - primary
       properties:
         id:
           type: integer
