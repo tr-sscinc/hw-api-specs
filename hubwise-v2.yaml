@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.5
+  version: 0.8.6
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -7054,7 +7054,7 @@ paths:
                           "type": "CONTRIBUTIONS",
                           "frequency": "ONE_OFF",
                           "nextDate": "2026-01-22",
-                          "endDate": "2026-011-22",
+                          "endDate": "2026-01-22",
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "value": {
                             "amount": 15000,
@@ -7083,17 +7083,10 @@ paths:
                       ],
                       "transfers": [
                         {
-                          "type": "CASH",
-                          "isPartial": false,
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "value": {
                             "amount": 10000,
-                            "currency": "GBP",
-                            "crystallised": 0
-                          },
-                          "currentYearSubscription": {
-                            "amount": 10000,
-                            "startDate": "2025-05-01"
+                            "currency": "GBP"
                           },
                           "fee": {
                             "amount": 5,
@@ -7120,12 +7113,12 @@ paths:
                   value:
                     {
                       "message":{
-                      "result":{},
-                      "document":{
-                        "pdfData":"string",
-                        "totalPages":12
+                        "result":{},
+                        "document":{
+                          "pdfData": "0747a9ad467d4dc29ce70344",
+                          "totalPages":12
+                        }
                       }
-                  }
                     }
         "400":
           description: Bad request
@@ -10104,8 +10097,6 @@ components:
             $ref: '#/components/schemas/Declaration'
     
     IllustrationNPAccountMovement:
-      required:
-        - action
       type: object
       additionalProperties: false
       properties:
@@ -10169,8 +10160,6 @@ components:
     
     IllustrationNPAccountFee:
       description: Account level fees not associated with a specific money movement or transfer.
-      required:
-        - action
       additionalProperties: false
       properties:
         id:
@@ -10230,8 +10219,6 @@ components:
       description: Transfers into the account from an external provider
       type: object
       additionalProperties: false
-      required:
-        - action
       properties:
         
         investmentInstruction:
@@ -10559,21 +10546,6 @@ components:
           type: integer
           example: 12
 
-    IllustrationTransferSubscription:
-      additionalProperties: false
-      description: | 
-        Subscription details for an ISA or JISA. Applies to:
-        
-          - Transfers in, to record the transfered amount
-          - Investment account, to record the amount not tranferred. 
-      type: object
-      properties:
-        amountNotTransfered:
-          format: double
-          description: The current tax year ISA or JISA subscriptions being transferred. Only applicable to the investment account, not transfers.
-          type: number
-          example: 15000
-
     IllustrationModel:
       type: object
       description: >
@@ -10630,37 +10602,6 @@ components:
           description: The percentage of any investment to be allocated to this asset.
           example: 100
 
-    IllustrationInstrument:
-      type: object
-      additionalProperties: false
-      properties:
-        
-        allocation:
-          type: array
-          items:
-            type: object
-            properties:
-             
-              isin:
-                type: string
-                description: Must be a valid 12-character ISIN code identifying the asset to which the allocation applies.
-                example: GB0000000KL1
-              currency:
-                type: string
-                description: Market currency
-                enum:
-                  - USD
-                  - GBP
-                  - EUR
-                example: GBP
-              exchange:
-                type: string
-                example: XLON
-              percentage:
-                description: The percentage of any investment to be allocated to this asset.
-                type: number
-                example: 60
-    
     IllustrationMovementFee:
       allOf:
         - $ref: '#/components/schemas/IllustrationTransferFee'
