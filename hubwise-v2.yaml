@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.5
+  version: 0.8.6
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -12,6 +12,7 @@ tags:
   - name: Investors
   - name: Accounts
   - name: Fee Groups
+  - name: Illustrations
 
 security:
   - bearer-token: []
@@ -6805,6 +6806,341 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /non-pension-illustrations:
+
+    post:
+      tags:
+        - Illustrations
+      summary: Create an Illustration for non pension products
+      description: |
+        Creates an illustration based on the supplied scenario.
+
+
+        You can use this endpoint to generate a non-pension illustration for an existing investment account or a hypothetical investment account that has not yet been onboarded to the platform. The default illustration period is 10 years, but you can specify a different forecast period if required.
+
+        When generating an illustration for an existing investment account, the only required field is the Account ID. You may also optionally model changes to the account. If the request payload includes a money movement, transfer, or fee without an associated ID, it will be treated as a new item.
+
+        You can retrieve the ID of an existing regular money movement or fee using the relevant GET endpoint and include that ID along with any proposed amendments. This can include specifying an end date that falls before the illustration period, allowing you to generate an illustration that excludes the movement or fee entirely.
+
+        When illustrating a hypothetical investment account, you need to populate the Product ID plus at least one money movement or transfer. You also need to provide an investment strategy by either specifying the Model ID to use an existing model portfolio or defining individual asset allocations.
+
+        You can provide details of any one-off or ongoing fees. If the hypothetical account will belong to a Fee Group for a particular fee type, use the Band Adjustment Amount field to specify the value of the other accounts in the group. This ensures the fee is correctly illustrated.
+
+      operationId: createNonPensionIllustration
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: generateData
+          in: query
+          required: false
+          schema:
+            type: boolean
+            enum: [true, false]
+            default: true
+          description: Indicates whether illustration data should be generated.
+        - name: generateDocument
+          in: query
+          required: false
+          schema:
+            type: boolean
+            enum: [true, false]
+            default: true
+          description: Indicates whether an illustration document should be generated.
+        
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IllustrationNPRequest"
+            examples:
+              Ex1:
+                summary: Generate a anonymous Illustration for non pension product with model
+                value:
+                  {
+                    
+                    "investors": [
+                      {
+                          "name": "Anne Winfield",
+                          "dateOfBirth": "1990-05-15"
+                      }
+                    ],
+                    "illustrationDetails": {
+                      "forecastPeriod": 15,
+                      "account": {
+                        "productId": "HIS",
+                        "currency": "GBP",
+                      },
+                      "model": {
+                          "id": "HW000000090",
+                          "providerId": "HUBWISE",
+                          "date": "2020-04-28"
+                      },
+                      "moneyMovements": [
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "type": "ADVISER_ANNUAL",
+                          "code": "",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28",
+                          "bandAdjustmentAmount": 250000
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ],
+                    }
+                  }
+              Ex2:
+                summary: Generate a anonymous Illustration for non pension product with instruments
+                value:
+                 {
+                    
+                    "investors": [
+                      {
+                          "name": "Anne Winfield",
+                          "dateOfBirth": "1990-05-15"
+                      }
+                    ],
+                    "illustrationDetails": {
+                      "forecastPeriod": 15,
+                      "account": {
+                        "productId": "HIS",
+                        "currency": "GBP",
+                      },
+                      "model": {
+                          "allocations": [
+                                {
+                                  "isin": "GB0005405286",
+                                  "exchange": "LONX",
+                                  "currency": "GBP",
+                                  "percentage": 100
+                                }
+                              ]
+                        },
+                      "moneyMovements": [
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "type": "ADVISER_ANNUAL",
+                          "code": "",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28",
+                          "bandAdjustmentAmount": 250000
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ],
+                    }
+                  }
+              Ex3:
+                summary: Generate a non anonymous Illustration for non pension with no changes
+                value:
+                  {
+                    "accountId":"HW000000108"
+                  }
+              Ex4:
+                summary: Generate a non anonymous Illustration for non pension product with add/amend/remove changes
+                value:
+                  {
+                    "accountId":"HW000000108",
+                    "illustrationDetails": {
+                      "forecastPeriod": 10,
+                      "moneyMovements": [
+                        {
+                          "id":5,
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2026-01-22",
+                          "endDate": "2026-06-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        },
+                        {
+                          "id":1,
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2028-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP",
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        },
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2026-01-22",
+                          "endDate": "2026-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "id":1,
+                          "type": "ADVISER_ANNUAL",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28"
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ]
+                    }
+                  }
+              
+      responses:
+        "201":
+          description: Illustration generated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IllustrationNPResponse"
+              examples: 
+                Ex1:
+                  summary: Illustration Response Example
+                  value:
+                    {
+                      "message":{
+                        "result":{},
+                        "document":{
+                          "pdfData": "0747a9ad467d4dc29ce70344",
+                          "totalPages":12
+                        }
+                      }
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
 components:
   
   parameters:
@@ -9759,6 +10095,568 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Declaration'
+    
+    IllustrationNPAccountMovement:
+      type: object
+      additionalProperties: false
+      properties:
+      
+        id:
+          format: int64
+          description: Unique SS&C Wealth Platform Money Movement identifier.
+          type: integer
+          example: 2
+        
+        type:
+          description: >-
+            The type of money movement being specified, the API can support payments into and out
+            of the account.
+          enum:
+            - CONTRIBUTIONS
+            - WITHDRAWALS
+            - UFPLS
+            - FLEXI_ACCESS_INCOME
+            - FLEXI_ACCESS_PCLS
+          type: string
+          example: CONTRIBUTIONS
+        
+        frequency:
+          description: >-
+            The frequency of this specific money movement.
+          enum:
+            - ANNUALLY
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - ONE_OFF
+          type: string
+          example: ONE_OFF
+        nextDate:
+          format: date
+          description: >-
+            The intended start date of the money movement. 
+          type: string
+          example: "2025-01-22"
+        endDate:
+          format: date
+          description: >-
+            	The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
+          type: string
+        
+        investmentInstruction:
+          description: >-
+            Whether a contribution should be invested immediately or held as cash.
+          enum:
+            - LEAVE_IN_CASH
+            - INVEST_IN_MODEL
+          type: string
+          example: INVEST_IN_MODEL
+        
+        value:
+          $ref: "#/components/schemas/IllustrationValue"
+        
+        fee:
+          $ref: "#/components/schemas/IllustrationMovementFee"  
+    
+    IllustrationNPAccountFee:
+      description: Account level fees not associated with a specific money movement or transfer.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique SS&C Wealth Platform Fee identifier.
+          example: 1
+        type:
+          type: string
+          description: The type of fee.
+          enum:
+            - ADVISER_ANNUAL
+            - ADVISER_INITIAL
+            - ADVISER_ONE_OFF
+            - PORTFOLIO_MANAGEMENT
+            - INVESTMENT_SERVICE
+            - DISCRETIONARY_MANAGEMENT_ANNUAL
+          example: ADVISER_ANNUAL
+        code:
+          type: string
+          description: Unique identifier for a pre-configured set of tiered rates.
+          maxLength: 6
+          minLength: 0
+          example: AFGVCD
+        amount:
+          type: number
+          description: Amount-based fee value.
+          example: 1000
+        percentage:
+          type: number
+          description: The rate for a percentage-based fee.
+          example: 0.12
+        currency:
+          type: string
+          description: The currency associated with the fee.
+          example: GBP
+        vatIncluded:
+          type: boolean
+          description: Whether the fee includes VAT.
+          example: true
+        startDate:
+          type: string
+          description: The intended start date of the fee.
+          format: date
+          example: "2025-04-28"
+        endDate:
+          type: string
+          description: The date when the fee is scheduled to stop.
+          format: date
+          example: "2027-04-28"
+        bandAdjustmentAmount:
+          description: If the account is in a fee group for this fee type, the total value of the other accounts in the group.
+          type: number
+          example: 1000
+
+    IllustrationNPAccountTransfer:
+      description: Transfers into the account from an external provider
+      type: object
+      additionalProperties: false
+      properties:
+        
+        investmentInstruction:
+          type: string
+          description: Whether a transfer should be invested immediately or held as cash.
+          enum:
+            - INVEST_IN_MODEL
+            - LEAVE_IN_CASH
+          example: INVEST_IN_MODEL
+        value:
+          $ref: "#/components/schemas/IllustrationValue"
+        fee:
+          $ref: "#/components/schemas/IllustrationTransferFee"    
+              
+
+    IllustrationNPRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        accountId:
+           type: string
+           nullable: true
+           example: "ACC123456"
+           description: Unique SS&C Wealth Platform Account identifier
+
+        investors:
+              type: array
+              description: |
+                The investor(s) associated with the illustration.
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Anne Winfield"
+                    description: The investor’s name.
+                  dateOfBirth:
+                    type: string
+                    format: date
+                    example: "2000-10-10"
+                    description: The investor’s date of birth. 
+        
+          
+        illustrationDetails:
+          type: object
+          description: Required when creating a new illustration without an account ID, or when illustrating proposed changes to an existing account.
+          properties:
+
+            forecastPeriod:
+              type: integer
+              example: 15
+              description: Number of years that the illustration will cover. If not provided, the default 10 year period will be used.
+
+            account:
+              type: object
+              description: |
+                    Account details for the illustration.
+                    
+              properties:
+                productId:
+                  description: Unique SS&C Wealth Platform Product identifier.
+                  type: string
+                  example: GIA
+                currency:
+                  description: The currency associated with the account.
+                  type: string
+                  example: GBP
+
+            model:
+              $ref: '#/components/schemas/IllustrationModel'
+ 
+            moneyMovements:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationNPAccountMovement"
+                description: Contributions and Withdrawals.
+            
+            fees:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationNPAccountFee"
+                description: Account level fees not associated with a specific money movement or transfer.
+
+            transfers:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationNPAccountTransfer"
+                description: Transfers into the account from an external provider
+
+
+    IllustrationNPResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        message:
+          type: object
+          properties:
+            result:
+              type: object
+              properties:
+                illustrationResults:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/IllustrationResult'
+
+            document:
+              $ref: '#/components/schemas/IllustrationDocument'  
+    
+    IllustrationResult:
+      type: object
+      additionalProperties: false
+      properties:
+        projectionType:
+          type: string
+          description: Indicates whether the illustration class is new or existing.
+          enum:
+            - NEW
+            - EXISTING
+          example: NEW
+          x-enum-descriptions:
+            - New
+            - Existing
+
+        summary:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationSummary'
+
+        reductionInYield:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationReductionInYield'
+
+        deductions:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationDeduction'
+
+        adviserFees:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustratioAdviserFee'
+
+    IllustrationSummary:
+      type: object
+      additionalProperties: false
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - LOW
+            - MEDIUM
+            - HIGH
+          example: MEDIUM
+          x-enum-descriptions:
+            - Low
+            - Medium
+            - High
+
+        periodStartDate:
+          type: string
+          format: date
+          example: "2026-01-01"
+
+        periodEndDate:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        openingFundValue:
+          type: number
+          format: double
+          example: 10000
+
+        newFundInvestment:
+          type: number
+          format: double
+          example: 500
+
+        totalIncome:
+          type: number
+          format: double
+          example: 200
+
+        totalIncomeToDate:
+          type: number
+          format: double
+          example: 200
+
+        closingFundValue:
+          type: number
+          format: double
+          example: 10700
+
+    IllustrationReductionInYield:
+      type: object
+      additionalProperties: false
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        growthRatePercentage:
+          type: number
+          format: double
+          example: 5.0
+
+        reductionInYieldPercentage:
+          type: number
+          format: double
+          example: 1.2
+
+    IllustrationDeduction:
+      type: object
+      additionalProperties: false
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        date:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        year:
+          type: integer
+          example: 1
+
+        isProjectionEnd:
+          type: boolean
+          example: false
+
+        inflowToDate:
+          type: number
+          format: double
+          example: 1000
+
+        outflowToDate:
+          type: number
+          format: double
+          example: 200
+
+        actualDeductionsToDate:
+          type: number
+          format: double
+          example: 150
+
+        effectOfDeductionsToDate:
+          type: number
+          format: double
+          example: 75
+
+        yearEndValue:
+          type: number
+          format: double
+          example: 12000
+
+        yearEndValueWithoutCharges:
+          type: number
+          format: double
+          example: 12300
+
+        yearEndValueAfterProductCharges:
+          type: number
+          format: double
+          example: 11900
+
+    IllustratioAdviserFee:
+      type: object
+      additionalProperties: false
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        date:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        year:
+          type: integer
+          example: 1
+
+        isProjectionEnd:
+          type: boolean
+          example: false
+
+        initialAdviserFees:
+          type: number
+          format: double
+          example: 250
+
+        ongoingAdviserFees:
+          type: number
+          format: double
+          example: 100
+
+    IllustrationDocument:
+      type: object
+      additionalProperties: false
+      properties:
+        pdfData:
+          type: string
+          format: byte
+          description: Base64 encoded PDF document.
+
+        totalPages:
+          type: integer
+          example: 12
+
+    IllustrationModel:
+      type: object
+      description: >
+        Investment Strategy for the account.
+      properties:
+        id:
+          description: Unique SS&C Wealth Platform Model identifier.
+          type: string
+          example: HW000000090
+
+        providerId:
+          description: Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId from the token will be used.
+          type: string
+          example: HUBWISE
+
+        date:
+          description: The model version date. If not provided, the most recent version will be used.
+          type: string
+          format: date
+          example: '2026-04-28'
+
+        allocations: 
+          description: Individual asset selection.
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationAllocation'
+
+    IllustrationAllocation:
+      type: object
+      description: Asset allocation within the model.
+      properties:
+        isin:
+          type: string
+          description: Must be a valid 12-character ISIN code identifying the asset to which the allocation applies.
+          example: GB0005405286
+
+        currency:
+          type: string
+          description: Market currency.
+          enum:
+            - USD
+            - GBP
+            - EUR
+          example: GBP
+
+        exchange:
+          type: string
+          description: Exchange code.
+          example: XLON
+
+        percentage:
+          type: number
+          format: double
+          description: The percentage of any investment to be allocated to this asset.
+          example: 100
+
+    IllustrationMovementFee:
+      allOf:
+        - $ref: '#/components/schemas/IllustrationTransferFee'
+        - type: object
+          properties:
+            instalmentPlan:
+              $ref: "#/components/schemas/IllustrationFeeInstalmentPlan"
+
+    IllustrationTransferFee:
+      description: A fee associated with this money movement or transfer.
+      type: object
+      properties:
+        amount:
+          description: Amount-based fee value.
+          type: number
+          example: 5
+        percentage:
+          description: The rate for a percentage-based fee.
+          maximum: 100
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          example: 5
+
+    IllustrationFeeInstalmentPlan:
+      description: >-
+        A monthly instalment plan that spreads a fee across multiple regular money movements.
+      type: object
+      additionalProperties: false
+      properties:
+        totalMonths:
+          format: int64
+          description: The total number of instalments across which the fee will be spread.
+          maximum: 999
+          type: integer
+          example: 12
+
+    IllustrationValue:
+      required:
+        - amount
+        - currency
+      type: object
+      additionalProperties: false
+      properties:
+        amount:
+          format: double
+          description: Monetary value of the movement or transfer.
+          type: number
+          example: 15000
+        currency:
+          description: The currency associated with the money movement or transfer.
+          maxLength: 3
+          type: string
+          example: GBP
 
   examples:
     400-BadRequest:
