@@ -1,4 +1,11 @@
 # hw-api-specs
+Changelog for v0.8.7 API spec
+
+ - Added descriptions for the GET investor and account endpoints
+ - Updated investor email field description to be optional for childrem
+ - Updated investor POST, PATCH and GET examples
+ - Added descriptions for the PUT vulnerability and correspondence endpoints
+ - Added server information for QI environment
 
 Changelog for v0.8.6 API spec
 
