@@ -7,7 +7,7 @@ info:
 servers:
   - url: "https://rest-qd.hubwise.co.uk"
     description: Pilot/UAT environment
-  - url: "https://rest-qd.hubwise.co.uk"
+  - url: "https://rest-qi.hubwise.co.uk"
     description: Preproduction environment
 
 tags:
