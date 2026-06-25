@@ -6,6 +6,7 @@ Changelog for v0.8.7 API spec
  - Updated investor POST, PATCH and GET examples
  - Added descriptions for the PUT vulnerability and correspondence endpoints
  - Added server information for QI environment
+ - Added RFC9457 Problem Details example responses
 
 Changelog for v0.8.6 API spec
 
