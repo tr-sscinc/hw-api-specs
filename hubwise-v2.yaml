@@ -8694,43 +8694,44 @@ components:
 
     Taxation:
       type: object
-      description: the investors taxation. TIN to be provided for adult type individual and court appointed deputy. LEI to be provided for corporated and trusts without an exception.
+      description: The investors tax residency. 
       additionalProperties: false
+      required:
+        - primary
+        - countryCode
       properties:
         id:
           type: integer
           description: SS&C Wealth Platform Investor Tax Residencies identifier
           format: int64
           readOnly: true
-          example: 1
         countryCode:
           maxLength: 3
           type: string
-          description: Country Code
-          format: String
+          description: ISO Country Code. 
           example: GB
         primary:
           type: boolean
           description: Indicates the primary tax residency
-          format: Boolean
-          example: true
         tin:
           maxLength: 35
           type: string
-          description: Taxpayer Identification Number (validated for UK), mandatory for an adult individual or court appointed deputy
-          format: String
+          description: Taxpayer Identification Number, mandatory for an adult individual or court appointed deputy.
           example: AC123456C
         lei:
           maxLength: 35
+          description: Legal Entity Identifier, mandatory for a corporate investor or trust investor.
           type: string
-          description: Legal Entity Identifier (validated via GLEIF), mandatory for a corporate or trust unless exception
-          format: String
           example: 5493001KJTIIGC8Y1R12
 
     TerritorialProfile:
       type: object
       additionalProperties: false
-      description: The investors territorial profile. Required for individuals and court appointed deputies. 
+      description: |
+        The investors territorial profile. 
+        
+        
+        Required for individuals and court appointed deputies. 
       properties:
         nationalities:
           description: At least one nationality must be provided for individuals and court appointed deputies. 
@@ -8740,7 +8741,7 @@ components:
           items:
             $ref: "#/components/schemas/Nationality"
         taxResidencies:
-          description: At least one tax residency must be provided for adults and court appointed deputies.
+          description: At least one tax residency must be provided for adults and court appointed deputies. 
           maxItems: 5
           minItems: 1
           type: array
