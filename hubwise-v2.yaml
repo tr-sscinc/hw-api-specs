@@ -7587,7 +7587,7 @@ components:
         provider:
           format: string
           description: provider of the reference
-          maxLength: 36
+          maxLength: 30
           minLength: 1
           type: string
           example: CRM Name
@@ -8257,28 +8257,24 @@ components:
           $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
-          minLength: 0
           type: string
           description: If the investors title is other this field is applicable and mandatory
           format: string
           example: General
         firstName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors First Name
           format: string
           example: Sam
         middleName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Middle Name
           format: string
           example: John
         surname:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Surname
           format: string
@@ -8331,8 +8327,8 @@ components:
       additionalProperties: false
       properties:
         legalName:
-          maxLength: 25
-          minLength: 0
+          maxLength: 70
+          minLength: 1
           type: string
           description: The Legal name of a trust
           format: string
@@ -8349,8 +8345,8 @@ components:
       additionalProperties: false
       properties:
         legalName:
-          maxLength: 25
-          minLength: 0
+          maxLength: 70
+          minLength: 1
           type: string
           description: The Legal name of a trust
           format: string
@@ -8523,7 +8519,7 @@ components:
           example: HWI04003219
         tenantId:
           maxLength: 7
-          minLength: 0
+          
           type: string
           description: Unique SS&C Wealth Platform Tenant identifier
           format: string
@@ -8531,7 +8527,7 @@ components:
           example: HUBWISE
         adviserId:
           maxLength: 7
-          minLength: 0
+          
           type: string
           description: Unique SS&C Wealth Platform Adviser identifier
           format: string
@@ -10382,7 +10378,7 @@ components:
           type: string
           description: Unique identifier for a pre-configured set of tiered rates.
           maxLength: 6
-          minLength: 0
+          
           example: AFGVCD
         amount:
           type: number
