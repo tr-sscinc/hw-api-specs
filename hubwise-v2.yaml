@@ -7942,6 +7942,7 @@ components:
     ContactDetails:
       type: object
       additionalProperties: false
+      description: Contact details for an investor. Optional for a child investor, required for all other investors.
       properties:
         contactPhone:
           maxLength: 20
@@ -7965,7 +7966,7 @@ components:
           maxLength: 256
           minLength: 1
           type: string
-          description: email address for notifications, optional if under 18 
+          description: Optional if a child investor, required for all other investors.
           format: string
           example: john.doe@outlook.com
 
@@ -8018,13 +8019,13 @@ components:
           maxLength: 50
 
     IncomeAndInvestment:
-      description: income and investment details are mandatory for an adult individual or court appointed deputy investor type
+      description: Income and investment details are mandatory for an adult or a court appointed deputy.
       type: object
       additionalProperties: false
       properties:
         occupation:
           type: string
-          description: The investors occupation
+          description: The investors occupation. Required if investor is an adult or a court appointed deputy. If the occupation is other, occupationOtherValue is mandatory.
           format: string
           example: OTHER
           enum:
@@ -8056,12 +8057,12 @@ components:
         occupationOtherValue:
           maxLength: 50
           type: string
-          description: If the investors occupation is other this field is applicable and mandatory
+          description: Mandatory if occupation is OTHER
           format: string
           example: Management Consultant
         industry:
           type: string
-          description: The investors occupations industry
+          description: The investors occupations industry. Required if investor is an adult or a court appointed deputy. If the industry is other, industryOtherValue is mandatory.
           format: string
           example: OTHER
           enum:
@@ -8120,12 +8121,12 @@ components:
         industryOtherValue:
           maxLength: 50
           type: string
-          description: If the investors industry is other this field is applicable and mandatory
+          description: Mandatory if industry is OTHER
           format: string
           example: Consulting Services
         annualIncome:
           type: string
-          description: The investors annual income code
+          description: The investors annual income code. Mandatory if investor is an adult or a court appointed deputy.
           format: string
           example: FROM_50K_TO_75K
           enum:
@@ -8139,7 +8140,7 @@ components:
             - ABOVE_200K
         investmentReason:
           type: string
-          description: The reason for the investors investments
+          description: The reason for the investors investments. Mandatory if investor is an adult or a court appointed deputy.
           format: string
           example: GROW_WEALTH
           enum:
@@ -8151,7 +8152,7 @@ components:
             - TAX_ADVANTAGES
         investmentAgreedInPerson:
           type: boolean
-          description: If the investment was agreed in person with the investor
+          description: If the investment was agreed in person with the investor. Mandatory if investor is an adult or a court appointed deputy.
           format: Boolean
 
     Individual:
@@ -8162,7 +8163,7 @@ components:
         - surname
         - territorialProfile
         - title
-      description: required if investor type is individual or court appointed deputy
+      description: Required if investor is an individual or a court appointed deputy
       type: object
       additionalProperties: false
       properties:
@@ -8208,7 +8209,7 @@ components:
             - OTHER
         maritalStatus:
           type: string
-          description: The investors Marital Status
+          description: The investors Marital Status. Required if investor is an adult or a court appointed deputy.
           example: MARRIED
           enum:
             - SINGLE
@@ -8325,7 +8326,7 @@ components:
       required:
         - legalName
         - contactDetails
-      description: required if investor type is for a trust or corporate
+      description: Required for trust or corporate investors.
       type: object
       additionalProperties: false
       properties:
@@ -8344,7 +8345,6 @@ components:
           $ref: "#/components/schemas/Notification"
 
     TrustAndCorporatePatch:
-      description: required if investor type is for a trust or corporate
       type: object
       additionalProperties: false
       properties:
@@ -8734,14 +8734,17 @@ components:
     TerritorialProfile:
       type: object
       additionalProperties: false
+      description: The investors territorial profile. Required for individuals and court appointed deputies. 
       properties:
         nationalities:
+          description: At least one nationality must be provided for individuals and court appointed deputies. 
           maxItems: 5
           minItems: 1
           type: array
           items:
             $ref: "#/components/schemas/Nationality"
         taxResidencies:
+          description: At least one tax residency must be provided for adults and court appointed deputies.
           maxItems: 5
           minItems: 1
           type: array
