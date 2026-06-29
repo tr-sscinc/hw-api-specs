@@ -6053,33 +6053,33 @@ paths:
                 value: 
                   {
                     "instructions": [
-                        {
-                          "action": "BUY",
-                          "requestedBy": "XO",
-                          "instrumentDetails": {
+                      {
+                        "action": "BUY",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
                           "isin": "GB00B4L5Y983",
                           "exchange": "XLON",
                           "marketSettlementCurrency": "GBP"
-                          },
-                          "orderDetails": {
-                            "quantity": 1250.123456
-                          }
                         },
-                        {
-                          "action": "INVEST",
-                          "requestedBy": "XO",
-                          "instrumentDetails": {
+                        "orderDetails": {
+                          "quantity": 1250.123456
+                        }
+                      },
+                      {
+                        "action": "INVEST",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
                           "isin": "GB00B4L5A675",
                           "exchange": "XLON",
                           "marketSettlementCurrency": "GBP"
-                          },      
-                          "orderDetails": {
-                            "amount": 12500.0,
-                            "currency": "GBP"
-                          }
+                        },
+                        "orderDetails": {
+                          "amount": 12500.0,
+                          "currency": "GBP"
                         }
-                      ]
-                    }
+                      }
+                    ]
+                  }
               Ex2:
                 summary: Specfies two instructions to sell, one as a quantity of units/stock and one as a percentage of current holdings.
                 value:
@@ -6089,10 +6089,10 @@ paths:
                         "action": "SELL",
                         "requestedBy": "CLIENT",
                         "instrumentDetails": {
-                        "isin": "GB00B4L5Y983",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },          
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "percentage": 25
                         }
@@ -6101,14 +6101,14 @@ paths:
                         "action": "SELL",
                         "requestedBy": "CLIENT",
                         "instrumentDetails": {
-                        "isin": "GB00B4L5Y983",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },          
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "quantity": 1000.000
                         }
-                      }    
+                      }
                     ]
                   }
               Ex3:
@@ -6120,10 +6120,10 @@ paths:
                         "action": "REDEMPTION",
                         "requestedBy": "XO",
                         "instrumentDetails": {
-                        "isin": "GB00B4L5Y983",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },          
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "amount": 1000.00,
                           "currency": "GBP"
@@ -6140,10 +6140,10 @@ paths:
                         "action": "REDEMPTION",
                         "requestedBy": "XO",
                         "instrumentDetails": {
-                        "isin": "GB00B4L5Y983",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },          
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "amount": 10000.0,
                           "currency": "GBP"
@@ -6153,10 +6153,10 @@ paths:
                         "action": "REDEMPTION",
                         "requestedBy": "XO",
                         "instrumentDetails": {
-                        "isin": "GB00B3L2U883",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },        
+                          "isin": "GB00B3L2U883",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "amount": 10000.0,
                           "currency": "GBP"
@@ -6166,10 +6166,10 @@ paths:
                         "action": "REDEMPTION",
                         "requestedBy": "XO",
                         "instrumentDetails": {
-                        "isin": "GB00B3A3I098",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },        
+                          "isin": "GB00B3A3I098",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "amount": 10000.0,
                           "currency": "GBP"
@@ -6179,10 +6179,10 @@ paths:
                         "action": "SWITCH",
                         "requestedBy": "XO",
                         "instrumentDetails": {
-                        "isin": "GB00B4L5A675",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },        
+                          "isin": "GB00B4L5A675",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "percentage": 25
                         }
@@ -6191,10 +6191,10 @@ paths:
                         "action": "SWITCH",
                         "requestedBy": "XO",
                         "instrumentDetails": {
-                        "isin": "GB00B4A2C604",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },        
+                          "isin": "GB00B4A2C604",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "percentage": 75
                         }
@@ -6210,10 +6210,10 @@ paths:
                         "action": "SELL",
                         "requestedBy": "DFM",
                         "instrumentDetails": {
-                        "isin": "GB00B4L5Y983",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },    
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "quantity": 3000.0
                         }
@@ -6222,17 +6222,16 @@ paths:
                         "action": "SWITCH",
                         "requestedBy": "DFM",
                         "instrumentDetails": {
-                        "isin": "GB00B4L5A675",
-                        "exchange": "XLON",
-                        "marketSettlementCurrency": "GBP"
-                        },          
+                          "isin": "GB00B4L5A675",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
                         "orderDetails": {
                           "percentage": 100
                         }
                       }
                     ]
                   }
-        required: true
       responses:
         "201":
           description: Investment Instructions created successfully or redirect
@@ -6259,10 +6258,10 @@ paths:
                           "action": "BUY",
                           "requestedBy": "XO",
                           "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                          },  
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
                           "tradeStatus": "NEW",
                           "orderDetails": {
                             "quantity": 1250.123456
@@ -6273,10 +6272,10 @@ paths:
                           "action": "INVEST",
                           "requestedBy": "XO",
                           "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                          },  
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
                           "tradeStatus": "NEW",
                           "orderDetails": {
                             "amount": 12500.0,
@@ -6340,10 +6339,10 @@ paths:
                           "action": "REDEMPTION",
                           "requestedBy": "XO",
                           "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                          },  
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
                           "tradeStatus": "NEW",
                           "orderDetails": {
                             "amount": 1000.00,
@@ -6367,11 +6366,11 @@ paths:
                           "action": "REDEMPTION",
                           "requestedBy": "XO",
                           "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
                           },
-                          "tradeStatus": "NEW", 
+                          "tradeStatus": "NEW",
                           "orderDetails": {
                             "amount": 10000.0,
                             "currency": "GBP"
@@ -6382,9 +6381,9 @@ paths:
                           "action": "REDEMPTION",
                           "requestedBy": "XO",
                           "instrumentDetails": {
-                          "isin": "GB00B3L2U883",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
+                            "isin": "GB00B3L2U883",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
                           },
                           "tradeStatus": "NEW",
                           "orderDetails": {
@@ -6397,9 +6396,9 @@ paths:
                           "action": "REDEMPTION",
                           "requestedBy": "XO",
                           "instrumentDetails": {
-                          "isin": "GB00B3A3I098",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
+                            "isin": "GB00B3A3I098",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
                           },
                           "tradeStatus": "NEW",
                           "orderDetails": {
@@ -6412,9 +6411,9 @@ paths:
                           "action": "SWITCH",
                           "requestedBy": "XO",
                           "instrumentDetails": {
-                          "isin": "GB00B4L5A675",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
+                            "isin": "GB00B4L5A675",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
                           },
                           "tradeStatus": "NEW",
                           "orderDetails": {
@@ -6427,9 +6426,9 @@ paths:
                           "action": "SWITCH",
                           "requestedBy": "XO",
                           "instrumentDetails": {
-                          "isin": "GB00B4A2C604",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
+                            "isin": "GB00B4A2C604",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
                           },
                           "tradeStatus": "NEW",
                           "orderDetails": {
@@ -6454,9 +6453,9 @@ paths:
                           "action": "SELL",
                           "requestedBy": "DFM",
                           "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
                           },
                           "tradeStatus": "NEW",
                           "orderDetails": {
@@ -6466,13 +6465,13 @@ paths:
                         {
                           "id": 2,
                           "action": "SWITCH",
-                          "requestedBy": "DFM",      
+                          "requestedBy": "DFM",
                           "instrumentDetails": {
-                          "isin": "GB00B4L5A675",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
+                            "isin": "GB00B4L5A675",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
                           },
-                          "tradeStatus": "NEW",  
+                          "tradeStatus": "NEW",
                           "orderDetails": {
                             "percentage": 100
                           }
