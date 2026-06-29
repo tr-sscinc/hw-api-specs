@@ -1004,7 +1004,9 @@ paths:
       tags:
         - Investors
       summary: Updates an investor
-      description: Allows the modification of some of the investor details. 
+      description: >-
+        Allows the modification of some of the investor details, including updating the
+        investor status. Only INCEPTED, DECEASED and NON_UK_RESIDENT can be set via the API.
       operationId: modifyInvestor
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1102,7 +1104,7 @@ paths:
                               ]
                           }
                       },
-                    "declarations": 
+                    "declarations":
                       [
                         {
                           "adviserId": "E273053",
@@ -1111,7 +1113,13 @@ paths:
                         }
                       ]
                   }
-              
+              Ex6:
+                summary: Update an investor's status
+                value:
+                  {
+                    "status": "DECEASED"
+                  }
+
       responses:
         "200":
           description: Invesstor modified successfully
@@ -1195,7 +1203,30 @@ paths:
                         ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+                ValidationFailure:
+                  summary: A supplied field failed validation
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: status
+                        message: Status must be ACTIVE, DECEASED, or NON_UK_RESIDENT
+                StatusCannotBeUpdated:
+                  summary: The current investor status cannot be changed to the requested status
+                  value:
+                    errorCode: HWA-INVESTOR-023
+                    message: Investor status cannot be further updated.
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -8640,6 +8671,15 @@ components:
       type: object
       additionalProperties: false
       properties:
+        status:
+          description: >-
+            The status to update the investor to. Only the following statuses can be set via the API.
+          enum:
+            - INCEPTED
+            - DECEASED
+            - NON_UK_RESIDENT
+          type: string
+          example: DECEASED
         externalReferences:
           type: array
           items:
