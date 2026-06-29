@@ -7643,10 +7643,11 @@ components:
             applicable
           type: string
           example: "2020-04-28"
-
+    
     Address:
       additionalProperties: false
       required:
+        - primary
         - countryCode
         - line1
         - postCode
@@ -7657,7 +7658,6 @@ components:
         id:
           type: integer
           description: Id
-          format: int64
           readOnly: true
         primary:
           type: boolean
@@ -7703,6 +7703,10 @@ components:
       additionalProperties: false
       type: object
       properties:
+        id:
+          type: integer
+          description: Id
+          readOnly: true
         primary:
           type: boolean
           description: Primary
@@ -8612,7 +8616,7 @@ components:
           minItems: 0
           type: array
           items:
-            $ref: "#/components/schemas/Address"
+            $ref: "#/components/schemas/AddressPatch"
         declarations:
           writeOnly: true
           type: array
@@ -10174,7 +10178,7 @@ components:
           type: string
           maxLength: 10
         address:
-          $ref: "#/components/schemas/Address"
+          $ref: "#/components/schemas/AddressPatch"
           
     ThirdPartiesHeaderPatch:
       type: object
