@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.7
+  version: 0.8.8
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -2499,24 +2499,27 @@ paths:
       tags:
         - Accounts
       summary: Update an activated account
-      description: 
+      description:
         Updates an activated investment account.
-        
+
         This endpoint supports the modification of the account name for activated Individual, Corporate, Trust, and Joint accounts. If an investors name is being updated, the account name should be updated in line with this where applicable.
 
         The account name is used in documentation and displayed in the Adviser Portal.
-       
-       
+
+
         1.	Corporate or Trust accounts - Organisation name
-        
-        
+
+
         2.	Individual accounts  - title + firstName + middleName + surname
-        
-        
+
+
         3.	Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
-       
-       
+
+
         If the name exceeds 50 characters, the middle name and title should be removed or shortened as required.
+
+
+        This endpoint also supports updating the account status. Only the following statuses can be set via the API. Allowed values are ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, and NON_UK_RESIDENT.
 
       operationId: modifyAccount
       parameters:
@@ -2541,7 +2544,13 @@ paths:
                   {
                     "name": "Mr Sam John James-Smith"
                   }
-              
+              Ex2:
+                summary: Update account status
+                value:
+                  {
+                    "status": "DECEASED"
+                  }
+
       responses:
         "200":
           description: Invesstor modified successfully
@@ -2585,16 +2594,37 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                ValidationFailure:
+                  summary: A supplied field failed validation
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: status
+                        message: status must be one of ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, NON_UK_RESIDENT
+                StatusCannotBeUpdated:
+                  summary: The current account status cannot be changed to the requested status
+                  value:
+                    errorCode: HWA-ACCOUNT-038
+                    message: Account status cannot be further updated.
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
-        "404": 
+        "404":
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-        
+
   /accounts/{accountId}/bank-accounts:
     
     post:
@@ -7558,8 +7588,6 @@ components:
 
     AccountPatch:
       description: Account Patch Model
-      required:
-        - name
       properties:
         name:
           format: string
@@ -7568,6 +7596,17 @@ components:
           minLength: 1
           type: string
           example: Mr John Doe
+        status:
+          description: >-
+            The status to update the account to. Only the following statuses can be set via the API.
+          enum:
+            - ACTIVE
+            - DECEASED
+            - TRADING_SUSPENDED
+            - INTENTION_TO_CLOSE
+            - NON_UK_RESIDENT
+          type: string
+          example: DECEASED
 
     ExternalReference:
       type: object
