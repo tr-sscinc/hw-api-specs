@@ -1,16 +1,20 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.4
+  version: 0.8.7
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
   - url: "https://rest-qd.hubwise.co.uk"
     description: Pilot/UAT environment
+  - url: "https://rest-qi.hubwise.co.uk"
+    description: Preproduction environment
 
 tags:
-  - name: Investors 
-  - name: Accounts 
+  - name: Investors
+  - name: Accounts
+  - name: Fee Groups
+  - name: Illustrations
 
 security:
   - bearer-token: []
@@ -56,7 +60,7 @@ paths:
                     "externalReferences":
                       [
                         {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "reference": "A9F3K7X2L8Q4M1Z",
                           "provider": "CRM Name"
                         }
                       ],
@@ -67,7 +71,7 @@ paths:
                         "firstName": "Sam",
                         "middleName": "John",
                         "surname": "Smith",
-                        "dateOfBirth": "2000-02-20",
+                        "dateOfBirth": "1970-02-20",
                         "gender": "MALE",
                         "maritalStatus": "MARRIED",
                         "incomeAndInvestment":
@@ -75,30 +79,41 @@ paths:
                             "occupation": "OTHER",
                             "occupationOtherValue": "Management Consultant",
                             "industry": "OTHER",
-                            "industryOtherValue": "Consulting Services",
+                            "industryOtherValue": "Consulting",
                             "annualIncome": "FROM_50K_TO_75K",
                             "investmentReason": "GROW_WEALTH",
                             "investmentAgreedInPerson": true
                           },
-                        "territorialProfile":
-                          {
-                            "nationalities":
-                              [{ "countryCode": "GB", "primary": true }],
-                            "taxResidencies":
-                              [
+                       "territorialProfile": {
+                            "nationalities": [
                                 {
-                                  "countryCode": "GB",
-                                  "tin": "AC123456C",
-                                  "primary": true
+                                    "countryCode": "GB",
+                                    "primary": true
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "primary": false
                                 }
-                              ]
-                          },
+                            ],
+                            "taxResidencies": [
+                                {
+                                    "countryCode": "GB",
+                                    "tin": "AC123456C",
+                                    "primary": true
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "tin": "912-34-5678",
+                                    "primary": false
+                                }
+                            ]
+                        },
                         "contactDetails":
                           {
                             "contactPhone": "01619465555",
                             "homePhone": "01619464444",
                             "mobilePhone": "07877156340",
-                            "email": "john.doe@outlook.com"
+                            "email": "sam.smith@outlook.com"
                           },
                         "notificationPreferences":
                           { "disableEmails": false, "disableSms": false }
@@ -114,6 +129,15 @@ paths:
                           "countryCode": "GB",
                           "postCode": "HT3 4AB",
                           "primary": true
+                        },
+                        {
+                            "premisesIdentifier": "87",
+                            "line1": "Birch Road",
+                            "town": "Downtown",
+                            "county": "Yorkshore",
+                            "countryCode": "GB",
+                            "postCode": "L6 4DE",
+                            "primary": false
                         }
                       ],
                     "declarations":
@@ -134,7 +158,7 @@ paths:
                     "externalReferences":
                       [
                         {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "reference": "7D2P8V6R1X9T4YB",
                           "provider": "CRM Name"
                         }
                       ],
@@ -196,7 +220,7 @@ paths:
                     "externalReferences":
                       [
                         {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "reference": "Q4M8Z1K7L3C9A2E",
                           "provider": "CRM Name"
                         }
                       ],
@@ -252,37 +276,27 @@ paths:
                       ]
                   }
               Ex4:
-                summary: Corporate investor but LEI not provided
+                summary: Investor is a trust and a LEI is not required
                 value:
                   {
                     "adviserId": "E273053",
-                    "type": "CORPORATE",
+                    "type": "BARE_TRUST",
                     "externalReferences":
                       [
                         {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                          "reference": "X5T9B2N8R6P4W1H",
                           "provider": "CRM Name"
                         }
                       ],
                     "corporate":
                       {
-                        "legalName": "Silver Oak Holdings Ltd",
-                        "territorialProfile":
-                          {
-                            "taxResidencies":
-                              [
-                                {
-                                  "primary": true,
-                                  "countryCode": "GB"
-                                }
-                              ]
-                          },
+                        "legalName": "M S Ltd",
                         "contactDetails":
                           {
                             "contactPhone": "01619887766",
                             "homePhone": "01619887777",
                             "mobilePhone": "07799123456",
-                            "email": "info@silveroakholdings.co.uk"
+                            "email": "info@msltd.co.uk"
                           },
                         "notificationPreferences":
                           { "disableEmails": false, "disableSms": false }
@@ -290,7 +304,7 @@ paths:
                     "addresses":
                       [
                         {
-                          "premisesIdentifier": "15",
+                          "premisesIdentifier": "16",
                           "line1": "Maple House",
                           "line2": "Business Park Avenue",
                           "town": "Northford",
@@ -314,7 +328,60 @@ paths:
                         }
                       ]
                   }
-
+              Ex5:
+                summary: Investor is a child
+                value:
+                  {
+                    "adviserId": "E273053",
+                    "type": "INDIVIDUAL",
+                    "externalReferences":
+                      [
+                        {
+                          "reference": "L1Z7Q8C3A5M9F2D",
+                          "provider": "CRM Name"
+                        }
+                      ],
+                    "individual": {
+                      "title": "MASTER",
+                      "firstName": "Tom",
+                      "middleName": "John",
+                      "surname": "Smith",
+                      "dateOfBirth": "2026-02-20",
+                      "gender": "MALE",
+                      "territorialProfile": {
+                          "nationalities": [
+                              {
+                                  "countryCode": "GB",
+                                  "primary": true
+                              }
+                          ]
+                      },
+                      "notificationPreferences": {
+                          "disableEmails": false,
+                          "disableSms": false
+                      }
+                  },
+                  "addresses": [
+                      {
+                          "premisesIdentifier": "12",
+                          "line1": "Rosewood Cottage",
+                          "line2": "Elm Street",
+                          "town": "Hightown",
+                          "county": "Lancashire",
+                          "countryCode": "GB",
+                          "postCode": "HT3 4AB",
+                          "primary": true
+                      }
+                  ],
+                    "declarations":
+                      [
+                        {
+                          "adviserId": "E273053",
+                          "templateId": "IFA_FCA_AUTH",
+                          "acknowledgement": true
+                        }
+                      ]
+                  }
       responses:
         "201":
           description: Investor created successfully.
@@ -330,13 +397,13 @@ paths:
                   summary: Investor is an individual
                   value:
                     {
-                      "id": "HWI04003219",
+                      "id": "HWI04003217",
                       "adviserId": "E273053",
                       "type": "INDIVIDUAL",
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "A9F3K7X2L8Q4M1Z",
                             "provider": "CRM",
                           },
                         ],
@@ -347,7 +414,7 @@ paths:
                           "firstName": "Sam",
                           "middleName": "John",
                           "surname": "Smith",
-                          "dateOfBirth": "2000-02-20",
+                          "dateOfBirth": "1970-02-20",
                           "gender": "MALE",
                           "maritalStatus": "MARRIED",
                           "incomeAndInvestment":
@@ -355,30 +422,41 @@ paths:
                               "occupation": "OTHER",
                               "occupationOtherValue": "Management Consultant",
                               "industry": "OTHER",
-                              "industryOtherValue": "Consulting Services",
+                              "industryOtherValue": "Consulting",
                               "annualIncome": "FROM_50K_TO_75K",
                               "investmentReason": "GROW_WEALTH",
                               "investmentAgreedInPerson": true
                             },
-                          "territorialProfile":
-                            {
-                              "nationalities":
-                                [{ "countryCode": "GB", "primary": true }],
-                              "taxResidencies":
-                                [
-                                  {
+                          "territorialProfile": {
+                            "nationalities": [
+                                {
+                                    "countryCode": "GB",
+                                    "primary": true
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "primary": false
+                                }
+                            ],
+                            "taxResidencies": [
+                                {
                                     "countryCode": "GB",
                                     "tin": "AC123456C",
                                     "primary": true
-                                  }
-                                ]
-                            },
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "tin": "912-34-5678",
+                                    "primary": false
+                                }
+                            ]
+                        },
                           "contactDetails":
                             {
                               "contactPhone": "01619465555",
                               "homePhone": "01619464444",
                               "mobilePhone": "07877156340",
-                              "email": "john.doe@outlook.com"
+                              "email": "sam.smith@outlook.com"
                             },
                           "notificationPreferences":
                             { "disableEmails": false, "disableSms": false }
@@ -394,6 +472,15 @@ paths:
                             "countryCode": "GB",
                             "postCode": "HT3 4AB",
                             "primary": true
+                          },
+                          {
+                              "premisesIdentifier": "87",
+                              "line1": "Birch Road",
+                              "town": "Downtown",
+                              "county": "Yorkshore",
+                              "countryCode": "GB",
+                              "postCode": "L6 4DE",
+                              "primary": false
                           }
                         ]
                     }
@@ -401,13 +488,13 @@ paths:
                   summary: Investor is a discretionary trust
                   value:
                     {
-                      "id": "HWI04003219",
+                      "id": "HWI04003218",
                       "adviserId": "E273054",
                       "type": "DISCRETIONARY_TRUST",
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "7D2P8V6R1X9T4YB",
                             "provider": "CRM"
                           }
                         ],
@@ -448,7 +535,7 @@ paths:
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "Q4M8Z1K7L3C9A2E",
                             "provider": "CRM"
                           }
                         ],
@@ -490,18 +577,96 @@ paths:
                           }
                         ]
                     }
+                Ex4:
+                  summary: Investor is a trust and a LEI is not required
+                  value:
+                    {
+                      "id": "HWI04003220",
+                      "adviserId": "E273053",
+                      "type": "BARE_TRUST",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "X5T9B2N8R6P4W1H",
+                            "provider": "CRM Name"
+                          }
+                        ],
+                      "corporate":
+                        {
+                          "legalName": "M S Ltd",
+                          "contactDetails":
+                            {
+                              "contactPhone": "01619887766",
+                              "homePhone": "01619887777",
+                              "mobilePhone": "07799123456",
+                              "email": "info@msltd.co.uk"
+                            },
+                          "notificationPreferences":
+                            { "disableEmails": false, "disableSms": false }
+                        },
+                      "addresses":
+                        [
+                          {
+                            "premisesIdentifier": "16",
+                            "line1": "Maple House",
+                            "line2": "Business Park Avenue",
+                            "town": "Northford",
+                            "county": "Westshire",
+                            "countryCode": "GB",
+                            "postCode": "NF12 8XY",
+                            "primary": true
+                          }
+                        ]
+                    }
+                Ex5:
+                  summary: Investor is a child
+                  value:
+                    {
+                      "id": "HWI04003221",
+                      "adviserId": "E273053",
+                      "type": "INDIVIDUAL",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "L1Z7Q8C3A5M9F2D",
+                            "provider": "CRM Name"
+                          }
+                        ],
+                      "individual": {
+                        "title": "MASTER",
+                        "firstName": "Tom",
+                        "middleName": "John",
+                        "surname": "Smith",
+                        "dateOfBirth": "2026-02-20",
+                        "gender": "MALE",
+                        "territorialProfile": {
+                            "nationalities": [
+                                {
+                                    "countryCode": "GB",
+                                    "primary": true
+                                }
+                            ]
+                        },
+                        "notificationPreferences": {
+                            "disableEmails": false,
+                            "disableSms": false
+                        }
+                    },
+                    "addresses": [
+                        {
+                            "premisesIdentifier": "12",
+                            "line1": "Rosewood Cottage",
+                            "line2": "Elm Street",
+                            "town": "Hightown",
+                            "county": "Lancashire",
+                            "countryCode": "GB",
+                            "postCode": "HT3 4AB",
+                            "primary": true
+                        }
+                    ]
+                    }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -517,7 +682,18 @@ paths:
       tags:
         - Investors
       summary: Retrieves an investor by ID
-      description: TBC
+      description: 
+        Retrieves the details of a specific investor record.
+
+
+        This endpoint supports the retrieval of Individual, Corporate, and Trust investors using their unique SS&C Wealth Platform Investor ID.
+        
+        
+        The response includes core profile information, contact details, one or more addresses, and one or more territorial profiles, along with type specific attributes relevant to the investor classification.
+        
+        
+        The endpoint must be called once for each investor record to be retrieved.
+           
       operationId: retrieveInvestor
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -544,15 +720,15 @@ paths:
                   summary: Investor is an individual
                   value:
                     {
-                      "id": "HWI04003219",
+                      "id": "HWI04003217",
                       "adviserId": "E273053",
                       "type": "INDIVIDUAL",
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                            "provider": "CRM"
-                          }
+                            "reference": "A9F3K7X2L8Q4M1Z",
+                            "provider": "CRM",
+                          },
                         ],
                       "individual":
                         {
@@ -561,7 +737,7 @@ paths:
                           "firstName": "Sam",
                           "middleName": "John",
                           "surname": "Smith",
-                          "dateOfBirth": "2000-02-20",
+                          "dateOfBirth": "1970-02-20",
                           "gender": "MALE",
                           "maritalStatus": "MARRIED",
                           "incomeAndInvestment":
@@ -569,41 +745,44 @@ paths:
                               "occupation": "OTHER",
                               "occupationOtherValue": "Management Consultant",
                               "industry": "OTHER",
-                              "industryOtherValue": "Consulting Services",
+                              "industryOtherValue": "Consulting",
                               "annualIncome": "FROM_50K_TO_75K",
                               "investmentReason": "GROW_WEALTH",
                               "investmentAgreedInPerson": true
                             },
-                          "territorialProfile":
-                            {
-                              "nationalities":
-                                [
-                                  { 
-                                    "countryCode": "GB", 
-                                    "primary": true 
-                                  }
-                                ],
-                              "taxResidencies":
-                                [
-                                  {
+                          "territorialProfile": {
+                            "nationalities": [
+                                {
+                                    "countryCode": "GB",
+                                    "primary": true
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "primary": false
+                                }
+                            ],
+                            "taxResidencies": [
+                                {
                                     "countryCode": "GB",
                                     "tin": "AC123456C",
                                     "primary": true
-                                  }
-                                ]
-                            },
+                                },
+                                {
+                                    "countryCode": "US",
+                                    "tin": "912-34-5678",
+                                    "primary": false
+                                }
+                            ]
+                        },
                           "contactDetails":
                             {
                               "contactPhone": "01619465555",
                               "homePhone": "01619464444",
                               "mobilePhone": "07877156340",
-                              "email": "john.doe@outlook.com"
+                              "email": "sam.smith@outlook.com"
                             },
                           "notificationPreferences":
-                            { 
-                              "disableEmails": false, 
-                              "disableSms": false 
-                            }
+                            { "disableEmails": false, "disableSms": false }
                         },
                       "addresses":
                         [
@@ -616,6 +795,15 @@ paths:
                             "countryCode": "GB",
                             "postCode": "HT3 4AB",
                             "primary": true
+                          },
+                          {
+                              "premisesIdentifier": "87",
+                              "line1": "Birch Road",
+                              "town": "Downtown",
+                              "county": "Yorkshore",
+                              "countryCode": "GB",
+                              "postCode": "L6 4DE",
+                              "primary": false
                           }
                         ]
                     }
@@ -623,13 +811,13 @@ paths:
                   summary: Investor is a discretionary trust
                   value:
                     {
-                      "id": "HWI04003219",
+                      "id": "HWI04003218",
                       "adviserId": "E273054",
                       "type": "DISCRETIONARY_TRUST",
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "7D2P8V6R1X9T4YB",
                             "provider": "CRM"
                           }
                         ],
@@ -670,7 +858,7 @@ paths:
                       "externalReferences":
                         [
                           {
-                            "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
+                            "reference": "Q4M8Z1K7L3C9A2E",
                             "provider": "CRM"
                           }
                         ],
@@ -712,19 +900,97 @@ paths:
                           }
                         ]
                     }
+                Ex4:
+                  summary: Investor is a trust and a LEI is not required
+                  value:
+                    {
+                      "id": "HWI04003220",
+                      "adviserId": "E273053",
+                      "type": "BARE_TRUST",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "X5T9B2N8R6P4W1H",
+                            "provider": "CRM Name"
+                          }
+                        ],
+                      "corporate":
+                        {
+                          "legalName": "M S Ltd",
+                          "contactDetails":
+                            {
+                              "contactPhone": "01619887766",
+                              "homePhone": "01619887777",
+                              "mobilePhone": "07799123456",
+                              "email": "info@msltd.co.uk"
+                            },
+                          "notificationPreferences":
+                            { "disableEmails": false, "disableSms": false }
+                        },
+                      "addresses":
+                        [
+                          {
+                            "premisesIdentifier": "16",
+                            "line1": "Maple House",
+                            "line2": "Business Park Avenue",
+                            "town": "Northford",
+                            "county": "Westshire",
+                            "countryCode": "GB",
+                            "postCode": "NF12 8XY",
+                            "primary": true
+                          }
+                        ]
+                    }
+                Ex5:
+                  summary: Investor is a child
+                  value:
+                    {
+                      "id": "HWI04003221",
+                      "adviserId": "E273053",
+                      "type": "INDIVIDUAL",
+                      "externalReferences":
+                        [
+                          {
+                            "reference": "L1Z7Q8C3A5M9F2D",
+                            "provider": "CRM Name"
+                          }
+                        ],
+                      "individual": {
+                        "title": "MASTER",
+                        "firstName": "Tom",
+                        "middleName": "John",
+                        "surname": "Smith",
+                        "dateOfBirth": "2026-02-20",
+                        "gender": "MALE",
+                        "territorialProfile": {
+                            "nationalities": [
+                                {
+                                    "countryCode": "GB",
+                                    "primary": true
+                                }
+                            ]
+                        },
+                        "notificationPreferences": {
+                            "disableEmails": false,
+                            "disableSms": false
+                        }
+                      },
+                      "addresses": [
+                          {
+                              "premisesIdentifier": "12",
+                              "line1": "Rosewood Cottage",
+                              "line2": "Elm Street",
+                              "town": "Hightown",
+                              "county": "Lancashire",
+                              "countryCode": "GB",
+                              "postCode": "HT3 4AB",
+                              "primary": true
+                          }
+                        ]
+                    }
 
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -757,7 +1023,7 @@ paths:
               $ref: "#/components/schemas/InvestorPatch"
             examples:
               Ex1:
-                summary: Update investor phone number and notifications
+                summary: Update investor phone number and notification preferences
                 value:
                   {
                     "individual":
@@ -773,26 +1039,25 @@ paths:
                       }
                   }
               Ex2:
-                summary: Update investor address with ID 1
+                summary: Update an investor's surname and main address
                 value:
                   {
-                    "addresses":
-                      [
-                        {
-                          "id": 1,
-                          "premisesIdentifier": "14",
-                          "line1": "Rosewood Cottage",
-                          "line2": "Elm Street",
-                          "town": "Hightown",
-                          "county": "Lancashire",
-                          "countryCode": "GB",
-                          "postCode": "HT1 4AB",
-                          "primary": true
-                        }
+                      "individual": {
+                          "surname": "NewSurname"
+                      },
+                      "addresses": [
+                          {
+                              "id": 1,
+                              "premisesIdentifier": "100",
+                              "line1": "New address",
+                              "town": "South Tess",
+                              "countryCode": "GB",
+                              "postCode": "M40 5PX"
+                          }
                       ]
                   }
               Ex3:
-                summary: Update corporate investor email
+                summary: Update the email address of a corporate investor
                 value:
                   {
                     "corporate":
@@ -804,72 +1069,22 @@ paths:
                       }
                   }
               Ex4:
-                summary: Remove corporate investor LEI, with "LEI Not Required" declaration
+                summary: Adds a new primary tax redsidence and makes the existing one secondary
                 value:
                   {
-                    "corporate":
-                      {
-                        "territorialProfile":
-                          {
-                            "taxResidencies":
-                              [
-                                {
-                                  "primary": true,
-                                  "countryCode": "GB"
-                                }
+                      "individual": {
+                          "territorialProfile": {
+                              "taxResidencies": [
+                                  {
+                                      "countryCode": "FR",
+                                      "primary": true,
+                                      "tin": "RE215032A"
+                                  }
                               ]
                           }
-                      },
-                    "declarations": 
-                      [
-                        {
-                          "adviserId": "E273053",
-                          "templateId": "LEI_NOT_REQ",
-                          "acknowledgement": true
-                        }
-                      ]
-                  }
-              Ex5:
-                summary: Add a new external reference
-                description: Add a new external reference for the SomeCRM system.
-                value:
-                  {
-                    "externalReferences":
-                      [
-                        {
-                          "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                          "provider": "CRM"
-                        },
-                        {
-                          "reference": "6878768XX66",
-                          "provider": "SomeCRM"
-                        }
-                      ]
-                  }
-              Ex6:
-                summary: Remove an external references
-                value:
-                  {
-                    "externalReferences": [
-                      {
-                        "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
-                        "provider": "CRM"
-                      }
-                    ]
-                  }
-              Ex7:
-                summary: Update corporate investor email
-                value:
-                  {
-                    "corporate":
-                      {
-                        "contactDetails":
-                          {
-                            "email": "info@silveroakholdings.com"
-                          }
                       }
                   }
-              Ex8: 
+              Ex5: 
                 summary: Add corporate investor LEI
                 value:
                   {
@@ -980,17 +1195,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1100,17 +1305,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1124,7 +1319,18 @@ paths:
       tags:
         - Investors
       summary: Retrieves an investor's vulnerable Characteristics
-      description: TBC
+      description: 
+        Retrieves the characteristics of vulnerabilities for a specific investor record.
+
+
+        This endpoint supports the retrieval of one or more characteristics of vulnerabilities for Individual and Court Appointed Deputy investors using their unique SS&C Wealth Platform Investor ID.
+        
+        
+        The response includes the investors characteristics of vulnerabilities, along with the associated service level, start date, and expiry date. All vulnerabilities associated with the investor will be returned, regardless of their start date or expiry date.
+        
+
+        The endpoint must be called once for each investor record to be retrieved.  If the investor exists but has no characteristics of vulnerabilities, a valid response with empty collections will be returned.
+       
       operationId: retrieveInvestorVulnerabilities
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1179,17 +1385,7 @@ paths:
                       "vulnerabilities": []
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1203,6 +1399,18 @@ paths:
       tags:
         - Investors
       summary: Modify the vulnerable characteristics of an investor
+      description: >
+        Allows partial updates of one or more characteristics of vulnerability records for an existing investor.
+
+
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
+
+
+        All of the existing vulnerabilities data must be provided alongside any new or updated data when updating an investors vulnerabilities records. If an existing record is being updated, the expiry date is the only field that can be added or updated. New records can be provided as long as the vulnerability, service level and start date do not match an existing record. 
+
+
+        If vulnerability characteristics do not exist for the investor, the create endpoint must be used.
+
       operationId: modifyInvestorVulnerabilities
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1282,17 +1490,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1399,17 +1597,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1423,7 +1611,18 @@ paths:
       tags:
         - Investors
       summary: Retrieves the correspondence preferences of an investor
-      description: TBC
+      description: 
+        Retrieves the correspondences of vulnerabilities for a specific investor record.
+
+
+        This endpoint supports the retrieval of one or more correspondences of vulnerabilities for Individual and Court Appointed Deputy investors using their unique SS&C Wealth Platform Investor ID.
+        
+        
+        The response includes the investors correspondences of vulnerabilities, along with the associated start date, and expiry date. All correspondences associated with the investor will be returned, regardless of their start date or expiry date.
+        
+
+        The endpoint must be called once for each investor record to be retrieved.  If the investor exists but has no correspondences of vulnerabilities, a valid response with empty collections will be returned.
+       
       operationId: retrieveInvestorCorresponsences
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1476,17 +1675,7 @@ paths:
                       "correspondences": []
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1500,6 +1689,17 @@ paths:
       tags:
         - Investors
       summary: Modify an investor's correspondences
+      description: >
+        Allows partial updates of one or more correspondence preference records for an existing investor.
+
+
+        This endpoint applies only to investors of type Individual or Court Appointed Deputy and requires the SS&C Wealth Platform Investor ID generated during investor creation.
+
+
+        All of the existing correspondences data must be provided alongside any new or updated data when updating an investors correspondences records. If an existing record is being updated, the expiry date is the only field that can be added or updated. New records can be provided as long as the correspondence and start date do not match an existing record. 
+
+
+        If correspondence preferences do not exist for the investor, the create endpoint must be used.
       operationId: modifyInvestorCorrespondences
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -1577,17 +1777,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1635,17 +1825,7 @@ paths:
                       "ids": [1]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1693,17 +1873,7 @@ paths:
                       "ids": [1]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1753,17 +1923,7 @@ paths:
                       "ids": [1]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2157,17 +2317,7 @@ paths:
                         }
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2181,7 +2331,18 @@ paths:
       tags:
         - Accounts
       summary: Retrieve an investment account by it's ID.
-      description: TBC
+      description: 
+        Retrieves the details of a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment account (GIA,ISA,JISA,SIPP,third party product) using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the core account information, related investors, linked investment model, income options and pension details (if applicable) for Individual, Corporate, Trust and Joint investors.
+        
+        
+        The endpoint must be called once for each investment account record to be retrieved.
+       
       operationId: retrieveAccount
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -2323,6 +2484,8 @@ paths:
                         "type": "CASH"
                       }
                     }
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2421,6 +2584,16 @@ paths:
                         }
                       ]
                     }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404": 
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
         
   /accounts/{accountId}/bank-accounts:
     
@@ -2672,17 +2845,7 @@ paths:
                       "status": "UNCHECKED"
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2696,7 +2859,17 @@ paths:
       tags:
         - Accounts
       summary: Retrieves the bank accounts against an investment account.
-      description: TBC
+      description:
+        Retrieves the bank details against a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment accounts associated bank details using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the bank details, holders and status.
+        
+        
+        The endpoint must be called once for each investment accounts bank details to be retrieved.
       operationId: retrieveBankAccounts
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -2799,7 +2972,8 @@ paths:
                 Ex4:
                   summary: No bank accounts associated with an investment account
                   value: []
-
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -3346,19 +3520,8 @@ paths:
                         }
                       ]
                     }
-      
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -3372,7 +3535,17 @@ paths:
       tags:
         - Accounts
       summary: Retrieves the money movements on an account
-      description: TBC
+      description:
+        Retrieves the money movements against a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment accounts money movements (contributions and withdrawals) using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the investors core movement information, such as the type of movement, payment method, frequency, and start and end dates. It also provides details of the associated bank account, any applicable fees, and where relevant to pension account types, any associated HMRC protection details.
+
+
+        The endpoint must be called once for each investment accounts money movements to be retrieved.
       operationId: retrieveAccountMovements
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -3475,6 +3648,8 @@ paths:
                     {
                       "moneyMovements": []
                     }
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -3582,9 +3757,7 @@ paths:
                         "acknowledgement": true
                       }
                     ]
-                  }
-
-              
+                  }      
       responses:
         "200":
           description: Account fee archived successfully
@@ -3708,7 +3881,17 @@ paths:
                         }
                       ]
                     }
-    
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /accounts/{accountId}/transfers:
     
     post:
@@ -4035,17 +4218,7 @@ paths:
                     ]
                   }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4059,7 +4232,18 @@ paths:
       tags:
         - Accounts
       summary: Retrieves the transfers against an account
-      description: TBC
+      description: 
+        Retrieves the transfers against a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment accounts transfers (in and out) using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the transfer type, direction, status, amount, and contact details for the provider.
+
+
+        The endpoint must be called once for each investment accounts transfers to be retrieved.
+ 
       operationId: retrieveAccountTransfers
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4228,7 +4412,8 @@ paths:
                         
                       ]
                     }
-                
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4450,20 +4635,9 @@ paths:
                         "period": "ONE_OFF",
                       }
                     ]
-                  }
-                
+                  }  
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4477,7 +4651,18 @@ paths:
       tags:
         - Accounts
       summary: Get account fees
-      description: TBC
+      description: 
+        Retrieves the account level fees against a specific investment account record.
+
+
+        This endpoint supports the retrieval of an investment accounts fees (e.g. Adviser Annual, Adviser One Off, Platform Fee, Product Fee) using the unique SS&C Wealth Platform Account ID.
+        
+        
+        The response includes the fee details, status, next date, and band details if applicable.
+
+
+        The endpoint must be called once for each investment accounts account level fees to be retrieved.
+ 
       operationId: retrieveAccountFees
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4580,6 +4765,8 @@ paths:
                     {
                       "fees": []
                     }   
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4651,8 +4838,6 @@ paths:
                       }
                     ]
                   }
-
-              
       responses:
         "200":
           description: Account fee archived successfully
@@ -4688,7 +4873,17 @@ paths:
                         }
                       ]
                     }
-        
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /accounts/{accountId}/income-options:
 
     put:
@@ -4795,17 +4990,7 @@ paths:
                       }
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4983,19 +5168,8 @@ paths:
                           }
                         ]
                     }
-       
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5269,17 +5443,7 @@ paths:
                       ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5421,17 +5585,7 @@ paths:
                       ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5572,17 +5726,7 @@ paths:
                       ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5743,17 +5887,7 @@ paths:
                       ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5865,17 +5999,7 @@ paths:
                         }
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5927,188 +6051,187 @@ paths:
               Ex1:
                 summary: create two purchase instructions, one a buy as quantity of an instrument and the other an Invest, as a monetary
                 value: 
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                            {
-                              "action": "BUY",
-                              "requestedBy": "XO",
-                              "instrumentDetails": {
-                              "isin": "GB00B4L5Y983",
-                              "exchange": "XLON",
-                              "marketSettlementCurrency": "GBP"
-                              },
-                              "orderDetails": {
-                                "quantity": 1250.123456
-                              }
-                            },
-                            {
-                              "action": "INVEST",
-                              "requestedBy": "XO",
-                              "instrumentDetails": {
-                              "isin": "GB00B4L5A675",
-                              "exchange": "XLON",
-                              "marketSettlementCurrency": "GBP"
-                              },      
-                              "orderDetails": {
-                                "amount": 12500.0,
-                                "currency": "GBP"
-                              }
-                            }
-                          ]
+                        "action": "BUY",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "quantity": 1250.123456
                         }
+                      },
+                      {
+                        "action": "INVEST",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5A675",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 12500.0,
+                          "currency": "GBP"
+                        }
+                      }
+                    ]
+                  }
               Ex2:
                 summary: Specfies two instructions to sell, one as a quantity of units/stock and one as a percentage of current holdings.
                 value:
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                          {
-                            "action": "SELL",
-                            "requestedBy": "CLIENT",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "percentage": 25
-                            }
-                          },
-                          {
-                            "action": "SELL",
-                            "requestedBy": "CLIENT",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "quantity": 1000.000
-                            }
-                          }    
-                        ]
+                        "action": "SELL",
+                        "requestedBy": "CLIENT",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "percentage": 25
+                        }
+                      },
+                      {
+                        "action": "SELL",
+                        "requestedBy": "CLIENT",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "quantity": 1000.000
+                        }
                       }
+                    ]
+                  }
               Ex3:
                 summary: Specifies a Redemption, a sale specified as a monetary amount.
                 value:
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                          {
-                            "action": "REDEMPTION",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "amount": 1000.00,
-                              "currency": "GBP"
-                            }
-                          }
-                        ]
+                        "action": "REDEMPTION",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 1000.00,
+                          "currency": "GBP"
+                        }
                       }
+                    ]
+                  }
               Ex4:
                 summary: A switch instruction, specify sales as monetary amounts (Redemptions) with reinvestment of the proceeds split across two new instruments.
                 value:
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                          {
-                            "action": "REDEMPTION",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "amount": 10000.0,
-                              "currency": "GBP"
-                            }
-                          },
-                          {
-                            "action": "REDEMPTION",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B3L2U883",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },        
-                            "orderDetails": {
-                              "amount": 10000.0,
-                              "currency": "GBP"
-                            }
-                          },
-                          {
-                            "action": "REDEMPTION",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B3A3I098",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },        
-                            "orderDetails": {
-                              "amount": 10000.0,
-                              "currency": "GBP"
-                            }
-                          },
-                          {
-                            "action": "SWITCH",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5A675",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },        
-                            "orderDetails": {
-                              "percentage": 25
-                            }
-                          },
-                          {
-                            "action": "SWITCH",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B4A2C604",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },        
-                            "orderDetails": {
-                              "percentage": 75
-                            }
-                          }
-                        ]
+                        "action": "REDEMPTION",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 10000.0,
+                          "currency": "GBP"
+                        }
+                      },
+                      {
+                        "action": "REDEMPTION",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B3L2U883",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 10000.0,
+                          "currency": "GBP"
+                        }
+                      },
+                      {
+                        "action": "REDEMPTION",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B3A3I098",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 10000.0,
+                          "currency": "GBP"
+                        }
+                      },
+                      {
+                        "action": "SWITCH",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5A675",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "percentage": 25
+                        }
+                      },
+                      {
+                        "action": "SWITCH",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4A2C604",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "percentage": 75
+                        }
                       }
+                    ]
+                  }
               Ex5:
                 summary: A switch, with the sale specified as a quantity and the reinvestment of the proceeds into a single new instrument.
                 value:
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                          {
-                            "action": "SELL",
-                            "requestedBy": "DFM",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },    
-                            "orderDetails": {
-                              "quantity": 3000.0
-                            }
-                          },
-                          {
-                            "action": "SWITCH",
-                            "requestedBy": "DFM",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5A675",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "percentage": 100
-                            }
-                          }
-                        ]
+                        "action": "SELL",
+                        "requestedBy": "DFM",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "quantity": 3000.0
+                        }
+                      },
+                      {
+                        "action": "SWITCH",
+                        "requestedBy": "DFM",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5A675",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "percentage": 100
+                        }
                       }
-        required: true
+                    ]
+                  }
       responses:
         "201":
           description: Investment Instructions created successfully or redirect
@@ -6123,251 +6246,240 @@ paths:
                 Ex1:
                   summary: Created two purchase instructions, one a buy as quantity of an instrument and the other an Invest, as a monetary value
                   value:
-                          {
-                            "instructionsUrn": 00000001234,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "BUY",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },  
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "quantity": 1250.123456
-                                }
-                              },
-                              {
-                                "id": 2,
-                                "action": "INVEST",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },  
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "amount": 12500.0,
-                                  "currency": "GBP"
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000001234,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "BUY",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "quantity": 1250.123456
                           }
+                        },
+                        {
+                          "id": 2,
+                          "action": "INVEST",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 12500.0,
+                            "currency": "GBP"
+                          }
+                        }
+                      ]
+                    }
                 Ex2:
                   summary: Created two sell instructions, one specified as a quantity of units/stock and one as a percentage of current holdings.
                   value:
-                          {
-                            "instructionsUrn": 00000002345,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "SELL",
-                                "requestedBy": "CLIENT",
-                                "instrumentDetails": {
-                                  "isin": "GB00B4L5Y983",
-                                  "exchange": "XLON",
-                                  "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "percentage": 25
-                                }
-                              },
-                              {
-                                "id": 2,
-                                "action": "SELL",
-                                "requestedBy": "CLIENT",
-                                "instrumentDetails": {
-                                  "isin": "GB00B4L5Y983",
-                                  "exchange": "XLON",
-                                  "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "quantity": 1000.0
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000002345,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "SELL",
+                          "requestedBy": "CLIENT",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "percentage": 25
                           }
+                        },
+                        {
+                          "id": 2,
+                          "action": "SELL",
+                          "requestedBy": "CLIENT",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "quantity": 1000.0
+                          }
+                        }
+                      ]
+                    }
                 Ex3:
                   summary: Created a single redemption instruction. 
                   value:
-                          {
-                            "instructionsUrn": 00000000988,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "REDEMPTION",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },  
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "amount": 1000.00,
-                                  "currency": "GBP"
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000000988,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "REDEMPTION",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 1000.00,
+                            "currency": "GBP"
                           }
+                        }
+                      ]
+                    }
                 Ex4:
                   summary: Created a switch reqest, involving three sales as monetary amounts and the reinvestment of the proceeds into two new instruments.
                   value:
-                          {
-                            "instructionsUrn": 00000004988,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "REDEMPTION",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW", 
-                                "orderDetails": {
-                                  "amount": 10000.0,
-                                  "currency": "GBP"
-                                }
-                              },
-                              {
-                                "id": 2,
-                                "action": "REDEMPTION",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B3L2U883",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "amount": 10000.0,
-                                  "currency": "GBP"
-                                }
-                              },
-                              {
-                                "id": 3,
-                                "action": "REDEMPTION",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B3A3I098",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "amount": 10000.0,
-                                  "currency": "GBP"
-                                }
-                              },
-                              {
-                                "id": 4,
-                                "action": "SWITCH",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5A675",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "currency": "GBP",
-                                  "percentage": 25
-                                }
-                              },
-                              {
-                                "id": 5,
-                                "action": "SWITCH",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4A2C604",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "currency": "GBP",
-                                  "percentage": 75
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000004988,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "REDEMPTION",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 10000.0,
+                            "currency": "GBP"
                           }
+                        },
+                        {
+                          "id": 2,
+                          "action": "REDEMPTION",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B3L2U883",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 10000.0,
+                            "currency": "GBP"
+                          }
+                        },
+                        {
+                          "id": 3,
+                          "action": "REDEMPTION",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B3A3I098",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 10000.0,
+                            "currency": "GBP"
+                          }
+                        },
+                        {
+                          "id": 4,
+                          "action": "SWITCH",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5A675",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "currency": "GBP",
+                            "percentage": 25
+                          }
+                        },
+                        {
+                          "id": 5,
+                          "action": "SWITCH",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4A2C604",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "currency": "GBP",
+                            "percentage": 75
+                          }
+                        }
+                      ]
+                    }
                 Ex5:
                   summary: Created a simple switch, selling one instrument and reinvesting the proceeds in another.
                   value:
-                          {
-                            "instructionsUrn": 00000004068,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "SELL",
-                                "requestedBy": "DFM",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "quantity": 3000.000
-                                }
-                              },
-                              {
-                                "id": 2,
-                                "action": "SWITCH",
-                                "requestedBy": "DFM",      
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5A675",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",  
-                                "orderDetails": {
-                                  "percentage": 100
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000004068,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "SELL",
+                          "requestedBy": "DFM",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "quantity": 3000.000
                           }
-      
+                        },
+                        {
+                          "id": 2,
+                          "action": "SWITCH",
+                          "requestedBy": "DFM",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5A675",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "percentage": 100
+                          }
+                        }
+                      ]
+                    }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -6376,12 +6488,787 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
+  /fee-groups:
+
+    post:
+      tags:
+        - Fee Groups
+      summary: Create a Fee Group
+      description: >
+        Creates a new Fee Group, linking one or more eligible investment accounts under a shared fee qualification (fee type and fee code).
 
 
+        A Fee Group is identified by a user-supplied `groupId` which must be unique per tenant. Each account added to the group must already exist, must qualify for the requested `feeType` and `feeCode`, must be denominated in GBP, and must not be soft-deleted.
 
 
+        On success the response returns the persisted Fee Group with enriched account details (account name and product identifier).
+      operationId: createFeeGroup
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFeeGroupRequest"
+            examples:
+              Ex1:
+                summary: Create a Fee Group with a single account
+                value:
+                  {
+                    "groupId": "SMITHSPLT01",
+                    "feeType": "PLATFORM_ANNUAL",
+                    "feeCode": "SA0001",
+                    "accounts": [
+                      { "id": "HW04003258A" }
+                    ]
+                  }
+              Ex2:
+                summary: Create a Fee Group with multiple accounts
+                value:
+                  {
+                    "groupId": "SMITHSADV01",
+                    "feeType": "ADVISER_ANNUAL",
+                    "feeCode": "AF0001",
+                    "accounts": [
+                      { "id": "HW04003258A" },
+                      { "id": "HW04003259B" },
+                      { "id": "HW04003260C" }
+                    ]
+                  }
+      responses:
+        "201":
+          description: Fee Group created.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeeGroupResponse"
+              examples:
+                Ex1:
+                  summary: Fee Group created with a single account
+                  value:
+                    {
+                      "groupId": "SMITHSPLT01",
+                      "status": "ACTIVE",
+                      "feeType": "PLATFORM_ANNUAL",
+                      "feeCode": "SA0001",
+                      "accounts": [
+                        {
+                          "id": "HW04003258A",
+                          "name": "Mr John Smith",
+                          "productId": "HIS"
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                DuplicateGroupId:
+                  summary: groupId already exists for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-001
+                    message: The Group ID must be unique.
+                AccountNotEligibleOrMissing:
+                  summary: An account does not exist or does not qualify for the requested fee type / fee code
+                  value:
+                    errorCode: HWA-FEE-GROUP-002
+                    message: "Account HW04003258A cannot be added to this Fee Group because it does not meet the required criteria."
+                NonGbpAccount:
+                  summary: An account base currency is not GBP
+                  value:
+                    errorCode: HWA-FEE-GROUP-007
+                    message: "Account HW04003258A cannot be added to a Fee Group because its base currency is not GBP."
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                400-InvalidQueryParam:
+                  $ref: '#/components/examples/400-InvalidQueryParam'
+                400-InvalidRequestHeader:
+                  $ref: '#/components/examples/400-InvalidRequestHeader'
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
 
+  /fee-groups/{feeGroupId}:
+
+    get:
+      tags:
+        - Fee Groups
+      summary: Retrieve a Fee Group by ID
+      description: >
+        Retrieves a Fee Group and its current member accounts using a case-sensitive exact match on `groupId`.
+
+
+        The response includes enriched member details (account name and product identifier). The Fee Group must belong to the authenticated tenant; cross-tenant lookups return 404.
+      operationId: retrieveFeeGroup
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: feeGroupId
+          in: path
+          description: User-supplied Fee Group identifier. Case-sensitive exact match.
+          required: true
+          schema:
+            type: string
+            maxLength: 11
+          example: SMITHSPLT01
+      responses:
+        "200":
+          description: Fee Group retrieved.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeeGroupResponse"
+              examples:
+                Ex1:
+                  summary: Active Fee Group with two member accounts
+                  value:
+                    {
+                      "groupId": "SMITHSPLT01",
+                      "status": "ACTIVE",
+                      "feeType": "PLATFORM_ANNUAL",
+                      "feeCode": "SA0001",
+                      "accounts": [
+                        {
+                          "id": "HW04003258A",
+                          "name": "Mr John Smith",
+                          "productId": "HIS"
+                        },
+                        {
+                          "id": "HW04003259B",
+                          "name": "Mrs Jane Smith",
+                          "productId": "HIS"
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                400-InvalidQueryParam:
+                  $ref: '#/components/examples/400-InvalidQueryParam'
+                400-InvalidRequestHeader:
+                  $ref: '#/components/examples/400-InvalidRequestHeader'
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          description: The Fee Group was not found.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NotFound:
+                  summary: groupId does not exist for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-004
+                    message: "Fee Group SMITHSPLT01 does not exist."
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    patch:
+      tags:
+        - Fee Groups
+      summary: Update a Fee Group
+      description: >
+        Adds or removes member accounts on an existing Fee Group. The request payload contains an `operations` array of `add` and/or `delete` actions.
+
+
+        Operations are applied in array order within a single transaction. If any operation fails, all prior operations in the same request are rolled back.
+
+
+        For `add` operations, each account must exist, must qualify for the group's `feeType`/`feeCode`, must be denominated in GBP, and must not be soft-deleted. For `delete` operations, each account must currently be a member of the Fee Group.
+      operationId: modifyFeeGroup
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: feeGroupId
+          in: path
+          description: User-supplied Fee Group identifier. Case-sensitive exact match.
+          required: true
+          schema:
+            type: string
+            maxLength: 11
+          example: SMITHSPLT01
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFeeGroupRequest"
+            examples:
+              Ex1:
+                summary: Add a single account
+                value:
+                  {
+                    "operations": [
+                      {
+                        "action": "add",
+                        "accounts": [
+                          { "id": "HW04003261D" }
+                        ]
+                      }
+                    ]
+                  }
+              Ex2:
+                summary: Remove a single account
+                value:
+                  {
+                    "operations": [
+                      {
+                        "action": "delete",
+                        "accounts": [
+                          { "id": "HW04003258A" }
+                        ]
+                      }
+                    ]
+                  }
+              Ex3:
+                summary: Combined add + delete in a single request
+                value:
+                  {
+                    "operations": [
+                      {
+                        "action": "delete",
+                        "accounts": [
+                          { "id": "HW04003258A" }
+                        ]
+                      },
+                      {
+                        "action": "add",
+                        "accounts": [
+                          { "id": "HW04003261D" },
+                          { "id": "HW04003262E" }
+                        ]
+                      }
+                    ]
+                  }
+      responses:
+        "200":
+          description: Fee Group updated.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeeGroupResponse"
+              examples:
+                Ex1:
+                  summary: Fee Group with updated members after add+delete
+                  value:
+                    {
+                      "groupId": "SMITHSPLT01",
+                      "status": "ACTIVE",
+                      "feeType": "PLATFORM_ANNUAL",
+                      "feeCode": "SA0001",
+                      "accounts": [
+                        {
+                          "id": "HW04003259B",
+                          "name": "Mrs Jane Smith",
+                          "productId": "HIS"
+                        },
+                        {
+                          "id": "HW04003261D",
+                          "name": "Mr Robert Smith",
+                          "productId": "HIS"
+                        },
+                        {
+                          "id": "HW04003262E",
+                          "name": "Ms Anna Smith",
+                          "productId": "HIS"
+                        }
+                      ]
+                    }
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NoOperations:
+                  summary: operations array is empty
+                  value:
+                    errorCode: HWA-FEE-GROUP-008
+                    message: 'At least one "add" or "delete" action is required.'
+                AccountNotEligibleOrMissing:
+                  summary: Account does not exist or does not qualify for the group's fee type / fee code
+                  value:
+                    errorCode: HWA-FEE-GROUP-002
+                    message: "Account HW04003261D cannot be added to this Fee Group because it does not meet the required criteria."
+                NonGbpAccount:
+                  summary: Account base currency is not GBP
+                  value:
+                    errorCode: HWA-FEE-GROUP-007
+                    message: "Account HW04003261D cannot be added to a Fee Group because its base currency is not GBP."
+                NotMember:
+                  summary: Account targeted for delete is not currently a member
+                  value:
+                    errorCode: HWA-FEE-GROUP-009
+                    message: "Account HW04003258A cannot be removed from this Fee Group as it is not currently a member."
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                400-InvalidQueryParam:
+                  $ref: '#/components/examples/400-InvalidQueryParam'
+                400-InvalidRequestHeader:
+                  $ref: '#/components/examples/400-InvalidRequestHeader'
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          description: The Fee Group was not found.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NotFound:
+                  summary: groupId does not exist for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-004
+                    message: "Fee Group SMITHSPLT01 does not exist."
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    delete:
+      tags:
+        - Fee Groups
+      summary: Delete a Fee Group
+      description: >
+        Soft-deletes a Fee Group by setting its status to `INACTIVE`. Member account links are retained but the group is no longer active.
+
+
+        A Fee Group already in `INACTIVE` state cannot be deleted again — a second call returns 404 with `HWA-FEE-GROUP-006`.
+      operationId: deleteFeeGroup
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: feeGroupId
+          in: path
+          description: User-supplied Fee Group identifier. Case-sensitive exact match.
+          required: true
+          schema:
+            type: string
+            maxLength: 11
+          example: SMITHSPLT01
+      responses:
+        "204":
+          description: Fee Group deleted. No response body.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+        "400":
+          description: Bad request
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                400-InvalidQueryParam:
+                  $ref: '#/components/examples/400-InvalidQueryParam'
+                400-InvalidRequestHeader:
+                  $ref: '#/components/examples/400-InvalidRequestHeader'
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          description: The Fee Group was not found or is already inactive.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NotFound:
+                  summary: groupId does not exist for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-005
+                    message: The Fee Group cannot be found.
+                AlreadyDeleted:
+                  summary: Fee Group is already inactive
+                  value:
+                    errorCode: HWA-FEE-GROUP-006
+                    message: This Fee Group has already been deleted.
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /non-pension-illustrations:
+
+    post:
+      tags:
+        - Illustrations
+      summary: Create an Illustration for non pension products
+      description: |
+        Creates an illustration based on the supplied scenario.
+
+
+        You can use this endpoint to generate a non-pension illustration for an existing investment account or a hypothetical investment account that has not yet been onboarded to the platform. The default illustration period is 10 years, but you can specify a different forecast period if required.
+
+        When generating an illustration for an existing investment account, the only required field is the Account ID. You may also optionally model changes to the account. If the request payload includes a money movement, transfer, or fee without an associated ID, it will be treated as a new item.
+
+        You can retrieve the ID of an existing regular money movement or fee using the relevant GET endpoint and include that ID along with any proposed amendments. This can include specifying an end date that falls before the illustration period, allowing you to generate an illustration that excludes the movement or fee entirely.
+
+        When illustrating a hypothetical investment account, you need to populate the Product ID plus at least one money movement or transfer. You also need to provide an investment strategy by either specifying the Model ID to use an existing model portfolio or defining individual asset allocations.
+
+        You can provide details of any one-off or ongoing fees. If the hypothetical account will belong to a Fee Group for a particular fee type, use the Band Adjustment Amount field to specify the value of the other accounts in the group. This ensures the fee is correctly illustrated.
+
+      operationId: createNonPensionIllustration
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: generateData
+          in: query
+          required: false
+          schema:
+            type: boolean
+            enum: [true, false]
+            default: true
+          description: Indicates whether illustration data should be generated.
+        - name: generateDocument
+          in: query
+          required: false
+          schema:
+            type: boolean
+            enum: [true, false]
+            default: true
+          description: Indicates whether an illustration document should be generated.    
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IllustrationNPRequest"
+            examples:
+              Ex1:
+                summary: Generate a anonymous Illustration for non pension product with model
+                value:
+                  {
+                    "investors": [
+                      {
+                          "name": "Anne Winfield",
+                          "dateOfBirth": "1990-05-15"
+                      }
+                    ],
+                    "illustrationDetails": {
+                      "forecastPeriod": 15,
+                      "account": {
+                        "productId": "HIS",
+                        "currency": "GBP"
+                      },
+                      "model": {
+                          "id": "HW000000090",
+                          "providerId": "HUBWISE",
+                          "date": "2020-04-28"
+                      },
+                      "moneyMovements": [
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "type": "ADVISER_ANNUAL",
+                          "code": "",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28",
+                          "bandAdjustmentAmount": 250000
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ]
+                    }
+                  }
+              Ex2:
+                summary: Generate a anonymous Illustration for non pension product with instruments
+                value:
+                 {
+                    
+                    "investors": [
+                      {
+                          "name": "Anne Winfield",
+                          "dateOfBirth": "1990-05-15"
+                      }
+                    ],
+                    "illustrationDetails": {
+                      "forecastPeriod": 15,
+                      "account": {
+                        "productId": "HIS",
+                        "currency": "GBP"
+                      },
+                      "model": {
+                          "allocations": [
+                              {
+                                "isin": "GB0005405286",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 100
+                              }
+                            ]
+                        },
+                      "moneyMovements": [
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "type": "ADVISER_ANNUAL",
+                          "code": "",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28",
+                          "bandAdjustmentAmount": 250000
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ]
+                    }
+                  }
+              Ex3:
+                summary: Generate a non anonymous Illustration for non pension with no changes
+                value:
+                  {
+                    "accountId":"HW000000108"
+                  }
+              Ex4:
+                summary: Generate a non anonymous Illustration for non pension product with add/amend/remove changes
+                value:
+                  {
+                    "accountId":"HW000000108",
+                    "illustrationDetails": {
+                      "forecastPeriod": 10,
+                      "moneyMovements": [
+                        {
+                          "id":5,
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2026-01-22",
+                          "endDate": "2026-06-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        },
+                        {
+                          "id":1,
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2028-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        },
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2026-01-22",
+                          "endDate": "2026-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "id":1,
+                          "type": "ADVISER_ANNUAL",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28"
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ]
+                    }
+                  }             
+      responses:
+        "201":
+          description: Illustration generated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IllustrationNPResponse"
+              examples: 
+                Ex1:
+                  summary: Illustration Response Example
+                  value:
+                    {
+                      "message":{
+                        "result":{},
+                        "document":{
+                          "pdfData": "0747a9ad467d4dc29ce70344",
+                          "totalPages":12
+                        }
+                      }
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
 
 components:
   
@@ -6476,6 +7363,73 @@ components:
           type: string
           maxLength: 2000
           description: Detailed message about the request validation failure.
+    
+    ProblemDetails:
+      readOnly: true
+      type: object
+      description: | 
+        The `ProblemDetails` object provides detailed information about an errors that occurred during an API call execution. 
+        This problem object conforms to the [RFC9457](https://www.rfc-editor.org/info/rfc9457) (formerly [RFC7807](https://tools.ietf.org/html/rfc7807)).
+        
+        The object is extended with the following properties:
+          - `errors` - an array of errors providing contextual information on the root cause of the problem
+      required:
+        - detail
+      properties:
+        type:
+          type: string
+          description: A URI reference that identifies the problem type.
+          format: uri
+          maxLength: 1024
+        status:
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          format: int32
+          minimum: 100
+          maximum: 599
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem, except for purposes of localization.
+          maxLength: 1024
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          maxLength: 4096
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+          maxLength: 1024
+        errors:
+          type: array
+          description: An array of error details to accompany a problem details response.
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+
+    ErrorDetail:
+      readOnly: true
+      type: object
+      description: An object to provide explicit details on a problem towards an API consumer.
+      required: 
+        - detail
+      properties:
+        detail:
+          type: string
+          description: A granular description on the specific error related to a body property, query parameter, path parameters, and/or header.
+          maxLength: 4096
+        pointer:
+          type: string
+          description: >- 
+            A [JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901) to a specific request body property that is the source of error.
+          maxLength: 1024
+        parameter:
+          type: string
+          description: The name of the query or path parameter that is the source of error.
+          maxLength: 1024
+        header:
+          type: string
+          description: The name of the header that is the source of error.
+          maxLength: 1024
 
     Account:
       additionalProperties: false
@@ -6632,7 +7586,7 @@ components:
         provider:
           format: string
           description: provider of the reference
-          maxLength: 36
+          maxLength: 30
           minLength: 1
           type: string
           example: CRM Name
@@ -6689,10 +7643,11 @@ components:
             applicable
           type: string
           example: "2020-04-28"
-
+    
     Address:
       additionalProperties: false
       required:
+        - primary
         - countryCode
         - line1
         - postCode
@@ -6703,7 +7658,6 @@ components:
         id:
           type: integer
           description: Id
-          format: int64
           readOnly: true
         primary:
           type: boolean
@@ -6749,6 +7703,10 @@ components:
       additionalProperties: false
       type: object
       properties:
+        id:
+          type: integer
+          description: Id
+          readOnly: true
         primary:
           type: boolean
           description: Primary
@@ -6987,6 +7945,7 @@ components:
     ContactDetails:
       type: object
       additionalProperties: false
+      description: Contact details for an investor. Optional for a child investor, required for all other investors.
       properties:
         contactPhone:
           maxLength: 20
@@ -7010,7 +7969,7 @@ components:
           maxLength: 256
           minLength: 1
           type: string
-          description: email address for notifications
+          description: Optional if a child investor, required for all other investors.
           format: string
           example: john.doe@outlook.com
 
@@ -7063,13 +8022,13 @@ components:
           maxLength: 50
 
     IncomeAndInvestment:
-      description: income and investment details are mandatory for an adult individual or court appointed deputy investor type
+      description: Income and investment details are mandatory for an adult or a court appointed deputy.
       type: object
       additionalProperties: false
       properties:
         occupation:
           type: string
-          description: The investors occupation
+          description: The investors occupation. Required if investor is an adult or a court appointed deputy. If the occupation is other, occupationOtherValue is mandatory.
           format: string
           example: OTHER
           enum:
@@ -7101,12 +8060,12 @@ components:
         occupationOtherValue:
           maxLength: 50
           type: string
-          description: If the investors occupation is other this field is applicable and mandatory
+          description: Mandatory if occupation is OTHER
           format: string
           example: Management Consultant
         industry:
           type: string
-          description: The investors occupations industry
+          description: The investors occupations industry. Required if investor is an adult or a court appointed deputy. If the industry is other, industryOtherValue is mandatory.
           format: string
           example: OTHER
           enum:
@@ -7165,12 +8124,12 @@ components:
         industryOtherValue:
           maxLength: 50
           type: string
-          description: If the investors industry is other this field is applicable and mandatory
+          description: Mandatory if industry is OTHER
           format: string
           example: Consulting Services
         annualIncome:
           type: string
-          description: The investors annual income code
+          description: The investors annual income code. Mandatory if investor is an adult or a court appointed deputy.
           format: string
           example: FROM_50K_TO_75K
           enum:
@@ -7184,7 +8143,7 @@ components:
             - ABOVE_200K
         investmentReason:
           type: string
-          description: The reason for the investors investments
+          description: The reason for the investors investments. Mandatory if investor is an adult or a court appointed deputy.
           format: string
           example: GROW_WEALTH
           enum:
@@ -7196,7 +8155,7 @@ components:
             - TAX_ADVANTAGES
         investmentAgreedInPerson:
           type: boolean
-          description: If the investment was agreed in person with the investor
+          description: If the investment was agreed in person with the investor. Mandatory if investor is an adult or a court appointed deputy.
           format: Boolean
 
     Individual:
@@ -7207,7 +8166,7 @@ components:
         - surname
         - territorialProfile
         - title
-      description: required if investor type is individual or court appointed deputy
+      description: Required if investor is an individual or a court appointed deputy
       type: object
       additionalProperties: false
       properties:
@@ -7253,7 +8212,7 @@ components:
             - OTHER
         maritalStatus:
           type: string
-          description: The investors Marital Status
+          description: The investors Marital Status. Required if investor is an adult or a court appointed deputy.
           example: MARRIED
           enum:
             - SINGLE
@@ -7301,28 +8260,24 @@ components:
           $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
-          minLength: 0
           type: string
           description: If the investors title is other this field is applicable and mandatory
           format: string
           example: General
         firstName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors First Name
           format: string
           example: Sam
         middleName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Middle Name
           format: string
           example: John
         surname:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Surname
           format: string
@@ -7370,13 +8325,13 @@ components:
       required:
         - legalName
         - contactDetails
-      description: required if investor type is for a trust or corporate
+      description: Required for trust or corporate investors.
       type: object
       additionalProperties: false
       properties:
         legalName:
-          maxLength: 25
-          minLength: 0
+          maxLength: 70
+          minLength: 1
           type: string
           description: The Legal name of a trust
           format: string
@@ -7389,13 +8344,12 @@ components:
           $ref: "#/components/schemas/Notification"
 
     TrustAndCorporatePatch:
-      description: required if investor type is for a trust or corporate
       type: object
       additionalProperties: false
       properties:
         legalName:
-          maxLength: 25
-          minLength: 0
+          maxLength: 70
+          minLength: 1
           type: string
           description: The Legal name of a trust
           format: string
@@ -7568,7 +8522,7 @@ components:
           example: HWI04003219
         tenantId:
           maxLength: 7
-          minLength: 0
+          
           type: string
           description: Unique SS&C Wealth Platform Tenant identifier
           format: string
@@ -7576,7 +8530,7 @@ components:
           example: HUBWISE
         adviserId:
           maxLength: 7
-          minLength: 0
+          
           type: string
           description: Unique SS&C Wealth Platform Adviser identifier
           format: string
@@ -7662,7 +8616,7 @@ components:
           minItems: 0
           type: array
           items:
-            $ref: "#/components/schemas/Address"
+            $ref: "#/components/schemas/AddressPatch"
         declarations:
           writeOnly: true
           type: array
@@ -7743,50 +8697,54 @@ components:
 
     Taxation:
       type: object
-      description: the investors taxation. TIN to be provided for adult type individual and court appointed deputy. LEI to be provided for corporated and trusts without an exception.
+      description: The investors tax residency. 
       additionalProperties: false
+      required:
+        - primary
+        - countryCode
       properties:
         id:
           type: integer
           description: SS&C Wealth Platform Investor Tax Residencies identifier
           format: int64
           readOnly: true
-          example: 1
         countryCode:
           maxLength: 3
           type: string
-          description: Country Code
-          format: String
+          description: ISO Country Code. 
           example: GB
         primary:
           type: boolean
           description: Indicates the primary tax residency
-          format: Boolean
-          example: true
         tin:
           maxLength: 35
           type: string
-          description: Taxpayer Identification Number (validated for UK), mandatory for an adult individual or court appointed deputy
-          format: String
+          description: Taxpayer Identification Number, mandatory for an adult individual or court appointed deputy.
           example: AC123456C
         lei:
           maxLength: 35
+          description: Legal Entity Identifier, mandatory for a corporate investor or trust investor.
           type: string
-          description: Legal Entity Identifier (validated via GLEIF), mandatory for a corporate or trust unless exception
-          format: String
           example: 5493001KJTIIGC8Y1R12
 
     TerritorialProfile:
       type: object
       additionalProperties: false
+      description: |
+        The investors territorial profile. 
+        
+        
+        Required for individuals and court appointed deputies. 
       properties:
         nationalities:
+          description: At least one nationality must be provided for individuals and court appointed deputies. 
           maxItems: 5
           minItems: 1
           type: array
           items:
             $ref: "#/components/schemas/Nationality"
         taxResidencies:
+          description: At least one tax residency must be provided for adults and court appointed deputies. 
           maxItems: 5
           minItems: 1
           type: array
@@ -8228,6 +9186,172 @@ components:
           description: The date the fee ends
           type: string
           example: "2025-05-28"
+
+    CreateFeeGroupRequest:
+      description: Request payload for creating a Fee Group.
+      required:
+        - groupId
+        - feeType
+        - feeCode
+        - accounts
+      type: object
+      additionalProperties: false
+      properties:
+        groupId:
+          description: User-supplied Fee Group identifier. Must be unique per tenant.
+          maxLength: 11
+          minLength: 1
+          type: string
+          example: SMITHSPLT01
+        feeType:
+          description: The fee type associated with the group. Must match the fee qualification of every account being added.
+          type: string
+          enum:
+            - ADVISER_ANNUAL
+            - ADVISER_INITIAL
+            - ADVISER_ONE_OFF
+            - PORTFOLIO_MANAGEMENT
+            - INVESTMENT_SERVICE
+            - PRODUCT_ANNUAL
+            - PLATFORM_ANNUAL
+            - PLATFORM_INITIAL
+            - DISCRETIONARY_MANAGEMENT_ANNUAL
+          example: PLATFORM_ANNUAL
+        feeCode:
+          description: A fee code identifying an existing set of tiered rates. Must match the fee qualification of every account being added.
+          maxLength: 6
+          minLength: 1
+          type: string
+          example: SA0001
+        accounts:
+          description: List of investment accounts to add to the Fee Group. At least one account is required.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/FeeGroupAccountRequest"
+
+    UpdateFeeGroupRequest:
+      description: Request payload for updating a Fee Group by adding and/or removing member accounts.
+      type: object
+      additionalProperties: false
+      properties:
+        operations:
+          description: An ordered list of add and/or delete operations. Operations are applied in array order within a single transaction. The server requires at least one operation; an empty or missing array is rejected with `HWA-FEE-GROUP-008`.
+          type: array
+          items:
+            $ref: "#/components/schemas/FeeGroupAction"
+
+    FeeGroupAction:
+      description: A single add or delete operation against a Fee Group.
+      required:
+        - action
+        - accounts
+      type: object
+      additionalProperties: false
+      properties:
+        action:
+          description: >-
+            The operation to perform on the listed accounts.
+            <ul>
+            <li>add: Adds the listed accounts to the Fee Group.</li>
+            <li>delete: Removes the listed accounts from the Fee Group.</li>
+            </ul>
+          enum:
+            - add
+            - delete
+          type: string
+          example: add
+        accounts:
+          description: The accounts targeted by this operation. At least one account is required.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/FeeGroupAccountRequest"
+
+    FeeGroupAccountRequest:
+      description: An account being referenced in a Fee Group create or update request.
+      required:
+        - id
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          description: Unique SS&C Wealth Platform Account identifier.
+          maxLength: 11
+          minLength: 1
+          type: string
+          example: HW04003258A
+
+    FeeGroupResponse:
+      description: A Fee Group and its current member accounts.
+      type: object
+      additionalProperties: false
+      properties:
+        groupId:
+          description: User-supplied Fee Group identifier.
+          maxLength: 11
+          type: string
+          readOnly: true
+          example: SMITHSPLT01
+        status:
+          description: The current status of the Fee Group.
+          enum:
+            - ACTIVE
+            - INACTIVE
+          type: string
+          readOnly: true
+          example: ACTIVE
+        feeType:
+          description: The fee type associated with the group.
+          enum:
+            - ADVISER_ANNUAL
+            - ADVISER_INITIAL
+            - ADVISER_ONE_OFF
+            - PORTFOLIO_MANAGEMENT
+            - INVESTMENT_SERVICE
+            - PRODUCT_ANNUAL
+            - PLATFORM_ANNUAL
+            - PLATFORM_INITIAL
+            - DISCRETIONARY_MANAGEMENT_ANNUAL
+          type: string
+          readOnly: true
+          example: PLATFORM_ANNUAL
+        feeCode:
+          description: The fee code identifying the set of tiered rates for this group.
+          maxLength: 6
+          type: string
+          readOnly: true
+          example: SA0001
+        accounts:
+          description: Member accounts of the Fee Group, with enriched details.
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/FeeGroupAccountResponse"
+
+    FeeGroupAccountResponse:
+      description: A member account of a Fee Group, including enriched details from the account master.
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          description: Unique SS&C Wealth Platform Account identifier.
+          maxLength: 11
+          type: string
+          readOnly: true
+          example: HW04003258A
+        name:
+          description: The account name.
+          maxLength: 50
+          type: string
+          readOnly: true
+          example: Mr John Smith
+        productId:
+          description: Unique SS&C Wealth Platform Product identifier.
+          maxLength: 3
+          type: string
+          readOnly: true
+          example: HIS
 
     MovementsHeader:
       required:
@@ -9054,7 +10178,7 @@ components:
           type: string
           maxLength: 10
         address:
-          $ref: "#/components/schemas/Address"
+          $ref: "#/components/schemas/AddressPatch"
           
     ThirdPartiesHeaderPatch:
       type: object
@@ -9171,8 +10295,571 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Declaration'
+    
+    IllustrationNPAccountMovement:
+      type: object
+      additionalProperties: false
+      properties:
+      
+        id:
+          format: int64
+          description: Unique SS&C Wealth Platform Money Movement identifier.
+          type: integer
+          example: 2
+        
+        type:
+          description: >-
+            The type of money movement being specified, the API can support payments into and out
+            of the account.
+          enum:
+            - CONTRIBUTIONS
+            - WITHDRAWALS
+            - UFPLS
+            - FLEXI_ACCESS_INCOME
+            - FLEXI_ACCESS_PCLS
+          type: string
+          example: CONTRIBUTIONS
+        
+        frequency:
+          description: >-
+            The frequency of this specific money movement.
+          enum:
+            - ANNUALLY
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - ONE_OFF
+          type: string
+          example: ONE_OFF
+        nextDate:
+          format: date
+          description: >-
+            The intended start date of the money movement. 
+          type: string
+          example: "2025-01-22"
+        endDate:
+          format: date
+          description: >-
+            	The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
+          type: string
+        
+        investmentInstruction:
+          description: >-
+            Whether a contribution should be invested immediately or held as cash.
+          enum:
+            - LEAVE_IN_CASH
+            - INVEST_IN_MODEL
+          type: string
+          example: INVEST_IN_MODEL
+        
+        value:
+          $ref: "#/components/schemas/IllustrationValue"
+        
+        fee:
+          $ref: "#/components/schemas/IllustrationMovementFee"  
+    
+    IllustrationNPAccountFee:
+      description: Account level fees not associated with a specific money movement or transfer.
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique SS&C Wealth Platform Fee identifier.
+          example: 1
+        type:
+          type: string
+          description: The type of fee.
+          enum:
+            - ADVISER_ANNUAL
+            - ADVISER_INITIAL
+            - ADVISER_ONE_OFF
+            - PORTFOLIO_MANAGEMENT
+            - INVESTMENT_SERVICE
+            - DISCRETIONARY_MANAGEMENT_ANNUAL
+          example: ADVISER_ANNUAL
+        code:
+          type: string
+          description: Unique identifier for a pre-configured set of tiered rates.
+          maxLength: 6
+          
+          example: AFGVCD
+        amount:
+          type: number
+          description: Amount-based fee value.
+          example: 1000
+        percentage:
+          type: number
+          description: The rate for a percentage-based fee.
+          example: 0.12
+        currency:
+          type: string
+          description: The currency associated with the fee.
+          example: GBP
+        vatIncluded:
+          type: boolean
+          description: Whether the fee includes VAT.
+          example: true
+        startDate:
+          type: string
+          description: The intended start date of the fee.
+          format: date
+          example: "2025-04-28"
+        endDate:
+          type: string
+          description: The date when the fee is scheduled to stop.
+          format: date
+          example: "2027-04-28"
+        bandAdjustmentAmount:
+          description: If the account is in a fee group for this fee type, the total value of the other accounts in the group.
+          type: number
+          example: 1000
+
+    IllustrationNPAccountTransfer:
+      description: Transfers into the account from an external provider
+      type: object
+      additionalProperties: false
+      properties:
+        
+        investmentInstruction:
+          type: string
+          description: Whether a transfer should be invested immediately or held as cash.
+          enum:
+            - INVEST_IN_MODEL
+            - LEAVE_IN_CASH
+          example: INVEST_IN_MODEL
+        value:
+          $ref: "#/components/schemas/IllustrationValue"
+        fee:
+          $ref: "#/components/schemas/IllustrationTransferFee"    
+              
+
+    IllustrationNPRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        accountId:
+           type: string
+           nullable: true
+           example: "ACC123456"
+           description: Unique SS&C Wealth Platform Account identifier
+
+        investors:
+              type: array
+              description: |
+                The investor(s) associated with the illustration.
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Anne Winfield"
+                    description: The investor’s name.
+                  dateOfBirth:
+                    type: string
+                    format: date
+                    example: "2000-10-10"
+                    description: The investor’s date of birth. 
+        
+          
+        illustrationDetails:
+          type: object
+          description: Required when creating a new illustration without an account ID, or when illustrating proposed changes to an existing account.
+          properties:
+
+            forecastPeriod:
+              type: integer
+              example: 15
+              description: Number of years that the illustration will cover. If not provided, the default 10 year period will be used.
+
+            account:
+              type: object
+              description: |
+                    Account details for the illustration.
+                    
+              properties:
+                productId:
+                  description: Unique SS&C Wealth Platform Product identifier.
+                  type: string
+                  example: GIA
+                currency:
+                  description: The currency associated with the account.
+                  type: string
+                  example: GBP
+
+            model:
+              $ref: '#/components/schemas/IllustrationModel'
+ 
+            moneyMovements:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationNPAccountMovement"
+                description: Contributions and Withdrawals.
+            
+            fees:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationNPAccountFee"
+                description: Account level fees not associated with a specific money movement or transfer.
+
+            transfers:
+              type: array
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/IllustrationNPAccountTransfer"
+                description: Transfers into the account from an external provider
+
+
+    IllustrationNPResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        message:
+          type: object
+          properties:
+            result:
+              type: object
+              properties:
+                illustrationResults:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/IllustrationResult'
+
+            document:
+              $ref: '#/components/schemas/IllustrationDocument'  
+    
+    IllustrationResult:
+      type: object
+      additionalProperties: false
+      properties:
+        projectionType:
+          type: string
+          description: Indicates whether the illustration class is new or existing.
+          enum:
+            - NEW
+            - EXISTING
+          example: NEW
+          x-enum-descriptions:
+            - New
+            - Existing
+
+        summary:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationSummary'
+
+        reductionInYield:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationReductionInYield'
+
+        deductions:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationDeduction'
+
+        adviserFees:
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustratioAdviserFee'
+
+    IllustrationSummary:
+      type: object
+      additionalProperties: false
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - LOW
+            - MEDIUM
+            - HIGH
+          example: MEDIUM
+          x-enum-descriptions:
+            - Low
+            - Medium
+            - High
+
+        periodStartDate:
+          type: string
+          format: date
+          example: "2026-01-01"
+
+        periodEndDate:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        openingFundValue:
+          type: number
+          format: double
+          example: 10000
+
+        newFundInvestment:
+          type: number
+          format: double
+          example: 500
+
+        totalIncome:
+          type: number
+          format: double
+          example: 200
+
+        totalIncomeToDate:
+          type: number
+          format: double
+          example: 200
+
+        closingFundValue:
+          type: number
+          format: double
+          example: 10700
+
+    IllustrationReductionInYield:
+      type: object
+      additionalProperties: false
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        growthRatePercentage:
+          type: number
+          format: double
+          example: 5.0
+
+        reductionInYieldPercentage:
+          type: number
+          format: double
+          example: 1.2
+
+    IllustrationDeduction:
+      type: object
+      additionalProperties: false
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        date:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        year:
+          type: integer
+          example: 1
+
+        isProjectionEnd:
+          type: boolean
+          example: false
+
+        inflowToDate:
+          type: number
+          format: double
+          example: 1000
+
+        outflowToDate:
+          type: number
+          format: double
+          example: 200
+
+        actualDeductionsToDate:
+          type: number
+          format: double
+          example: 150
+
+        effectOfDeductionsToDate:
+          type: number
+          format: double
+          example: 75
+
+        yearEndValue:
+          type: number
+          format: double
+          example: 12000
+
+        yearEndValueWithoutCharges:
+          type: number
+          format: double
+          example: 12300
+
+        yearEndValueAfterProductCharges:
+          type: number
+          format: double
+          example: 11900
+
+    IllustratioAdviserFee:
+      type: object
+      additionalProperties: false
+      properties:
+        assumptionLevel:
+          type: string
+          enum:
+            - MEDIUM
+          example: MEDIUM
+          x-enum-descriptions:
+            - Medium
+
+        date:
+          type: string
+          format: date
+          example: "2026-12-31"
+
+        year:
+          type: integer
+          example: 1
+
+        isProjectionEnd:
+          type: boolean
+          example: false
+
+        initialAdviserFees:
+          type: number
+          format: double
+          example: 250
+
+        ongoingAdviserFees:
+          type: number
+          format: double
+          example: 100
+
+    IllustrationDocument:
+      type: object
+      additionalProperties: false
+      properties:
+        pdfData:
+          type: string
+          format: byte
+          description: Base64 encoded PDF document.
+
+        totalPages:
+          type: integer
+          example: 12
+
+    IllustrationModel:
+      type: object
+      description: >
+        Investment Strategy for the account.
+      properties:
+        id:
+          description: Unique SS&C Wealth Platform Model identifier.
+          type: string
+          example: HW000000090
+
+        providerId:
+          description: Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId from the token will be used.
+          type: string
+          example: HUBWISE
+
+        date:
+          description: The model version date. If not provided, the most recent version will be used.
+          type: string
+          format: date
+          example: '2026-04-28'
+
+        allocations: 
+          description: Individual asset selection.
+          type: array
+          items:
+            $ref: '#/components/schemas/IllustrationAllocation'
+
+    IllustrationAllocation:
+      type: object
+      description: Asset allocation within the model.
+      properties:
+        isin:
+          type: string
+          description: Must be a valid 12-character ISIN code identifying the asset to which the allocation applies.
+          example: GB0005405286
+
+        currency:
+          type: string
+          description: Market currency.
+          enum:
+            - USD
+            - GBP
+            - EUR
+          example: GBP
+
+        exchange:
+          type: string
+          description: Exchange code.
+          example: XLON
+
+        percentage:
+          type: number
+          format: double
+          description: The percentage of any investment to be allocated to this asset.
+          example: 100
+
+    IllustrationMovementFee:
+      allOf:
+        - $ref: '#/components/schemas/IllustrationTransferFee'
+        - type: object
+          properties:
+            instalmentPlan:
+              $ref: "#/components/schemas/IllustrationFeeInstalmentPlan"
+
+    IllustrationTransferFee:
+      description: A fee associated with this money movement or transfer.
+      type: object
+      properties:
+        amount:
+          description: Amount-based fee value.
+          type: number
+          example: 5
+        percentage:
+          description: The rate for a percentage-based fee.
+          maximum: 100
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          example: 5
+
+    IllustrationFeeInstalmentPlan:
+      description: >-
+        A monthly instalment plan that spreads a fee across multiple regular money movements.
+      type: object
+      additionalProperties: false
+      properties:
+        totalMonths:
+          format: int64
+          description: The total number of instalments across which the fee will be spread.
+          maximum: 999
+          type: integer
+          example: 12
+
+    IllustrationValue:
+      required:
+        - amount
+        - currency
+      type: object
+      additionalProperties: false
+      properties:
+        amount:
+          format: double
+          description: Monetary value of the movement or transfer.
+          type: number
+          example: 15000
+        currency:
+          description: The currency associated with the money movement or transfer.
+          maxLength: 3
+          type: string
+          example: GBP
 
   examples:
+    
     400-BadRequest:
       summary: Path parameter does not conform to API schema
       value:
@@ -9188,7 +10875,172 @@ components:
           ]
         }
 
+    400-MissingBodyProperty:
+      summary: Request body is missing a required property
+      value:
+        title: Invalid Request
+        detail: The request is missing an expected body property.
+        errors:
+          - detail: The body property {name} is required.
+            pointer: "/name"
+
+    400-MissingQueryParameter:
+      summary: Request is missing an expected query parameter
+      value:
+        title: Invalid Request
+        detail: The request is missing an expected query parameter.
+        errors:
+          - detail: The query parameter {name} is required.
+            parameter: name
+
+    400-MissingRequestHeader:
+      summary: Request is missing an expected HTTP request header
+      value:
+        title: Invalid Request
+        detail: The request is missing an expected HTTP request header.
+        errors:
+          - detail: The header {Accept} is required
+            header: Accept
+
+    400-InvalidQueryParam:
+      summary: Request contains a malformed query parameter
+      value:
+        title: Invalid Request
+        detail: The request contains a malformed query parameter.
+        errors:
+          - detail: The expected string values are ASC or DSC
+            parameter: sort
+
+    400-InvalidRequestHeader:
+      summary: Request contains a malformed request header
+      value:
+        title: Invalid Request
+        detail: The request contains a malformed request header parameter.
+        errors:
+          - detail: The request header was malformed
+            header: Accept            
+
+    400-InvalidBodyPropertyValue:
+      summary: Request contains an invalid body property value
+      value:
+        title: Invalid Request
+        detail: The request body contains an invalid body property value.
+        errors:
+          - detail: A value `Never` is an invalid. Please provide `monthly` or `quarterly`
+            pointer: "/marketingCommunication/frequency"
+          - detail: Must be a positive integer
+            pointer: "/quantity"
+
+    403-Forbidden:
+      summary: Access is forbidden
+      value:
+        title: Forbidden
+        detail: The action could not be completed
+        
+    404-NotFound:
+      summary: Resource not found
+      value:
+        title: Not found
+        detail: The requested resource was not found       
+            
+    400-AlreadyExists:
+      summary: Resource already exists
+      value:
+        title: Already exists
+        detail: The resource being created already exists.
+          
+    400-BusinessRules:
+      summary: Business rule violation
+      value: 
+        title: Multiple business rule violations
+        detail: The request body is invalid and not meeting business rules.
+        errors:
+          - detail: Cannot withdraw all income from a SIPP account
+            pointer: "/incomeOption/type"
+          - detail: Bank account currency must match the base currency of the investment account
+            pointer: "/currency"
+          - detail: Account holder with ID HWI00052961 does not exist
+            pointer: "/holders/1/id"
+            
+    500-serverError:
+      summary: Server error
+      value:
+        title: Server Error
+        detail: An unexpected technical error occurred. Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After header is returned, do not retry the call.
+
   responses:
+    
+    400-BadRequest:
+      description: |
+        The request was malformed or could not be processed. 
+
+        Examples of `Bad Request` problem detail responses:
+
+         - Missing or invalid request header parameter
+         - Missing os invalid query parameter         
+         - Missing or invalid request body property
+      headers:
+        Request-Id:
+          $ref: '#/components/headers/Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            RequestBody:
+              $ref: "#/components/examples/400-BadRequest"  
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            400-MissingBodyProperty:
+              $ref: '#/components/examples/400-MissingBodyProperty'
+            400-InvalidBodyPropertyValue:
+              $ref: '#/components/examples/400-InvalidBodyPropertyValue'
+            400-MissingQueryParameter:
+              $ref: '#/components/examples/400-MissingQueryParameter'
+            400-MissingRequestHeader:
+              $ref: '#/components/examples/400-MissingRequestHeader'
+            400-InvalidQueryParam:
+              $ref: '#/components/examples/400-InvalidQueryParam'
+            400-InvalidRequestHeader:
+              $ref: '#/components/examples/400-InvalidRequestHeader'
+            400-BusinessRules:
+              $ref: '#/components/examples/400-BusinessRules'
+            400-AlreadyExists:
+              $ref: '#/components/examples/400-AlreadyExists'
+    
+    400-BadRequest-NoBody:
+      description: |
+        The request had one of the following issues:
+
+         - Missing or invalid path parameter
+         - Missing or invalid query parameter
+         - Missing or invalid request header 
+
+      headers:
+        Request-Id:
+          $ref: '#/components/headers/Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            RequestBody:
+              $ref: "#/components/examples/400-BadRequest"  
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            400-MissingQueryParameter:
+              $ref: '#/components/examples/400-MissingQueryParameter'
+            400-MissingRequestHeader:
+              $ref: '#/components/examples/400-MissingRequestHeader'
+            400-InvalidQueryParam:
+              $ref: '#/components/examples/400-InvalidQueryParam'
+            400-InvalidRequestHeader:
+              $ref: '#/components/examples/400-InvalidRequestHeader'
+    
     401-Unauthorized:
       description: Unauththenticated request
       headers:
@@ -9230,6 +11082,12 @@ components:
               value:
                 errorCode: HWA-EXCEPTION-004
                 message: You do not have permission to access this resource
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            403-Forbidden:
+              $ref: '#/components/examples/403-Forbidden'
 
     404-NotFound:
       description: The resource was not found
@@ -9247,6 +11105,12 @@ components:
               value:
                 errorCode: HWA-INVESTOR-001
                 message: The requested resource could not be found.
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            404-NotFound:
+              $ref: '#/components/examples/404-NotFound'
 
     500-ServerError:
       description: Internal server error
@@ -9267,6 +11131,12 @@ components:
 
 
                   Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After header is returned, do not retry the call.
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            500-serverError:
+              $ref: '#/components/examples/500-serverError'
 
   securitySchemes:
     bearer-token:
