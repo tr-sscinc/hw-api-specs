@@ -666,17 +666,7 @@ paths:
                     ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1000,17 +990,7 @@ paths:
                     }
 
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1215,17 +1195,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1335,17 +1305,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1425,17 +1385,7 @@ paths:
                       "vulnerabilities": []
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1540,17 +1490,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1657,17 +1597,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1745,17 +1675,7 @@ paths:
                       "correspondences": []
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1857,17 +1777,7 @@ paths:
                         ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1915,17 +1825,7 @@ paths:
                       "ids": [1]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -1973,17 +1873,7 @@ paths:
                       "ids": [1]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2033,17 +1923,7 @@ paths:
                       "ids": [1]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2437,17 +2317,7 @@ paths:
                         }
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2614,6 +2484,8 @@ paths:
                         "type": "CASH"
                       }
                     }
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2712,6 +2584,16 @@ paths:
                         }
                       ]
                     }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404": 
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
         
   /accounts/{accountId}/bank-accounts:
     
@@ -2963,17 +2845,7 @@ paths:
                       "status": "UNCHECKED"
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -3100,7 +2972,8 @@ paths:
                 Ex4:
                   summary: No bank accounts associated with an investment account
                   value: []
-
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -3647,19 +3520,8 @@ paths:
                         }
                       ]
                     }
-      
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -3786,6 +3648,8 @@ paths:
                     {
                       "moneyMovements": []
                     }
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -3893,9 +3757,7 @@ paths:
                         "acknowledgement": true
                       }
                     ]
-                  }
-
-              
+                  }      
       responses:
         "200":
           description: Account fee archived successfully
@@ -4019,7 +3881,17 @@ paths:
                         }
                       ]
                     }
-    
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /accounts/{accountId}/transfers:
     
     post:
@@ -4346,17 +4218,7 @@ paths:
                     ]
                   }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4550,7 +4412,8 @@ paths:
                         
                       ]
                     }
-                
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4772,20 +4635,9 @@ paths:
                         "period": "ONE_OFF",
                       }
                     ]
-                  }
-                
+                  }  
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4913,6 +4765,8 @@ paths:
                     {
                       "fees": []
                     }   
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4984,8 +4838,6 @@ paths:
                       }
                     ]
                   }
-
-              
       responses:
         "200":
           description: Account fee archived successfully
@@ -5021,7 +4873,17 @@ paths:
                         }
                       ]
                     }
-        
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /accounts/{accountId}/income-options:
 
     put:
@@ -5128,17 +4990,7 @@ paths:
                       }
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5316,19 +5168,8 @@ paths:
                           }
                         ]
                     }
-       
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5602,17 +5443,7 @@ paths:
                       ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5754,17 +5585,7 @@ paths:
                       ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -5905,17 +5726,7 @@ paths:
                       ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -6076,17 +5887,7 @@ paths:
                       ]
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -6198,17 +5999,7 @@ paths:
                         }
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -6260,188 +6051,187 @@ paths:
               Ex1:
                 summary: create two purchase instructions, one a buy as quantity of an instrument and the other an Invest, as a monetary
                 value: 
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                            {
-                              "action": "BUY",
-                              "requestedBy": "XO",
-                              "instrumentDetails": {
-                              "isin": "GB00B4L5Y983",
-                              "exchange": "XLON",
-                              "marketSettlementCurrency": "GBP"
-                              },
-                              "orderDetails": {
-                                "quantity": 1250.123456
-                              }
-                            },
-                            {
-                              "action": "INVEST",
-                              "requestedBy": "XO",
-                              "instrumentDetails": {
-                              "isin": "GB00B4L5A675",
-                              "exchange": "XLON",
-                              "marketSettlementCurrency": "GBP"
-                              },      
-                              "orderDetails": {
-                                "amount": 12500.0,
-                                "currency": "GBP"
-                              }
-                            }
-                          ]
+                        "action": "BUY",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "quantity": 1250.123456
                         }
+                      },
+                      {
+                        "action": "INVEST",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5A675",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 12500.0,
+                          "currency": "GBP"
+                        }
+                      }
+                    ]
+                  }
               Ex2:
                 summary: Specfies two instructions to sell, one as a quantity of units/stock and one as a percentage of current holdings.
                 value:
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                          {
-                            "action": "SELL",
-                            "requestedBy": "CLIENT",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "percentage": 25
-                            }
-                          },
-                          {
-                            "action": "SELL",
-                            "requestedBy": "CLIENT",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "quantity": 1000.000
-                            }
-                          }    
-                        ]
+                        "action": "SELL",
+                        "requestedBy": "CLIENT",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "percentage": 25
+                        }
+                      },
+                      {
+                        "action": "SELL",
+                        "requestedBy": "CLIENT",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "quantity": 1000.000
+                        }
                       }
+                    ]
+                  }
               Ex3:
                 summary: Specifies a Redemption, a sale specified as a monetary amount.
                 value:
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                          {
-                            "action": "REDEMPTION",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "amount": 1000.00,
-                              "currency": "GBP"
-                            }
-                          }
-                        ]
+                        "action": "REDEMPTION",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 1000.00,
+                          "currency": "GBP"
+                        }
                       }
+                    ]
+                  }
               Ex4:
                 summary: A switch instruction, specify sales as monetary amounts (Redemptions) with reinvestment of the proceeds split across two new instruments.
                 value:
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                          {
-                            "action": "REDEMPTION",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "amount": 10000.0,
-                              "currency": "GBP"
-                            }
-                          },
-                          {
-                            "action": "REDEMPTION",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B3L2U883",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },        
-                            "orderDetails": {
-                              "amount": 10000.0,
-                              "currency": "GBP"
-                            }
-                          },
-                          {
-                            "action": "REDEMPTION",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B3A3I098",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },        
-                            "orderDetails": {
-                              "amount": 10000.0,
-                              "currency": "GBP"
-                            }
-                          },
-                          {
-                            "action": "SWITCH",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5A675",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },        
-                            "orderDetails": {
-                              "percentage": 25
-                            }
-                          },
-                          {
-                            "action": "SWITCH",
-                            "requestedBy": "XO",
-                            "instrumentDetails": {
-                            "isin": "GB00B4A2C604",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },        
-                            "orderDetails": {
-                              "percentage": 75
-                            }
-                          }
-                        ]
+                        "action": "REDEMPTION",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 10000.0,
+                          "currency": "GBP"
+                        }
+                      },
+                      {
+                        "action": "REDEMPTION",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B3L2U883",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 10000.0,
+                          "currency": "GBP"
+                        }
+                      },
+                      {
+                        "action": "REDEMPTION",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B3A3I098",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "amount": 10000.0,
+                          "currency": "GBP"
+                        }
+                      },
+                      {
+                        "action": "SWITCH",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5A675",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "percentage": 25
+                        }
+                      },
+                      {
+                        "action": "SWITCH",
+                        "requestedBy": "XO",
+                        "instrumentDetails": {
+                          "isin": "GB00B4A2C604",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "percentage": 75
+                        }
                       }
+                    ]
+                  }
               Ex5:
                 summary: A switch, with the sale specified as a quantity and the reinvestment of the proceeds into a single new instrument.
                 value:
+                  {
+                    "instructions": [
                       {
-                        "instructions": [
-                          {
-                            "action": "SELL",
-                            "requestedBy": "DFM",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5Y983",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },    
-                            "orderDetails": {
-                              "quantity": 3000.0
-                            }
-                          },
-                          {
-                            "action": "SWITCH",
-                            "requestedBy": "DFM",
-                            "instrumentDetails": {
-                            "isin": "GB00B4L5A675",
-                            "exchange": "XLON",
-                            "marketSettlementCurrency": "GBP"
-                            },          
-                            "orderDetails": {
-                              "percentage": 100
-                            }
-                          }
-                        ]
+                        "action": "SELL",
+                        "requestedBy": "DFM",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5Y983",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "quantity": 3000.0
+                        }
+                      },
+                      {
+                        "action": "SWITCH",
+                        "requestedBy": "DFM",
+                        "instrumentDetails": {
+                          "isin": "GB00B4L5A675",
+                          "exchange": "XLON",
+                          "marketSettlementCurrency": "GBP"
+                        },
+                        "orderDetails": {
+                          "percentage": 100
+                        }
                       }
-        required: true
+                    ]
+                  }
       responses:
         "201":
           description: Investment Instructions created successfully or redirect
@@ -6456,251 +6246,240 @@ paths:
                 Ex1:
                   summary: Created two purchase instructions, one a buy as quantity of an instrument and the other an Invest, as a monetary value
                   value:
-                          {
-                            "instructionsUrn": 00000001234,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "BUY",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },  
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "quantity": 1250.123456
-                                }
-                              },
-                              {
-                                "id": 2,
-                                "action": "INVEST",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },  
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "amount": 12500.0,
-                                  "currency": "GBP"
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000001234,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "BUY",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "quantity": 1250.123456
                           }
+                        },
+                        {
+                          "id": 2,
+                          "action": "INVEST",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 12500.0,
+                            "currency": "GBP"
+                          }
+                        }
+                      ]
+                    }
                 Ex2:
                   summary: Created two sell instructions, one specified as a quantity of units/stock and one as a percentage of current holdings.
                   value:
-                          {
-                            "instructionsUrn": 00000002345,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "SELL",
-                                "requestedBy": "CLIENT",
-                                "instrumentDetails": {
-                                  "isin": "GB00B4L5Y983",
-                                  "exchange": "XLON",
-                                  "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "percentage": 25
-                                }
-                              },
-                              {
-                                "id": 2,
-                                "action": "SELL",
-                                "requestedBy": "CLIENT",
-                                "instrumentDetails": {
-                                  "isin": "GB00B4L5Y983",
-                                  "exchange": "XLON",
-                                  "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "quantity": 1000.0
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000002345,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "SELL",
+                          "requestedBy": "CLIENT",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "percentage": 25
                           }
+                        },
+                        {
+                          "id": 2,
+                          "action": "SELL",
+                          "requestedBy": "CLIENT",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "quantity": 1000.0
+                          }
+                        }
+                      ]
+                    }
                 Ex3:
                   summary: Created a single redemption instruction. 
                   value:
-                          {
-                            "instructionsUrn": 00000000988,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "REDEMPTION",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },  
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "amount": 1000.00,
-                                  "currency": "GBP"
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000000988,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "REDEMPTION",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 1000.00,
+                            "currency": "GBP"
                           }
+                        }
+                      ]
+                    }
                 Ex4:
                   summary: Created a switch reqest, involving three sales as monetary amounts and the reinvestment of the proceeds into two new instruments.
                   value:
-                          {
-                            "instructionsUrn": 00000004988,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "REDEMPTION",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW", 
-                                "orderDetails": {
-                                  "amount": 10000.0,
-                                  "currency": "GBP"
-                                }
-                              },
-                              {
-                                "id": 2,
-                                "action": "REDEMPTION",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B3L2U883",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "amount": 10000.0,
-                                  "currency": "GBP"
-                                }
-                              },
-                              {
-                                "id": 3,
-                                "action": "REDEMPTION",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B3A3I098",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "amount": 10000.0,
-                                  "currency": "GBP"
-                                }
-                              },
-                              {
-                                "id": 4,
-                                "action": "SWITCH",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5A675",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "currency": "GBP",
-                                  "percentage": 25
-                                }
-                              },
-                              {
-                                "id": 5,
-                                "action": "SWITCH",
-                                "requestedBy": "XO",
-                                "instrumentDetails": {
-                                "isin": "GB00B4A2C604",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "currency": "GBP",
-                                  "percentage": 75
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000004988,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "REDEMPTION",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 10000.0,
+                            "currency": "GBP"
                           }
+                        },
+                        {
+                          "id": 2,
+                          "action": "REDEMPTION",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B3L2U883",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 10000.0,
+                            "currency": "GBP"
+                          }
+                        },
+                        {
+                          "id": 3,
+                          "action": "REDEMPTION",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B3A3I098",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "amount": 10000.0,
+                            "currency": "GBP"
+                          }
+                        },
+                        {
+                          "id": 4,
+                          "action": "SWITCH",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5A675",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "currency": "GBP",
+                            "percentage": 25
+                          }
+                        },
+                        {
+                          "id": 5,
+                          "action": "SWITCH",
+                          "requestedBy": "XO",
+                          "instrumentDetails": {
+                            "isin": "GB00B4A2C604",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "currency": "GBP",
+                            "percentage": 75
+                          }
+                        }
+                      ]
+                    }
                 Ex5:
                   summary: Created a simple switch, selling one instrument and reinvesting the proceeds in another.
                   value:
-                          {
-                            "instructionsUrn": 00000004068,
-                            "accountId": "HW00013451A",
-                            "tenantId": "HUBWISE",
-                            "adviserId": "E273053",
-                            "requestStatus": "NEW",
-                            "instructions": [
-                              {
-                                "id": 1,
-                                "action": "SELL",
-                                "requestedBy": "DFM",
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5Y983",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",
-                                "orderDetails": {
-                                  "quantity": 3000.000
-                                }
-                              },
-                              {
-                                "id": 2,
-                                "action": "SWITCH",
-                                "requestedBy": "DFM",      
-                                "instrumentDetails": {
-                                "isin": "GB00B4L5A675",
-                                "exchange": "XLON",
-                                "marketSettlementCurrency": "GBP"
-                                },
-                                "tradeStatus": "NEW",  
-                                "orderDetails": {
-                                  "percentage": 100
-                                }
-                              }
-                            ]
+                    {
+                      "instructionsUrn": 00000004068,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "requestStatus": "NEW",
+                      "instructions": [
+                        {
+                          "id": 1,
+                          "action": "SELL",
+                          "requestedBy": "DFM",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5Y983",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "quantity": 3000.000
                           }
-      
+                        },
+                        {
+                          "id": 2,
+                          "action": "SWITCH",
+                          "requestedBy": "DFM",
+                          "instrumentDetails": {
+                            "isin": "GB00B4L5A675",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          },
+                          "tradeStatus": "NEW",
+                          "orderDetails": {
+                            "percentage": 100
+                          }
+                        }
+                      ]
+                    }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -6810,6 +6589,14 @@ paths:
                   value:
                     errorCode: HWA-FEE-GROUP-007
                     message: "Account HW04003258A cannot be added to a Fee Group because its base currency is not GBP."
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                400-InvalidQueryParam:
+                  $ref: '#/components/examples/400-InvalidQueryParam'
+                400-InvalidRequestHeader:
+                  $ref: '#/components/examples/400-InvalidRequestHeader'
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -6885,6 +6672,14 @@ paths:
               examples:
                 RequestBody:
                   $ref: "#/components/examples/400-BadRequest"
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                400-InvalidQueryParam:
+                  $ref: '#/components/examples/400-InvalidQueryParam'
+                400-InvalidRequestHeader:
+                  $ref: '#/components/examples/400-InvalidRequestHeader'
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -7050,6 +6845,14 @@ paths:
                   value:
                     errorCode: HWA-FEE-GROUP-009
                     message: "Account HW04003258A cannot be removed from this Fee Group as it is not currently a member."
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                400-InvalidQueryParam:
+                  $ref: '#/components/examples/400-InvalidQueryParam'
+                400-InvalidRequestHeader:
+                  $ref: '#/components/examples/400-InvalidRequestHeader'
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -7110,6 +6913,14 @@ paths:
               examples:
                 RequestBody:
                   $ref: "#/components/examples/400-BadRequest"
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                400-InvalidQueryParam:
+                  $ref: '#/components/examples/400-InvalidQueryParam'
+                400-InvalidRequestHeader:
+                  $ref: '#/components/examples/400-InvalidRequestHeader'
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -7175,8 +6986,7 @@ paths:
             type: boolean
             enum: [true, false]
             default: true
-          description: Indicates whether an illustration document should be generated.
-        
+          description: Indicates whether an illustration document should be generated.    
       requestBody:
         required: true
         content:
@@ -7188,7 +6998,6 @@ paths:
                 summary: Generate a anonymous Illustration for non pension product with model
                 value:
                   {
-                    
                     "investors": [
                       {
                           "name": "Anne Winfield",
@@ -7199,7 +7008,7 @@ paths:
                       "forecastPeriod": 15,
                       "account": {
                         "productId": "HIS",
-                        "currency": "GBP",
+                        "currency": "GBP"
                       },
                       "model": {
                           "id": "HW000000090",
@@ -7251,7 +7060,7 @@ paths:
                             "percentage": 0
                           }
                         }
-                      ],
+                      ]
                     }
                   }
               Ex2:
@@ -7269,17 +7078,17 @@ paths:
                       "forecastPeriod": 15,
                       "account": {
                         "productId": "HIS",
-                        "currency": "GBP",
+                        "currency": "GBP"
                       },
                       "model": {
                           "allocations": [
-                                {
-                                  "isin": "GB0005405286",
-                                  "exchange": "LONX",
-                                  "currency": "GBP",
-                                  "percentage": 100
-                                }
-                              ]
+                              {
+                                "isin": "GB0005405286",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 100
+                              }
+                            ]
                         },
                       "moneyMovements": [
                         {
@@ -7326,7 +7135,7 @@ paths:
                             "percentage": 0
                           }
                         }
-                      ],
+                      ]
                     }
                   }
               Ex3:
@@ -7371,7 +7180,7 @@ paths:
                           "investmentInstruction": "INVEST_IN_MODEL",
                           "value": {
                             "amount": 15000,
-                            "currency": "GBP",
+                            "currency": "GBP"
                           },
                           "fee": {
                             "amount": 5,
@@ -7426,8 +7235,7 @@ paths:
                         }
                       ]
                     }
-                  }
-              
+                  }             
       responses:
         "201":
           description: Illustration generated successfully.
@@ -7452,17 +7260,7 @@ paths:
                       }
                     }
         "400":
-          description: Bad request
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -7565,6 +7363,73 @@ components:
           type: string
           maxLength: 2000
           description: Detailed message about the request validation failure.
+    
+    ProblemDetails:
+      readOnly: true
+      type: object
+      description: | 
+        The `ProblemDetails` object provides detailed information about an errors that occurred during an API call execution. 
+        This problem object conforms to the [RFC9457](https://www.rfc-editor.org/info/rfc9457) (formerly [RFC7807](https://tools.ietf.org/html/rfc7807)).
+        
+        The object is extended with the following properties:
+          - `errors` - an array of errors providing contextual information on the root cause of the problem
+      required:
+        - detail
+      properties:
+        type:
+          type: string
+          description: A URI reference that identifies the problem type.
+          format: uri
+          maxLength: 1024
+        status:
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          format: int32
+          minimum: 100
+          maximum: 599
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem, except for purposes of localization.
+          maxLength: 1024
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          maxLength: 4096
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+          maxLength: 1024
+        errors:
+          type: array
+          description: An array of error details to accompany a problem details response.
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+
+    ErrorDetail:
+      readOnly: true
+      type: object
+      description: An object to provide explicit details on a problem towards an API consumer.
+      required: 
+        - detail
+      properties:
+        detail:
+          type: string
+          description: A granular description on the specific error related to a body property, query parameter, path parameters, and/or header.
+          maxLength: 4096
+        pointer:
+          type: string
+          description: >- 
+            A [JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901) to a specific request body property that is the source of error.
+          maxLength: 1024
+        parameter:
+          type: string
+          description: The name of the query or path parameter that is the source of error.
+          maxLength: 1024
+        header:
+          type: string
+          description: The name of the header that is the source of error.
+          maxLength: 1024
 
     Account:
       additionalProperties: false
@@ -7721,7 +7586,7 @@ components:
         provider:
           format: string
           description: provider of the reference
-          maxLength: 36
+          maxLength: 30
           minLength: 1
           type: string
           example: CRM Name
@@ -7778,10 +7643,11 @@ components:
             applicable
           type: string
           example: "2020-04-28"
-
+    
     Address:
       additionalProperties: false
       required:
+        - primary
         - countryCode
         - line1
         - postCode
@@ -7792,7 +7658,6 @@ components:
         id:
           type: integer
           description: Id
-          format: int64
           readOnly: true
         primary:
           type: boolean
@@ -7838,6 +7703,10 @@ components:
       additionalProperties: false
       type: object
       properties:
+        id:
+          type: integer
+          description: Id
+          readOnly: true
         primary:
           type: boolean
           description: Primary
@@ -8076,6 +7945,7 @@ components:
     ContactDetails:
       type: object
       additionalProperties: false
+      description: Contact details for an investor. Optional for a child investor, required for all other investors.
       properties:
         contactPhone:
           maxLength: 20
@@ -8099,7 +7969,7 @@ components:
           maxLength: 256
           minLength: 1
           type: string
-          description: email address for notifications, optional if under 18 
+          description: Optional if a child investor, required for all other investors.
           format: string
           example: john.doe@outlook.com
 
@@ -8152,13 +8022,13 @@ components:
           maxLength: 50
 
     IncomeAndInvestment:
-      description: income and investment details are mandatory for an adult individual or court appointed deputy investor type
+      description: Income and investment details are mandatory for an adult or a court appointed deputy.
       type: object
       additionalProperties: false
       properties:
         occupation:
           type: string
-          description: The investors occupation
+          description: The investors occupation. Required if investor is an adult or a court appointed deputy. If the occupation is other, occupationOtherValue is mandatory.
           format: string
           example: OTHER
           enum:
@@ -8190,12 +8060,12 @@ components:
         occupationOtherValue:
           maxLength: 50
           type: string
-          description: If the investors occupation is other this field is applicable and mandatory
+          description: Mandatory if occupation is OTHER
           format: string
           example: Management Consultant
         industry:
           type: string
-          description: The investors occupations industry
+          description: The investors occupations industry. Required if investor is an adult or a court appointed deputy. If the industry is other, industryOtherValue is mandatory.
           format: string
           example: OTHER
           enum:
@@ -8254,12 +8124,12 @@ components:
         industryOtherValue:
           maxLength: 50
           type: string
-          description: If the investors industry is other this field is applicable and mandatory
+          description: Mandatory if industry is OTHER
           format: string
           example: Consulting Services
         annualIncome:
           type: string
-          description: The investors annual income code
+          description: The investors annual income code. Mandatory if investor is an adult or a court appointed deputy.
           format: string
           example: FROM_50K_TO_75K
           enum:
@@ -8273,7 +8143,7 @@ components:
             - ABOVE_200K
         investmentReason:
           type: string
-          description: The reason for the investors investments
+          description: The reason for the investors investments. Mandatory if investor is an adult or a court appointed deputy.
           format: string
           example: GROW_WEALTH
           enum:
@@ -8285,7 +8155,7 @@ components:
             - TAX_ADVANTAGES
         investmentAgreedInPerson:
           type: boolean
-          description: If the investment was agreed in person with the investor
+          description: If the investment was agreed in person with the investor. Mandatory if investor is an adult or a court appointed deputy.
           format: Boolean
 
     Individual:
@@ -8296,7 +8166,7 @@ components:
         - surname
         - territorialProfile
         - title
-      description: required if investor type is individual or court appointed deputy
+      description: Required if investor is an individual or a court appointed deputy
       type: object
       additionalProperties: false
       properties:
@@ -8342,7 +8212,7 @@ components:
             - OTHER
         maritalStatus:
           type: string
-          description: The investors Marital Status
+          description: The investors Marital Status. Required if investor is an adult or a court appointed deputy.
           example: MARRIED
           enum:
             - SINGLE
@@ -8390,28 +8260,24 @@ components:
           $ref: "#/components/schemas/Title"
         titleOtherValue:
           maxLength: 15
-          minLength: 0
           type: string
           description: If the investors title is other this field is applicable and mandatory
           format: string
           example: General
         firstName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors First Name
           format: string
           example: Sam
         middleName:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Middle Name
           format: string
           example: John
         surname:
           maxLength: 25
-          minLength: 0
           type: string
           description: The investors Surname
           format: string
@@ -8459,13 +8325,13 @@ components:
       required:
         - legalName
         - contactDetails
-      description: required if investor type is for a trust or corporate
+      description: Required for trust or corporate investors.
       type: object
       additionalProperties: false
       properties:
         legalName:
-          maxLength: 25
-          minLength: 0
+          maxLength: 70
+          minLength: 1
           type: string
           description: The Legal name of a trust
           format: string
@@ -8478,13 +8344,12 @@ components:
           $ref: "#/components/schemas/Notification"
 
     TrustAndCorporatePatch:
-      description: required if investor type is for a trust or corporate
       type: object
       additionalProperties: false
       properties:
         legalName:
-          maxLength: 25
-          minLength: 0
+          maxLength: 70
+          minLength: 1
           type: string
           description: The Legal name of a trust
           format: string
@@ -8657,7 +8522,7 @@ components:
           example: HWI04003219
         tenantId:
           maxLength: 7
-          minLength: 0
+          
           type: string
           description: Unique SS&C Wealth Platform Tenant identifier
           format: string
@@ -8665,7 +8530,7 @@ components:
           example: HUBWISE
         adviserId:
           maxLength: 7
-          minLength: 0
+          
           type: string
           description: Unique SS&C Wealth Platform Adviser identifier
           format: string
@@ -8751,7 +8616,7 @@ components:
           minItems: 0
           type: array
           items:
-            $ref: "#/components/schemas/Address"
+            $ref: "#/components/schemas/AddressPatch"
         declarations:
           writeOnly: true
           type: array
@@ -8832,50 +8697,54 @@ components:
 
     Taxation:
       type: object
-      description: the investors taxation. TIN to be provided for adult type individual and court appointed deputy. LEI to be provided for corporated and trusts without an exception.
+      description: The investors tax residency. 
       additionalProperties: false
+      required:
+        - primary
+        - countryCode
       properties:
         id:
           type: integer
           description: SS&C Wealth Platform Investor Tax Residencies identifier
           format: int64
           readOnly: true
-          example: 1
         countryCode:
           maxLength: 3
           type: string
-          description: Country Code
-          format: String
+          description: ISO Country Code. 
           example: GB
         primary:
           type: boolean
           description: Indicates the primary tax residency
-          format: Boolean
-          example: true
         tin:
           maxLength: 35
           type: string
-          description: Taxpayer Identification Number (validated for UK), mandatory for an adult individual or court appointed deputy
-          format: String
+          description: Taxpayer Identification Number, mandatory for an adult individual or court appointed deputy.
           example: AC123456C
         lei:
           maxLength: 35
+          description: Legal Entity Identifier, mandatory for a corporate investor or trust investor.
           type: string
-          description: Legal Entity Identifier (validated via GLEIF), mandatory for a corporate or trust unless exception
-          format: String
           example: 5493001KJTIIGC8Y1R12
 
     TerritorialProfile:
       type: object
       additionalProperties: false
+      description: |
+        The investors territorial profile. 
+        
+        
+        Required for individuals and court appointed deputies. 
       properties:
         nationalities:
+          description: At least one nationality must be provided for individuals and court appointed deputies. 
           maxItems: 5
           minItems: 1
           type: array
           items:
             $ref: "#/components/schemas/Nationality"
         taxResidencies:
+          description: At least one tax residency must be provided for adults and court appointed deputies. 
           maxItems: 5
           minItems: 1
           type: array
@@ -10309,7 +10178,7 @@ components:
           type: string
           maxLength: 10
         address:
-          $ref: "#/components/schemas/Address"
+          $ref: "#/components/schemas/AddressPatch"
           
     ThirdPartiesHeaderPatch:
       type: object
@@ -10513,7 +10382,7 @@ components:
           type: string
           description: Unique identifier for a pre-configured set of tiered rates.
           maxLength: 6
-          minLength: 0
+          
           example: AFGVCD
         amount:
           type: number
@@ -10990,6 +10859,7 @@ components:
           example: GBP
 
   examples:
+    
     400-BadRequest:
       summary: Path parameter does not conform to API schema
       value:
@@ -11005,7 +10875,172 @@ components:
           ]
         }
 
+    400-MissingBodyProperty:
+      summary: Request body is missing a required property
+      value:
+        title: Invalid Request
+        detail: The request is missing an expected body property.
+        errors:
+          - detail: The body property {name} is required.
+            pointer: "/name"
+
+    400-MissingQueryParameter:
+      summary: Request is missing an expected query parameter
+      value:
+        title: Invalid Request
+        detail: The request is missing an expected query parameter.
+        errors:
+          - detail: The query parameter {name} is required.
+            parameter: name
+
+    400-MissingRequestHeader:
+      summary: Request is missing an expected HTTP request header
+      value:
+        title: Invalid Request
+        detail: The request is missing an expected HTTP request header.
+        errors:
+          - detail: The header {Accept} is required
+            header: Accept
+
+    400-InvalidQueryParam:
+      summary: Request contains a malformed query parameter
+      value:
+        title: Invalid Request
+        detail: The request contains a malformed query parameter.
+        errors:
+          - detail: The expected string values are ASC or DSC
+            parameter: sort
+
+    400-InvalidRequestHeader:
+      summary: Request contains a malformed request header
+      value:
+        title: Invalid Request
+        detail: The request contains a malformed request header parameter.
+        errors:
+          - detail: The request header was malformed
+            header: Accept            
+
+    400-InvalidBodyPropertyValue:
+      summary: Request contains an invalid body property value
+      value:
+        title: Invalid Request
+        detail: The request body contains an invalid body property value.
+        errors:
+          - detail: A value `Never` is an invalid. Please provide `monthly` or `quarterly`
+            pointer: "/marketingCommunication/frequency"
+          - detail: Must be a positive integer
+            pointer: "/quantity"
+
+    403-Forbidden:
+      summary: Access is forbidden
+      value:
+        title: Forbidden
+        detail: The action could not be completed
+        
+    404-NotFound:
+      summary: Resource not found
+      value:
+        title: Not found
+        detail: The requested resource was not found       
+            
+    400-AlreadyExists:
+      summary: Resource already exists
+      value:
+        title: Already exists
+        detail: The resource being created already exists.
+          
+    400-BusinessRules:
+      summary: Business rule violation
+      value: 
+        title: Multiple business rule violations
+        detail: The request body is invalid and not meeting business rules.
+        errors:
+          - detail: Cannot withdraw all income from a SIPP account
+            pointer: "/incomeOption/type"
+          - detail: Bank account currency must match the base currency of the investment account
+            pointer: "/currency"
+          - detail: Account holder with ID HWI00052961 does not exist
+            pointer: "/holders/1/id"
+            
+    500-serverError:
+      summary: Server error
+      value:
+        title: Server Error
+        detail: An unexpected technical error occurred. Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After header is returned, do not retry the call.
+
   responses:
+    
+    400-BadRequest:
+      description: |
+        The request was malformed or could not be processed. 
+
+        Examples of `Bad Request` problem detail responses:
+
+         - Missing or invalid request header parameter
+         - Missing os invalid query parameter         
+         - Missing or invalid request body property
+      headers:
+        Request-Id:
+          $ref: '#/components/headers/Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            RequestBody:
+              $ref: "#/components/examples/400-BadRequest"  
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            400-MissingBodyProperty:
+              $ref: '#/components/examples/400-MissingBodyProperty'
+            400-InvalidBodyPropertyValue:
+              $ref: '#/components/examples/400-InvalidBodyPropertyValue'
+            400-MissingQueryParameter:
+              $ref: '#/components/examples/400-MissingQueryParameter'
+            400-MissingRequestHeader:
+              $ref: '#/components/examples/400-MissingRequestHeader'
+            400-InvalidQueryParam:
+              $ref: '#/components/examples/400-InvalidQueryParam'
+            400-InvalidRequestHeader:
+              $ref: '#/components/examples/400-InvalidRequestHeader'
+            400-BusinessRules:
+              $ref: '#/components/examples/400-BusinessRules'
+            400-AlreadyExists:
+              $ref: '#/components/examples/400-AlreadyExists'
+    
+    400-BadRequest-NoBody:
+      description: |
+        The request had one of the following issues:
+
+         - Missing or invalid path parameter
+         - Missing or invalid query parameter
+         - Missing or invalid request header 
+
+      headers:
+        Request-Id:
+          $ref: '#/components/headers/Request-Id'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            RequestBody:
+              $ref: "#/components/examples/400-BadRequest"  
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            400-MissingQueryParameter:
+              $ref: '#/components/examples/400-MissingQueryParameter'
+            400-MissingRequestHeader:
+              $ref: '#/components/examples/400-MissingRequestHeader'
+            400-InvalidQueryParam:
+              $ref: '#/components/examples/400-InvalidQueryParam'
+            400-InvalidRequestHeader:
+              $ref: '#/components/examples/400-InvalidRequestHeader'
+    
     401-Unauthorized:
       description: Unauththenticated request
       headers:
@@ -11047,6 +11082,12 @@ components:
               value:
                 errorCode: HWA-EXCEPTION-004
                 message: You do not have permission to access this resource
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            403-Forbidden:
+              $ref: '#/components/examples/403-Forbidden'
 
     404-NotFound:
       description: The resource was not found
@@ -11064,6 +11105,12 @@ components:
               value:
                 errorCode: HWA-INVESTOR-001
                 message: The requested resource could not be found.
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            404-NotFound:
+              $ref: '#/components/examples/404-NotFound'
 
     500-ServerError:
       description: Internal server error
@@ -11084,6 +11131,12 @@ components:
 
 
                   Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After header is returned, do not retry the call.
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          examples:
+            500-serverError:
+              $ref: '#/components/examples/500-serverError'
 
   securitySchemes:
     bearer-token:
