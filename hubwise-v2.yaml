@@ -1227,6 +1227,26 @@ paths:
                   value:
                     errorCode: HWA-INVESTOR-023
                     message: Investor status cannot be further updated.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                StatusValidationFailure:
+                  summary: The supplied status is not an allowed value
+                  value:
+                    title: Invalid Request
+                    detail: The request body contains an invalid body property value.
+                    errors:
+                      - detail: Status must be ACTIVE, DECEASED, or NON_UK_RESIDENT
+                        pointer: "/status"
+                StatusCannotBeUpdated:
+                  summary: The current investor status cannot be changed to the requested status
+                  value:
+                    title: Business rule violation
+                    detail: Investor status cannot be further updated.
+                    errors:
+                      - detail: Investor status cannot be further updated.
+                        pointer: "/status"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -2634,6 +2654,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
               examples:
+                RequestBody:
+                  $ref: "#/components/examples/400-BadRequest"
                 ValidationFailure:
                   summary: A supplied field failed validation
                   value:
@@ -2647,6 +2669,26 @@ paths:
                   value:
                     errorCode: HWA-ACCOUNT-038
                     message: Account status cannot be further updated.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                StatusValidationFailure:
+                  summary: The supplied status is not an allowed value
+                  value:
+                    title: Invalid Request
+                    detail: The request body contains an invalid body property value.
+                    errors:
+                      - detail: status must be one of ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, NON_UK_RESIDENT
+                        pointer: "/status"
+                StatusCannotBeUpdated:
+                  summary: The current account status cannot be changed to the requested status
+                  value:
+                    title: Business rule violation
+                    detail: Account status cannot be further updated.
+                    errors:
+                      - detail: Account status cannot be further updated.
+                        pointer: "/status"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
