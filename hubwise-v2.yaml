@@ -7650,7 +7650,7 @@ components:
         model:
           $ref: "#/components/schemas/Model"
         incomeOption:
-          $ref: "#/components/schemas/IncomeOption"
+          $ref: "#/components/schemas/ReadOnlyIncomeOption"
         currentYearSubscription:
           $ref: "#/components/schemas/AccountTransferSubscription"
         declarations:
@@ -8097,6 +8097,49 @@ components:
       properties:
         incomeOption:
           $ref: '#/components/schemas/IncomeOption'
+
+    ReadOnlyIncomeOption:
+      type: object
+      additionalProperties: false
+      readOnly: true
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          readOnly: true
+          enum:
+            - CASH
+            - REINVEST
+            - WITHDRAW
+        reinvestmentDate:
+          type: string
+          format: date
+          readOnly: true
+        withdrawalDate:
+          type: string
+          format: date
+          readOnly: true
+        withdrawalFrequency: 
+          type: string
+          readOnly: true
+          enum: 
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - YEARLY
+        accountNumber: 
+          type: string
+          pattern: ^[0-9]{8}$
+          readOnly: true
+        sortCode:
+          type: string
+          pattern: ^[0-9]{6}$
+          readOnly: true
+        accountName:
+          type: string
+          maxLength: 50
+          readOnly: true
 
     IncomeOption:
       type: object
