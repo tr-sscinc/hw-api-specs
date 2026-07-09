@@ -4806,30 +4806,6 @@ paths:
             type: integer
             format: int64
           example: 1001
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/InterAccountTransferDeleteRequest"
-            examples:
-              Ex1:
-                summary: Archive with declarations
-                value:
-                  {
-                    "declarations": [
-                      {
-                        "adviserId": "E273053",
-                        "templateId": "AMENDMENT_CONSENT",
-                        "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E273053",
-                        "templateId": "INTERNAL_TRANSFER_CONSIDERATIONS",
-                        "acknowledgement": true
-                      }
-                    ]
-                  }
       responses:
         "204":
           description: Inter-account transfer archived successfully.
@@ -10478,15 +10454,7 @@ components:
           items:
             $ref: "#/components/schemas/Declaration"
 
-    InterAccountTransferDeleteRequest:
-      additionalProperties: false
-      type: object
-      properties:
-        declarations:
-          writeOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/Declaration"
+
 
     AccountTransfersHeader:
       additionalProperties: false
