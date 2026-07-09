@@ -2,8 +2,6 @@
 Changelog for v0.8.8 API spec
 
  - Added inter-account transfers endpoints (HWIT-6446, HWIT-6448, HWIT-10127, HWIT-6450)
- - Added inter-account transfer schemas
- - Added INTERNAL_TRANSFER_CONSIDERATIONS to Declaration.templateId enum
  - Added account status updates to PATCH /accounts/{accountId} (HWIT-5629, HWIT-6458)
  - status now accepts ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, NON_UK_RESIDENT
  - Documented 400/401/403/404/500 responses on PATCH /accounts/{accountId}, including the HWA-ACCOUNT-038 status error

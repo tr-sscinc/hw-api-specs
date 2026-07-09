@@ -4552,13 +4552,6 @@ paths:
             minLength: 11
             maxLength: 11
           example: HW00013451A
-        - name: testMode
-          in: query
-          description: If true, simulates the creation and rolls back all changes after validation.
-          required: false
-          schema:
-            type: boolean
-            default: false
       requestBody:
         required: true
         content:
@@ -4640,7 +4633,7 @@ paths:
       description: >-
         Retrieves all active inter-account transfer records for a specific investment account.
 
-        Returns HTTP 204 if no active records exist.
+        Returns an empty collection if no active records exist.
       operationId: retrieveInterAccountTransfers
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4683,11 +4676,12 @@ paths:
                         }
                       ]
                     }
-        "204":
-          description: No active inter-account transfers exist for this account.
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
+                Ex2:
+                  summary: No active inter-account transfers
+                  value:
+                    {
+                      "interAccountTransfers": []
+                    }
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -4731,13 +4725,6 @@ paths:
             type: integer
             format: int64
           example: 1001
-        - name: testMode
-          in: query
-          description: If true, simulates the update and rolls back all changes after validation.
-          required: false
-          schema:
-            type: boolean
-            default: false
       requestBody:
         required: true
         content:
@@ -4750,22 +4737,7 @@ paths:
                 value:
                   {
                     "value": 7500.00,
-                    "currency": "GBP",
-                    "frequency": "ONE_OFF",
-                    "fundingAccountId": "HW00013452A",
-                    "nextDate": "2026-09-01",
-                    "declarations": [
-                      {
-                        "adviserId": "E273053",
-                        "templateId": "AMENDMENT_CONSENT",
-                        "acknowledgement": true
-                      },
-                      {
-                        "adviserId": "E273053",
-                        "templateId": "INTERNAL_TRANSFER_CONSIDERATIONS",
-                        "acknowledgement": true
-                      }
-                    ]
+                    "nextDate": "2026-09-01"
                   }
       responses:
         "200":
@@ -4834,13 +4806,6 @@ paths:
             type: integer
             format: int64
           example: 1001
-        - name: testMode
-          in: query
-          description: If true, simulates the archival and rolls back all changes after validation.
-          required: false
-          schema:
-            type: boolean
-            default: false
       requestBody:
         required: false
         content:
@@ -4867,7 +4832,7 @@ paths:
                   }
       responses:
         "204":
-          description: Inter-account transfer archived successfully. No response body.
+          description: Inter-account transfer archived successfully.
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
