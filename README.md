@@ -1,13 +1,9 @@
 # hw-api-specs
 Changelog for v0.8.8 API spec
 
- - Added inter-account transfers endpoints (HWIT-6446, HWIT-6448, HWIT-10127, HWIT-6450)
- - Added account status updates to PATCH /accounts/{accountId} (HWIT-5629, HWIT-6458)
- - status now accepts ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, NON_UK_RESIDENT
- - Documented 400/401/403/404/500 responses on PATCH /accounts/{accountId}, including the HWA-ACCOUNT-038 status error
- - Added investor status updates to PATCH /investors/{investorId} (HWIT-5629, HWIT-6460)
- - InvestorPatch.status now accepts INCEPTED, DECEASED, NON_UK_RESIDENT
- - Documented 400 validation (HWA-EXCEPTION-001) and business-logic (HWA-INVESTOR-023) responses on PATCH /investors/{investorId}
+ - Added inter-account transfers endpoints
+ - Added account status update functionality
+ - Added investor status update functionality
 
 Changelog for v0.8.7 API spec
 
