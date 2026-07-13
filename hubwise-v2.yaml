@@ -10275,14 +10275,14 @@ components:
         interAccountTransfers:
           type: array
           items:
-            $ref: "#/components/schemas/InterAccountTransferItem"
+            $ref: "#/components/schemas/InterAccountTransfer"
         declarations:
           writeOnly: true
           type: array
           items:
             $ref: "#/components/schemas/Declaration"
 
-    InterAccountTransferItem:
+    InterAccountTransfer:
       additionalProperties: false
       required:
         - value
@@ -10290,42 +10290,6 @@ components:
         - frequency
         - fundingAccountId
         - nextDate
-      type: object
-      properties:
-        value:
-          description: Transfer value
-          type: number
-          format: double
-          example: 5000.00
-        currency:
-          description: ISO 4217 currency code
-          type: string
-          maxLength: 3
-          example: GBP
-        frequency:
-          description: Transfer frequency
-          enum:
-            - ANNUALLY
-            - MONTHLY
-            - QUARTERLY
-            - HALF_YEARLY
-            - ONE_OFF
-          type: string
-          example: ONE_OFF
-        fundingAccountId:
-          description: Unique SS&C Wealth Platform Account identifier for the source (funding) account
-          type: string
-          minLength: 11
-          maxLength: 11
-          example: HW00013452A
-        nextDate:
-          description: Transfer start date (YYYY-MM-DD). Must not be in the past.
-          type: string
-          format: date
-          example: "2026-08-01"
-
-    InterAccountTransfer:
-      additionalProperties: false
       type: object
       properties:
         id:
@@ -10358,13 +10322,11 @@ components:
           description: Transfer value
           type: number
           format: double
-          readOnly: true
           example: 5000.00
         currency:
           description: ISO 4217 currency code
           type: string
           maxLength: 3
-          readOnly: true
           example: GBP
         frequency:
           description: Transfer frequency
@@ -10375,20 +10337,17 @@ components:
             - HALF_YEARLY
             - ONE_OFF
           type: string
-          readOnly: true
           example: ONE_OFF
         fundingAccountId:
           description: Unique SS&C Wealth Platform Account identifier for the source (funding) account
           type: string
           minLength: 11
           maxLength: 11
-          readOnly: true
           example: HW00013452A
         nextDate:
-          description: Transfer start date
+          description: Transfer start date (YYYY-MM-DD). Must not be in the past.
           type: string
           format: date
-          readOnly: true
           example: "2026-08-01"
         status:
           description: Transfer status
