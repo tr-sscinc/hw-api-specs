@@ -4525,7 +4525,304 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
+  /accounts/{accountId}/inter-account-transfers:
+
+    post:
+      tags:
+        - Accounts
+      summary: Create inter-account transfer(s)
+      description: >-
+        Creates one or more internal transfer records between two investment accounts belonging to the same investor.
+
+        Supported destination account product types are GIA, ISA, and JISA. Supported funding account product types are GIA and ISA. Corporate and trust accounts are not supported.
+
+        For ISA and JISA destination accounts, the subscription value for a one-off (first) transfer is validated against the remaining allowance for the applicable tax year.
+
+        The funding account must have sufficient balance to cover the transfer value. Both accounts must belong to the same investor.
+      operationId: createInterAccountTransfers
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier (destination account)
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013451A
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InterAccountTransfersHeader"
+            examples:
+              Ex1:
+                summary: Create a one-off inter-account transfer from GIA to ISA
+                value:
+                  {
+                    "interAccountTransfers": [
+                      {
+                        "value": 5000.00,
+                        "currency": "GBP",
+                        "frequency": "ONE_OFF",
+                        "fundingAccountId": "HW00013452A",
+                        "nextDate": "2026-08-01"
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      },
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "INTERNAL_TRANSFER_CONSIDERATIONS",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+      responses:
+        "201":
+          description: Inter-account transfer(s) created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterAccountTransfersResponse"
+              examples:
+                Ex1:
+                  summary: One-off inter-account transfer created
+                  value:
+                    {
+                      "interAccountTransfers": [
+                        {
+                          "id": 1001,
+                          "accountId": "HW00013451A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E273053",
+                          "value": 5000.00,
+                          "currency": "GBP",
+                          "frequency": "ONE_OFF",
+                          "fundingAccountId": "HW00013452A",
+                          "nextDate": "2026-08-01",
+                          "status": "INCEPTED"
+                        }
+                      ]
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve inter-account transfers
+      description: >-
+        Retrieves all active inter-account transfer records for a specific investment account.
+
+        Returns an empty collection if no active records exist.
+      operationId: retrieveInterAccountTransfers
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013451A
+      responses:
+        "200":
+          description: Active inter-account transfers retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterAccountTransfersResponse"
+              examples:
+                Ex1:
+                  summary: Active inter-account transfers
+                  value:
+                    {
+                      "interAccountTransfers": [
+                        {
+                          "id": 1001,
+                          "accountId": "HW00013451A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E273053",
+                          "value": 5000.00,
+                          "currency": "GBP",
+                          "frequency": "ONE_OFF",
+                          "fundingAccountId": "HW00013452A",
+                          "nextDate": "2026-08-01",
+                          "status": "INCEPTED"
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: No active inter-account transfers
+                  value:
+                    {
+                      "interAccountTransfers": []
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /accounts/{accountId}/inter-account-transfers/{interAccountTransfersId}:
+
+    patch:
+      tags:
+        - Accounts
+      summary: Update an inter-account transfer
+      description: >-
+        Partially updates an existing inter-account transfer record.
+
+        For pending accounts, both one-off and regular transfers may be updated. For activated accounts, only regular transfers may be updated.
+
+        The transfer must not already be archived. All update fields are optional; the same validation rules as creation apply.
+      operationId: modifyInterAccountTransfer
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier (destination account)
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013451A
+        - name: interAccountTransfersId
+          in: path
+          description: Unique SS&C Wealth Platform inter-account transfer identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InterAccountTransferPatch"
+            examples:
+              Ex1:
+                summary: Update transfer value and next date
+                value:
+                  {
+                    "value": 7500.00,
+                    "nextDate": "2026-09-01"
+                  }
+      responses:
+        "200":
+          description: Inter-account transfer updated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterAccountTransfer"
+              examples:
+                Ex1:
+                  summary: Transfer updated
+                  value:
+                    {
+                      "id": 1001,
+                      "accountId": "HW00013451A",
+                      "tenantId": "HUBWISE",
+                      "adviserId": "E273053",
+                      "value": 7500.00,
+                      "currency": "GBP",
+                      "frequency": "ONE_OFF",
+                      "fundingAccountId": "HW00013452A",
+                      "nextDate": "2026-09-01",
+                      "status": "INCEPTED"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    delete:
+      tags:
+        - Accounts
+      summary: Archive an inter-account transfer
+      description: >-
+        Archives (soft-deletes) an existing inter-account transfer record.
+
+        For pending accounts, both one-off and regular transfers may be archived. For activated accounts, only regular transfers may be archived.
+
+        The transfer must not already be archived and its next date must be in the future.
+      operationId: removeInterAccountTransfer
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013451A
+        - name: interAccountTransfersId
+          in: path
+          description: Unique SS&C Wealth Platform inter-account transfer identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1001
+      responses:
+        "204":
+          description: Inter-account transfer archived successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /accounts/{accountId}/fees:
     
     post:
@@ -7989,6 +8286,7 @@ components:
             - CONFIRM_VULNERABILITY_CONSENT
             - DRAWDOWN_INCOME
             - IFA_FCA_AUTH
+            - INTERNAL_TRANSFER_CONSIDERATIONS
             - ISA_ACKNOWLEDGEMENT
             - ISA_NOT_IN_WRITING
             - JISA_ACKNOWLEDGEMENT
@@ -9967,6 +10265,155 @@ components:
           description: Optional when type is OTHER
           type: string
           maxLength: 205
+
+    InterAccountTransfersHeader:
+      additionalProperties: false
+      required:
+        - interAccountTransfers
+      type: object
+      properties:
+        interAccountTransfers:
+          type: array
+          items:
+            $ref: "#/components/schemas/InterAccountTransfer"
+        declarations:
+          writeOnly: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Declaration"
+
+    InterAccountTransfer:
+      additionalProperties: false
+      required:
+        - value
+        - currency
+        - frequency
+        - fundingAccountId
+        - nextDate
+      type: object
+      properties:
+        id:
+          description: SS&C Wealth Platform inter-account transfer identifier
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1001
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier (destination account)
+          type: string
+          minLength: 11
+          maxLength: 11
+          readOnly: true
+          example: HW00013451A
+        tenantId:
+          description: Unique SS&C Wealth Platform Tenant identifier
+          type: string
+          minLength: 7
+          maxLength: 7
+          readOnly: true
+          example: HUBWISE
+        adviserId:
+          description: Unique SS&C Wealth Platform Adviser identifier
+          type: string
+          maxLength: 7
+          readOnly: true
+          example: E273053
+        value:
+          description: Transfer value
+          type: number
+          format: double
+          example: 5000.00
+        currency:
+          description: ISO 4217 currency code
+          type: string
+          maxLength: 3
+          example: GBP
+        frequency:
+          description: Transfer frequency
+          enum:
+            - ANNUALLY
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - ONE_OFF
+          type: string
+          example: ONE_OFF
+        fundingAccountId:
+          description: Unique SS&C Wealth Platform Account identifier for the source (funding) account
+          type: string
+          minLength: 11
+          maxLength: 11
+          example: HW00013452A
+        nextDate:
+          description: Transfer start date (YYYY-MM-DD). Must not be in the past.
+          type: string
+          format: date
+          example: "2026-08-01"
+        status:
+          description: Transfer status
+          enum:
+            - INCEPTED
+            - NEW
+            - COMPLETE
+            - PENDING
+            - ARCHIVED
+            - INACTIVE_INCOME
+          type: string
+          readOnly: true
+          example: INCEPTED
+
+    InterAccountTransfersResponse:
+      additionalProperties: false
+      type: object
+      properties:
+        interAccountTransfers:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InterAccountTransfer"
+
+    InterAccountTransferPatch:
+      additionalProperties: false
+      type: object
+      properties:
+        value:
+          description: Transfer value
+          type: number
+          format: double
+          example: 7500.00
+        currency:
+          description: ISO 4217 currency code
+          type: string
+          maxLength: 3
+          example: GBP
+        frequency:
+          description: Transfer frequency
+          enum:
+            - ANNUALLY
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - ONE_OFF
+          type: string
+          example: MONTHLY
+        fundingAccountId:
+          description: Unique SS&C Wealth Platform Account identifier for the source (funding) account
+          type: string
+          minLength: 11
+          maxLength: 11
+          example: HW00013452A
+        nextDate:
+          description: Transfer start date (YYYY-MM-DD). Must not be in the past.
+          type: string
+          format: date
+          example: "2026-09-01"
+        declarations:
+          writeOnly: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Declaration"
+
+
 
     AccountTransfersHeader:
       additionalProperties: false

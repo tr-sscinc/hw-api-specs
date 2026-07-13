@@ -1,4 +1,8 @@
 # hw-api-specs
+Changelog for v0.8.9 API spec
+
+ - Added inter-account transfers endpoints
+
 Changelog for v0.8.8 API spec
 
  - Added account status updates to PATCH /accounts/{accountId} (HWIT-5629, HWIT-6458)
