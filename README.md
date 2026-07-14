@@ -1,4 +1,11 @@
 # hw-api-specs
+
+Changelog for v0.8.12 API spec
+
+ - Made income option in account read-only
+ - Added delete money movements endpoint
+ - Removed x-api-key security scheme 
+
 Changelog for v0.8.11 API spec
 
  - create account updated for MIS
