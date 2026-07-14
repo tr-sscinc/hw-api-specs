@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.11
+  version: 0.8.12
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -18,7 +18,6 @@ tags:
 
 security:
   - bearer-token: []
-  - x-api-key: []
 
 paths:
 
@@ -4048,7 +4047,7 @@ paths:
                   }      
       responses:
         "200":
-          description: Account fee archived successfully
+          description: Money movement modified successfully
           headers:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
@@ -4179,6 +4178,49 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
+
+    delete:
+      tags:
+        - Accounts
+      summary: Delete money movements
+      description: >-
+        
+        Archives (soft-deletes) an existing money movement against an investment account.
+
+      operationId: removeMoneyMovement
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+        - name: moneyMovementId
+          in: path
+          description: Unique SS&C Wealth Platform Money Movement identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: '1'
+      responses:
+        "204":
+          description: Money movement removed successfully
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
 
   /accounts/{accountId}/transfers:
     
@@ -8134,7 +8176,7 @@ components:
         model:
           $ref: "#/components/schemas/Model"
         incomeOption:
-          $ref: "#/components/schemas/IncomeOption"
+          $ref: "#/components/schemas/ReadOnlyIncomeOption"
         currentYearSubscription:
           $ref: "#/components/schemas/AccountTransferSubscription"
         declarations:
@@ -8582,6 +8624,49 @@ components:
       properties:
         incomeOption:
           $ref: '#/components/schemas/IncomeOption'
+
+    ReadOnlyIncomeOption:
+      type: object
+      additionalProperties: false
+      readOnly: true
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          readOnly: true
+          enum:
+            - CASH
+            - REINVEST
+            - WITHDRAW
+        reinvestmentDate:
+          type: string
+          format: date
+          readOnly: true
+        withdrawalDate:
+          type: string
+          format: date
+          readOnly: true
+        withdrawalFrequency: 
+          type: string
+          readOnly: true
+          enum: 
+            - MONTHLY
+            - QUARTERLY
+            - HALF_YEARLY
+            - YEARLY
+        accountNumber: 
+          type: string
+          pattern: ^[0-9]{8}$
+          readOnly: true
+        sortCode:
+          type: string
+          pattern: ^[0-9]{6}$
+          readOnly: true
+        accountName:
+          type: string
+          maxLength: 50
+          readOnly: true
 
     IncomeOption:
       type: object
@@ -12046,8 +12131,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
-    x-api-key:
-      type: apiKey
-      name: x-api-key
-      in: header
