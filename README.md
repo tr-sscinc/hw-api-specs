@@ -1,4 +1,8 @@
 # hw-api-specs
+Changelog for v0.8.10 API spec
+
+ - Updated portfolio adjustments endpoint parameter validation and response description
+
 Changelog for v0.8.9 API spec
 
  - Added inter-account transfers endpoints
