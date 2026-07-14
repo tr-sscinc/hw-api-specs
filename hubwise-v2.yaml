@@ -4048,7 +4048,7 @@ paths:
                   }      
       responses:
         "200":
-          description: Account fee archived successfully
+          description: Money movement modified successfully
           headers:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
@@ -4179,6 +4179,49 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
+
+    delete:
+      tags:
+        - Accounts
+      summary: Delete money movements
+      description: >-
+        
+        Archives (soft-deletes) an existing money movement against an investment account.
+
+      operationId: removeMoneyMovement
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: HW00013451A
+        - name: moneyMovementId
+          in: path
+          description: Unique SS&C Wealth Platform Money Movement identifier
+          required: true
+          schema:
+            type: string
+            maxLength: 14
+          example: '1'
+      responses:
+        "204":
+          description: Money movement removed successfully
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
 
   /accounts/{accountId}/transfers:
     
