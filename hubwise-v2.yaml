@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.12
+  version: 0.8.13
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -665,13 +665,101 @@ paths:
                     ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                MissingAdviserId:
+                  summary: adviserId is mandatory
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: adviserId
+                        resource: /investors
+                        message: adviserId is mandatory.
+                InvalidType:
+                  summary: type is not a valid enum value
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: type
+                        resource: /investors
+                        message: type must be one of INDIVIDUAL, CORPORATE, DISCRETIONARY_TRUST, BARE_TRUST, COURT_APPOINTED_DEPUTY.
+                InvalidEmail:
+                  summary: Email address format is invalid
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: individual.contactDetails.email
+                        resource: /investors
+                        message: individual.contactDetails.email is not a valid email address.
+                TooManyAddresses:
+                  summary: Investor may not have more than 10 addresses
+                  value:
+                    errorCode: HWA-EXCEPTION-002
+                    message: An investor may have a maximum of 10 addresses.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                MissingAdviserId:
+                  summary: adviserId is mandatory
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /investors
+                    errors:
+                      - detail: adviserId is mandatory.
+                        pointer: /adviserId
+                InvalidEmail:
+                  summary: Email address format is invalid
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /investors
+                    errors:
+                      - detail: individual.contactDetails.email is not a valid email address.
+                        pointer: /individual/contactDetails/email
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
-        "404":
-          $ref: "#/components/responses/404-NotFound"
+        "409":
+          description: Conflict - an investor with the same external reference already exists.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                DuplicateExternalReference:
+                  summary: External reference already exists for this provider
+                  value:
+                    errorCode: HWA-EXT-REFERENCE-001
+                    message: An investor with the external reference A9F3K7X2L8Q4M1Z from provider CRM Name already exists.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                DuplicateExternalReference:
+                  summary: External reference already exists for this provider
+                  value:
+                    title: Conflict
+                    status: 409
+                    detail: HWA-EXT-REFERENCE-001 - An investor with the external reference A9F3K7X2L8Q4M1Z from provider CRM Name already exists.
+                    instance: /investors
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -989,13 +1077,68 @@ paths:
                     }
 
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter format.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInvestorId:
+                  summary: Investor ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: investorId
+                        resource: /investors/{investorId}
+                        message: investorId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidInvestorId:
+                  summary: Investor ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /investors/{investorId}
+                    errors:
+                      - detail: investorId must not exceed 14 characters.
+                        pointer: /investorId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INVESTOR-001 - Investor HWI04003219 does not exist.
+                    instance: /investors/HWI04003219
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -1251,7 +1394,31 @@ paths:
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INVESTOR-001 - Investor HWI04003219 does not exist.
+                    instance: /investors/HWI04003219
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -1355,13 +1522,97 @@ paths:
                         ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorIdMissing:
+                  summary: investorId path parameter is missing
+                  value:
+                    errorCode: HWA-VULNERABILITY-001
+                    message: Investor ID is mandatory.
+                InvalidInvestorType:
+                  summary: Investor type does not support vulnerabilities
+                  value:
+                    errorCode: HWA-VULNERABILITY-003
+                    message: Vulnerability characteristics can only be added for Individual or Court Appointed Deputy investors.
+                DuplicateVulnerability:
+                  summary: Duplicate vulnerability type and service level combination
+                  value:
+                    errorCode: HWA-VULNERABILITY-006
+                    message: A vulnerability record with the same type and service level already exists.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidInvestorType:
+                  summary: Investor type does not support vulnerabilities
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-VULNERABILITY-003 - Vulnerability characteristics can only be added for Individual or Court Appointed Deputy investors.
+                    instance: /investors/HWI04003219/vulnerabilities
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INVESTOR-001 - Investor HWI04003219 does not exist.
+                    instance: /investors/HWI04003219/vulnerabilities
+        "409":
+          description: Conflict - vulnerability characteristics already exist for this investor.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                VulnerabilitiesAlreadyExist:
+                  summary: Investor already has vulnerability records
+                  value:
+                    errorCode: HWA-VULNERABILITY-005
+                    message: Vulnerability characteristics already exist for investor HWI04003219. Use the update endpoint to modify them.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                VulnerabilitiesAlreadyExist:
+                  summary: Investor already has vulnerability records
+                  value:
+                    title: Conflict
+                    status: 409
+                    detail: HWA-VULNERABILITY-005 - Vulnerability characteristics already exist for investor HWI04003219. Use the update endpoint to modify them.
+                    instance: /investors/HWI04003219/vulnerabilities
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -1435,16 +1686,71 @@ paths:
                       "vulnerabilities": []
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInvestorId:
+                  summary: Investor ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: investorId
+                        resource: /investors/{investorId}/vulnerabilities
+                        message: investorId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidInvestorId:
+                  summary: Investor ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /investors/{investorId}/vulnerabilities
+                    errors:
+                      - detail: investorId must not exceed 14 characters.
+                        pointer: /investorId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INVESTOR-001 - Investor HWI04003219 does not exist.
+                    instance: /investors/HWI04003219/vulnerabilities
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
     put:
       tags:
         - Investors
@@ -1540,16 +1846,74 @@ paths:
                         ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInvestorType:
+                  summary: Investor type does not support vulnerabilities
+                  value:
+                    errorCode: HWA-VULNERABILITY-003
+                    message: Vulnerability characteristics can only be updated for Individual or Court Appointed Deputy investors.
+                DuplicateVulnerability:
+                  summary: Duplicate vulnerability type, service level and start date combination
+                  value:
+                    errorCode: HWA-VULNERABILITY-006
+                    message: A vulnerability record with the same type, service level and start date already exists.
+                VulnerabilityNotFound:
+                  summary: No existing vulnerabilities to update
+                  value:
+                    errorCode: HWA-VULNERABILITY-005
+                    message: No vulnerability characteristics exist for this investor. Use the create endpoint.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidInvestorType:
+                  summary: Investor type does not support vulnerabilities
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-VULNERABILITY-003 - Vulnerability characteristics can only be updated for Individual or Court Appointed Deputy investors.
+                    instance: /investors/HWI04003219/vulnerabilities
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INVESTOR-001 - Investor HWI04003219 does not exist.
+                    instance: /investors/HWI04003219/vulnerabilities
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
   /investors/{investorId}/correspondences:
     
     post:
@@ -1647,13 +2011,97 @@ paths:
                         ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInvestorType:
+                  summary: Investor type does not support correspondences
+                  value:
+                    errorCode: HWA-VULNERABILITY-003
+                    message: Correspondence preferences can only be added for Individual or Court Appointed Deputy investors.
+                DeclarationMissing:
+                  summary: CONFIRM_CORRESPONDENCES_CONSENT declaration is missing
+                  value:
+                    errorCode: HWA-VULNERABILITY-009
+                    message: The CONFIRM_CORRESPONDENCES_CONSENT declaration is required.
+                DuplicateCorrespondence:
+                  summary: Duplicate correspondence type and start date combination
+                  value:
+                    errorCode: HWA-VULNERABILITY-008
+                    message: A correspondence record with the same type and start date already exists.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidInvestorType:
+                  summary: Investor type does not support correspondences
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-VULNERABILITY-003 - Correspondence preferences can only be added for Individual or Court Appointed Deputy investors.
+                    instance: /investors/HWI04003219/correspondences
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INVESTOR-001 - Investor HWI04003219 does not exist.
+                    instance: /investors/HWI04003219/correspondences
+        "409":
+          description: Conflict - correspondence preferences already exist for this investor.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                CorrespondencesAlreadyExist:
+                  summary: Investor already has correspondence records
+                  value:
+                    errorCode: HWA-VULNERABILITY-005
+                    message: Correspondence preferences already exist for investor HWI04003219. Use the update endpoint to modify them.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                CorrespondencesAlreadyExist:
+                  summary: Investor already has correspondence records
+                  value:
+                    title: Conflict
+                    status: 409
+                    detail: HWA-VULNERABILITY-005 - Correspondence preferences already exist for investor HWI04003219. Use the update endpoint to modify them.
+                    instance: /investors/HWI04003219/correspondences
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -1725,16 +2173,71 @@ paths:
                       "correspondences": []
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInvestorId:
+                  summary: Investor ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: investorId
+                        resource: /investors/{investorId}/correspondences
+                        message: investorId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidInvestorId:
+                  summary: Investor ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /investors/{investorId}/correspondences
+                    errors:
+                      - detail: investorId must not exceed 14 characters.
+                        pointer: /investorId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INVESTOR-001 - Investor HWI04003219 does not exist.
+                    instance: /investors/HWI04003219/correspondences
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
     put:
       tags:
         - Investors
@@ -1827,13 +2330,66 @@ paths:
                         ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInvestorType:
+                  summary: Investor type does not support correspondences
+                  value:
+                    errorCode: HWA-VULNERABILITY-003
+                    message: Correspondence preferences can only be updated for Individual or Court Appointed Deputy investors.
+                DeclarationMissing:
+                  summary: CONFIRM_CORRESPONDENCES_CONSENT declaration is missing
+                  value:
+                    errorCode: HWA-VULNERABILITY-009
+                    message: The CONFIRM_CORRESPONDENCES_CONSENT declaration is required.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidInvestorType:
+                  summary: Investor type does not support correspondences
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-VULNERABILITY-003 - Correspondence preferences can only be updated for Individual or Court Appointed Deputy investors.
+                    instance: /investors/HWI04003219/correspondences
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INVESTOR-001 - Investor HWI04003219 does not exist.
+                    instance: /investors/HWI04003219/correspondences
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -1875,13 +2431,66 @@ paths:
                       "ids": [1]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - primary taxation cannot be deleted or resource identifier invalid.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                PrimaryCannotBeDeleted:
+                  summary: Primary taxation record cannot be deleted
+                  value:
+                    errorCode: HWA-INVESTOR-003
+                    message: The primary taxation record cannot be deleted unless another taxation is promoted to primary first.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                PrimaryCannotBeDeleted:
+                  summary: Primary taxation record cannot be deleted
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-INVESTOR-003 - The primary taxation record cannot be deleted unless another taxation is promoted to primary first.
+                    instance: /investors/HWI04003219/taxations/1
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor or taxation record not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+                TaxationNotFound:
+                  summary: The specified taxation ID does not exist for this investor
+                  value:
+                    errorCode: HWA-EXCEPTION-005
+                    message: Taxation record 1 does not exist for investor HWI04003219.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                TaxationNotFound:
+                  summary: Taxation record not found
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-EXCEPTION-005 - Taxation record 1 does not exist for investor HWI04003219.
+                    instance: /investors/HWI04003219/taxations/1
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -1923,13 +2532,71 @@ paths:
                       "ids": [1]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - primary nationality cannot be deleted or investor type does not support nationalities.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                PrimaryCannotBeDeleted:
+                  summary: Primary nationality record cannot be deleted
+                  value:
+                    errorCode: HWA-INVESTOR-013
+                    message: The primary nationality record cannot be deleted unless another nationality is promoted to primary first.
+                CorporateTrustNotSupported:
+                  summary: Nationalities cannot be deleted for Corporate or Trust investors
+                  value:
+                    errorCode: HWA-INVESTOR-002
+                    message: Nationality records cannot be deleted for Corporate or Trust investors.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                PrimaryCannotBeDeleted:
+                  summary: Primary nationality record cannot be deleted
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-INVESTOR-013 - The primary nationality record cannot be deleted unless another nationality is promoted to primary first.
+                    instance: /investors/HWI04003219/nationalities/1
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor or nationality record not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+                NationalityNotFound:
+                  summary: The specified nationality ID does not exist for this investor
+                  value:
+                    errorCode: HWA-EXCEPTION-005
+                    message: Nationality record 1 does not exist for investor HWI04003219.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                NationalityNotFound:
+                  summary: Nationality record not found
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-EXCEPTION-005 - Nationality record 1 does not exist for investor HWI04003219.
+                    instance: /investors/HWI04003219/nationalities/1
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -1973,16 +2640,69 @@ paths:
                       "ids": [1]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - primary address cannot be deleted.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                PrimaryCannotBeDeleted:
+                  summary: Primary address cannot be deleted
+                  value:
+                    errorCode: HWA-INVESTOR-003
+                    message: The primary address cannot be deleted unless another address is promoted to primary first.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                PrimaryCannotBeDeleted:
+                  summary: Primary address cannot be deleted
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-INVESTOR-003 - The primary address cannot be deleted unless another address is promoted to primary first.
+                    instance: /investors/HWI04003219/addresses/1
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Investor or address record not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvestorNotFound:
+                  summary: The specified investor ID does not exist
+                  value:
+                    errorCode: HWA-INVESTOR-001
+                    message: Investor HWI04003219 does not exist.
+                AddressNotFound:
+                  summary: The specified address ID does not exist for this investor
+                  value:
+                    errorCode: HWA-EXCEPTION-005
+                    message: Address record 1 does not exist for investor HWI04003219.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AddressNotFound:
+                  summary: Address record not found
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-EXCEPTION-005 - Address record 1 does not exist for investor HWI04003219.
+                    instance: /investors/HWI04003219/addresses/1
         "500":
           $ref: "#/components/responses/500-ServerError"
-  
+
   /accounts:
     
     post:
@@ -2552,14 +3272,91 @@ paths:
                       }
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                MissingProductId:
+                  summary: productId is mandatory
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: productId
+                        resource: /accounts
+                        message: productId is mandatory while creating an account.
+                InvestorNotFound:
+                  summary: The referenced investor does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-005
+                    message: Investor HWI04003371 does not exist or cannot be found.
+                ModelNotFound:
+                  summary: The referenced investment model does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-002
+                    message: Investment model HW000001984 does not exist or cannot be found.
+                PensionDetailsRequired:
+                  summary: Pension details are required for SIPP products
+                  value:
+                    errorCode: HWA-ACCOUNT-008
+                    message: Pension details are required for SIPP product accounts.
+                InvalidCurrency:
+                  summary: The specified currency is not supported
+                  value:
+                    errorCode: HWA-ACCOUNT-007
+                    message: Currency XYZ is not a supported currency for this product.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                MissingProductId:
+                  summary: productId is mandatory
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-ACCOUNT-001 - productId is mandatory while creating an account.
+                    instance: /accounts
+                    errors:
+                      - detail: productId is mandatory while creating an account.
+                        pointer: /productId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
+        "409":
+          description: Conflict - maximum number of accounts for this product has been reached.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                MaxAccountsReached:
+                  summary: Maximum accounts for this product already exist for the investor
+                  value:
+                    errorCode: HWA-ACCOUNT-017
+                    message: The maximum number of accounts for product HIS has been reached for investor HWI04003371.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                MaxAccountsReached:
+                  summary: Maximum accounts for this product already exist for the investor
+                  value:
+                    title: Conflict
+                    status: 409
+                    detail: HWA-ACCOUNT-017 - The maximum number of accounts for product HIS has been reached for investor HWI04003371.
+                    instance: /accounts
         "500":
           $ref: "#/components/responses/500-ServerError"
-  
+
   /accounts/{accountId}:
     
     get:
@@ -2720,16 +3517,71 @@ paths:
                       }
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter format.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: accountId
+                        resource: /accounts/{accountId}
+                        message: accountId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /accounts/{accountId}
+                    errors:
+                      - detail: accountId must not exceed 14 characters.
+                        pointer: /accountId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
     patch:
       tags:
         - Accounts
@@ -2878,7 +3730,31 @@ paths:
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -3132,13 +4008,109 @@ paths:
                       "status": "UNCHECKED"
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                MissingSortCode:
+                  summary: Sort code is mandatory for GBP bank accounts
+                  value:
+                    errorCode: HWA-BANK-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: sortCode
+                        resource: /accounts/{accountId}/bank-accounts
+                        message: sortCode is mandatory for GBP bank accounts.
+                InvalidCurrency:
+                  summary: The specified currency is not valid for this account
+                  value:
+                    errorCode: HWA-BANK-010
+                    message: Currency XYZ is not a valid currency for this bank account.
+                HolderNotFound:
+                  summary: The specified holder does not exist
+                  value:
+                    errorCode: HWA-BANK-013
+                    message: Account holder HWI04003219 does not exist.
+                InvalidAccountNumber:
+                  summary: Account number format is invalid
+                  value:
+                    errorCode: HWA-BANK-011
+                    message: The account number must be 8 digits for GBP bank accounts.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                MissingSortCode:
+                  summary: Sort code is mandatory for GBP bank accounts
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-BANK-001 - sortCode is mandatory for GBP bank accounts.
+                    instance: /accounts/HW00013451A/bank-accounts
+                    errors:
+                      - detail: sortCode is mandatory for GBP bank accounts.
+                        pointer: /sortCode
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/bank-accounts
+        "409":
+          description: Conflict - a bank account with the same details already exists for this investment account.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                BankAccountAlreadyExists:
+                  summary: Bank account with the same sort code and account number already exists
+                  value:
+                    errorCode: HWA-BANK-003
+                    message: A bank account with sort code 309894 and account number 87654321 already exists for account HW00013451A.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                BankAccountAlreadyExists:
+                  summary: Bank account already exists
+                  value:
+                    title: Conflict
+                    status: 409
+                    detail: HWA-BANK-003 - A bank account with sort code 309894 and account number 87654321 already exists for account HW00013451A.
+                    instance: /accounts/HW00013451A/bank-accounts
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -3260,13 +4232,68 @@ paths:
                   summary: No bank accounts associated with an investment account
                   value: []
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter format.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: accountId
+                        resource: /accounts/{accountId}/bank-accounts
+                        message: accountId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /accounts/{accountId}/bank-accounts
+                    errors:
+                      - detail: accountId must not exceed 14 characters.
+                        pointer: /accountId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/bank-accounts
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -3808,16 +4835,79 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                MovementTypeNotAllowed:
+                  summary: The specified movement type is not permitted for this product
+                  value:
+                    errorCode: HWA-MOVEMENT-001
+                    message: Movement type UFPLS is only valid for pension product accounts.
+                InsufficientFunds:
+                  summary: Insufficient funds for the requested withdrawal
+                  value:
+                    errorCode: HWA-MOVEMENT-010
+                    message: Insufficient funds to process the requested withdrawal of 15000.00 GBP.
+                BelowMinimumContribution:
+                  summary: Contribution amount is below the product minimum
+                  value:
+                    errorCode: HWA-MOVEMENT-016
+                    message: The contribution amount 50.00 is below the minimum allowed contribution for this product.
+                TooManyRegularContributions:
+                  summary: Maximum number of regular contributions already configured
+                  value:
+                    errorCode: HWA-MOVEMENT-014
+                    message: The maximum number of regular contributions has already been reached for account HW00013451A.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                MovementTypeNotAllowed:
+                  summary: The specified movement type is not permitted for this product
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-MOVEMENT-001 - Movement type UFPLS is only valid for pension product accounts.
+                    instance: /accounts/HW00013451A/money-movements
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/money-movements
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
     get:
       tags:
         - Accounts
@@ -3936,13 +5026,68 @@ paths:
                       "moneyMovements": []
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter format.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: accountId
+                        resource: /accounts/{accountId}/money-movements
+                        message: accountId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /accounts/{accountId}/money-movements
+                    errors:
+                      - detail: accountId must not exceed 14 characters.
+                        pointer: /accountId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/money-movements
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -4169,13 +5314,76 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                MovementAlreadyCompleted:
+                  summary: Money movement has already been completed and cannot be modified
+                  value:
+                    errorCode: HWA-MOVEMENT-009
+                    message: Money movement 1 has already been completed and cannot be modified.
+                PendingMovementCannotBeUpdated:
+                  summary: A pending movement cannot be updated in this state
+                  value:
+                    errorCode: HWA-MOVEMENT-037
+                    message: Money movement 1 is in a PENDING state and cannot be updated.
+                FullWithdrawalCannotBeUpdated:
+                  summary: A full withdrawal movement cannot be modified
+                  value:
+                    errorCode: HWA-MOVEMENT-027
+                    message: Full withdrawal money movements cannot be modified.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                MovementAlreadyCompleted:
+                  summary: Money movement has already been completed
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-MOVEMENT-009 - Money movement 1 has already been completed and cannot be modified.
+                    instance: /accounts/HW00013451A/money-movements/1
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account or money movement not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+                MovementNotFound:
+                  summary: The specified money movement ID does not exist
+                  value:
+                    errorCode: HWA-MOVEMENT-031
+                    message: Money movement 1 does not exist for account HW00013451A.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                MovementNotFound:
+                  summary: The specified money movement ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-MOVEMENT-031 - Money movement 1 does not exist for account HW00013451A.
+                    instance: /accounts/HW00013451A/money-movements/1
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -4548,13 +5756,76 @@ paths:
                     ]
                   }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                TransferTypeInvalidForProduct:
+                  summary: Transfer type is not valid for this product
+                  value:
+                    errorCode: HWA-TRANSFER-003
+                    message: Transfer type CASH is not valid for a GIA product account.
+                PensionTransferTypeInvalid:
+                  summary: Plan type is required for pension transfers
+                  value:
+                    errorCode: HWA-TRANSFER-004
+                    message: Plan type is mandatory for ISA, JISA, and pension transfers.
+                AmountBelowMinimum:
+                  summary: Transfer amount is below the minimum allowed
+                  value:
+                    errorCode: HWA-TRANSFER-017
+                    message: The transfer amount 50.00 is below the minimum allowed transfer amount.
+                MaxTransfersReached:
+                  summary: Maximum number of transfers for this account has been reached
+                  value:
+                    errorCode: HWA-TRANSFER-013
+                    message: The maximum number of transfers has been reached for account HW00013451A.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                TransferTypeInvalid:
+                  summary: Transfer type is not valid for this product
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-TRANSFER-003 - Transfer type CASH is not valid for a GIA product account.
+                    instance: /accounts/HW00013451A/transfers
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/transfers
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -4743,13 +6014,68 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter format.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: accountId
+                        resource: /accounts/{accountId}/transfers
+                        message: accountId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /accounts/{accountId}/transfers
+                    errors:
+                      - detail: accountId must not exceed 14 characters.
+                        pointer: /accountId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/transfers
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -4843,13 +6169,71 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InsufficientFunds:
+                  summary: Funding account has insufficient balance
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-003
+                    message: The funding account HW00013452A has insufficient balance for the requested transfer of 5000.00 GBP.
+                CurrencyMismatch:
+                  summary: Account currencies do not match
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-005
+                    message: The currency of the destination and funding accounts must match.
+                InvalidProduct:
+                  summary: Product type is not supported for inter-account transfers
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-001
+                    message: Inter-account transfers are not supported for this product type.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InsufficientFunds:
+                  summary: Funding account has insufficient balance
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-INTER-TRANSFER-003 - The funding account HW00013452A has insufficient balance for the requested transfer.
+                    instance: /accounts/HW00013451A/inter-account-transfers
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/inter-account-transfers
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -4910,13 +6294,68 @@ paths:
                       "interAccountTransfers": []
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter format.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidAccountId:
+                  summary: Account ID must be exactly 11 characters
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: accountId
+                        resource: /accounts/{accountId}/inter-account-transfers
+                        message: accountId must be between 11 and 11 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidAccountId:
+                  summary: Account ID format invalid
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /accounts/{accountId}/inter-account-transfers
+                    errors:
+                      - detail: accountId must be between 11 and 11 characters.
+                        pointer: /accountId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/inter-account-transfers
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -4993,13 +6432,71 @@ paths:
                       "status": "INCEPTED"
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                TransferAlreadyArchived:
+                  summary: Transfer has already been archived
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-001
+                    message: Inter-account transfer 1001 has already been archived and cannot be updated.
+                OneOffTransferOnActiveAccount:
+                  summary: One-off transfers cannot be updated on activated accounts
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-002
+                    message: One-off inter-account transfers cannot be updated after the account has been activated.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                TransferAlreadyArchived:
+                  summary: Transfer has already been archived
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-INTER-TRANSFER-001 - Inter-account transfer 1001 has already been archived and cannot be updated.
+                    instance: /accounts/HW00013451A/inter-account-transfers/1001
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account or transfer not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+                TransferNotFound:
+                  summary: The specified transfer ID does not exist
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-004
+                    message: Inter-account transfer 1001 does not exist for account HW00013451A.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                TransferNotFound:
+                  summary: Transfer not found
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INTER-TRANSFER-004 - Inter-account transfer 1001 does not exist for account HW00013451A.
+                    instance: /accounts/HW00013451A/inter-account-transfers/1001
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -5040,13 +6537,76 @@ paths:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - business rule prevents archiving this transfer.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                TransferAlreadyArchived:
+                  summary: Transfer has already been archived
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-001
+                    message: Inter-account transfer 1001 has already been archived.
+                OneOffTransferOnActiveAccount:
+                  summary: One-off transfers cannot be archived on activated accounts
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-002
+                    message: One-off inter-account transfers cannot be archived after the account has been activated.
+                NextDateInPast:
+                  summary: Transfer next date is in the past
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-006
+                    message: Inter-account transfer 1001 cannot be archived because its next date is in the past.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                TransferAlreadyArchived:
+                  summary: Transfer has already been archived
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-INTER-TRANSFER-001 - Inter-account transfer 1001 has already been archived.
+                    instance: /accounts/HW00013451A/inter-account-transfers/1001
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account or transfer not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+                TransferNotFound:
+                  summary: The specified transfer ID does not exist
+                  value:
+                    errorCode: HWA-INTER-TRANSFER-004
+                    message: Inter-account transfer 1001 does not exist for account HW00013451A.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                TransferNotFound:
+                  summary: Transfer not found
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-INTER-TRANSFER-004 - Inter-account transfer 1001 does not exist for account HW00013451A.
+                    instance: /accounts/HW00013451A/inter-account-transfers/1001
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -5264,13 +6824,76 @@ paths:
                     ]
                   }  
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                FeeTypeNotAllowed:
+                  summary: The fee type is not permitted for this account
+                  value:
+                    errorCode: HWA-FEE-003
+                    message: Fee type PRODUCT_ANNUAL cannot be created via the API. This fee is configured automatically.
+                FeeCodeInvalid:
+                  summary: The specified fee code does not exist
+                  value:
+                    errorCode: HWA-FEE-004
+                    message: Fee code AFGVCD does not exist or is not valid for this fee type.
+                FeeAboveMaximum:
+                  summary: Fee amount or percentage exceeds the maximum allowed
+                  value:
+                    errorCode: HWA-FEE-008
+                    message: The fee amount exceeds the maximum permitted value for this fee type.
+                StartDateInPast:
+                  summary: Start date cannot be in the past
+                  value:
+                    errorCode: HWA-FEE-011
+                    message: The fee start date cannot be in the past.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                FeeTypeNotAllowed:
+                  summary: The fee type is not permitted for this account
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-003 - Fee type PRODUCT_ANNUAL cannot be created via the API.
+                    instance: /accounts/HW00013451A/fees
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/fees
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -5393,13 +7016,68 @@ paths:
                       "fees": []
                     }   
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter format.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: accountId
+                        resource: /accounts/{accountId}/fees
+                        message: accountId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /accounts/{accountId}/fees
+                    errors:
+                      - detail: accountId must not exceed 14 characters.
+                        pointer: /accountId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/fees
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -5501,13 +7179,71 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                FeeTypeNotSupported:
+                  summary: This fee type does not support end date modification
+                  value:
+                    errorCode: HWA-FEE-003
+                    message: End dates can only be set on ADVISER_ANNUAL, PORTFOLIO_MANAGEMENT, or INVESTMENT_MANAGEMENT fees.
+                FeeAlreadyArchived:
+                  summary: Fee is already in archived state
+                  value:
+                    errorCode: HWA-FEE-013
+                    message: Fee 1 is already archived and cannot be modified.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                FeeTypeNotSupported:
+                  summary: Fee type does not support end date modification
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-003 - End dates can only be set on ADVISER_ANNUAL, PORTFOLIO_MANAGEMENT, or INVESTMENT_MANAGEMENT fees.
+                    instance: /accounts/HW04003259A/fees/1
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account or fee not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW04003259A does not exist.
+                FeeNotFound:
+                  summary: The specified fee ID does not exist for this account
+                  value:
+                    errorCode: HWA-FEE-015
+                    message: Fee 1 does not exist for account HW04003259A.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                FeeNotFound:
+                  summary: Fee not found
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-FEE-015 - Fee 1 does not exist for account HW04003259A.
+                    instance: /accounts/HW04003259A/fees/1
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -5617,13 +7353,70 @@ paths:
                       }
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                WithdrawNotAllowedForSipp:
+                  summary: WITHDRAW income option cannot be used on a SIPP account
+                  value:
+                    errorCode: HWA-EXCEPTION-002
+                    message: The WITHDRAW income option is not permitted for SIPP accounts.
+                BankDetailsMissingForWithdraw:
+                  summary: Bank details are required when income option is WITHDRAW
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: incomeOption.sortCode
+                        resource: /accounts/{accountId}/income-options
+                        message: sortCode is required when income option type is WITHDRAW.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                WithdrawNotAllowedForSipp:
+                  summary: WITHDRAW income option not permitted for SIPP
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-002 - The WITHDRAW income option is not permitted for SIPP accounts.
+                    instance: /accounts/HW00013451A/income-options
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/income-options
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -5796,13 +7589,66 @@ paths:
                         ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - account cannot be activated in its current state.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                KycNotCleared:
+                  summary: KYC check has not been completed for the investor
+                  value:
+                    errorCode: HWA-ACCOUNT-039
+                    message: The account cannot be activated because the KYC check has not been cleared for the investor.
+                AccountNotInPendingStatus:
+                  summary: Account is not in PENDING status and cannot be activated
+                  value:
+                    errorCode: HWA-ACCOUNT-018
+                    message: Account HW00013451A is not in PENDING status and cannot be activated.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                KycNotCleared:
+                  summary: KYC check has not been completed
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-ACCOUNT-039 - The account cannot be activated because the KYC check has not been cleared for the investor.
+                    instance: /accounts/HW00013451A/activate
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/activate
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -6070,13 +7916,71 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                EmployerAlreadyExists:
+                  summary: An employer third party already exists for this account
+                  value:
+                    errorCode: HWA-THIRD-PARTY-001
+                    message: An employer third party already exists for account HW00013451A. Only one employer per account is permitted.
+                BeneficiaryPercentageNotHundred:
+                  summary: Beneficiary percentages must total 100
+                  value:
+                    errorCode: HWA-THIRD-PARTY-003
+                    message: The total beneficiary percentage must equal 100 when adding beneficiaries.
+                BeneficiariesAlreadyExist:
+                  summary: Beneficiaries already exist - use the replace endpoint
+                  value:
+                    errorCode: HWA-THIRD-PARTY-002
+                    message: Beneficiaries already exist for account HW00013451A. Use the replace beneficiaries endpoint to update them.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                EmployerAlreadyExists:
+                  summary: An employer already exists for this account
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-THIRD-PARTY-001 - An employer third party already exists for account HW00013451A.
+                    instance: /accounts/HW00013451A/third-parties
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/third-parties
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -6212,13 +8116,68 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest-NoBody"
+          description: Bad request - invalid path parameter format.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: accountId
+                        resource: /accounts/{accountId}/third-parties
+                        message: accountId must not exceed 14 characters.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                InvalidAccountId:
+                  summary: Account ID exceeds maximum length
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+                    instance: /accounts/{accountId}/third-parties
+                    errors:
+                      - detail: accountId must not exceed 14 characters.
+                        pointer: /accountId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/third-parties
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -6353,13 +8312,66 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                ThirdPartyNotFound:
+                  summary: The specified third party ID does not exist for this account
+                  value:
+                    errorCode: HWA-THIRD-PARTY-005
+                    message: Third party 1 does not exist for account HW00013451A.
+                UnsupportedFieldUpdate:
+                  summary: The requested field cannot be updated
+                  value:
+                    errorCode: HWA-THIRD-PARTY-007
+                    message: The third party type, beneficiary percentage, date of birth, and relationship cannot be updated via this endpoint.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                ThirdPartyNotFound:
+                  summary: Third party not found
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-THIRD-PARTY-005 - Third party 1 does not exist for account HW00013451A.
+                    instance: /accounts/HW00013451A/third-parties
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/third-parties
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -6514,15 +8526,73 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                BeneficiaryPercentageNotHundred:
+                  summary: Beneficiary percentages must total 100
+                  value:
+                    errorCode: HWA-THIRD-PARTY-003
+                    message: The total beneficiary percentage must equal 100 when replacing beneficiaries.
+                NonBeneficiaryTypeInRequest:
+                  summary: Request must only contain beneficiary type third parties
+                  value:
+                    errorCode: HWA-THIRD-PARTY-009
+                    message: This endpoint only supports replacement of BENEFICIARY type third parties.
+                NoBeneficiariesExist:
+                  summary: No existing beneficiaries to replace
+                  value:
+                    errorCode: HWA-THIRD-PARTY-010
+                    message: No beneficiaries exist for account HW00013451A. Use the create endpoint to add beneficiaries.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                BeneficiaryPercentageNotHundred:
+                  summary: Beneficiary percentages must total 100
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-THIRD-PARTY-003 - The total beneficiary percentage must equal 100 when replacing beneficiaries.
+                    instance: /accounts/HW00013451A/third-parties
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/third-parties
         "500":
-          $ref: "#/components/responses/500-ServerError"      
+          $ref: "#/components/responses/500-ServerError"
 
   /accounts/{accountId}/portfolio-adjustments:
     
@@ -6628,16 +8698,74 @@ paths:
                         }
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotActive:
+                  summary: Account must be in ACTIVE status for portfolio adjustments
+                  value:
+                    errorCode: HWA-EXCEPTION-002
+                    message: Portfolio adjustments can only be created for ACTIVE accounts.
+                ModelNotFoundForSwitch:
+                  summary: The specified model for a SWITCH instruction does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-002
+                    message: Investment model DF000000001 does not exist or is not accessible for this account.
+                RebalanceNoModel:
+                  summary: Account has no investment model to rebalance
+                  value:
+                    errorCode: HWA-EXCEPTION-002
+                    message: The account does not have an assigned investment model to rebalance.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotActive:
+                  summary: Account must be in ACTIVE status
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-002 - Portfolio adjustments can only be created for ACTIVE accounts.
+                    instance: /accounts/HW00013451A/portfolio-adjustments
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/portfolio-adjustments
         "500":
           $ref: "#/components/responses/500-ServerError"
- 
+
   /accounts/{accountId}/investment-instructions:
     
     post:
@@ -7108,13 +9236,75 @@ paths:
                       ]
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInstrumentIsin:
+                  summary: The specified ISIN is not recognised
+                  value:
+                    errorCode: HWA-EXCEPTION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: instructions[0].instrumentDetails.isin
+                        resource: /accounts/{accountId}/investment-instructions
+                        message: ISIN GB00B4L5Y983 is not recognised or is not available for trading.
+                SwitchWithoutSell:
+                  summary: A SWITCH instruction must be associated with a SELL or REDEMPTION
+                  value:
+                    errorCode: HWA-EXCEPTION-002
+                    message: SWITCH instructions must be associated with a SELL or REDEMPTION instruction in the same request.
+                SwitchPercentageNotHundred:
+                  summary: SWITCH instruction percentages must total 100
+                  value:
+                    errorCode: HWA-EXCEPTION-002
+                    message: The combined percentage of all SWITCH instructions must equal 100.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                SwitchWithoutSell:
+                  summary: A SWITCH requires an associated SELL or REDEMPTION
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-002 - SWITCH instructions must be associated with a SELL or REDEMPTION instruction in the same request.
+                    instance: /accounts/HW00013451A/investment-instructions
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW00013451A does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW00013451A does not exist.
+                    instance: /accounts/HW00013451A/investment-instructions
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -7230,8 +9420,32 @@ paths:
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
-        "404":
-          $ref: "#/components/responses/404-NotFound"
+        "409":
+          description: Conflict - a Fee Group with this groupId already exists for the tenant.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                DuplicateGroupId:
+                  summary: groupId already exists for the tenant
+                  value:
+                    errorCode: HWA-FEE-GROUP-001
+                    message: A Fee Group with groupId SMITHSPLT01 already exists for this tenant.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                DuplicateGroupId:
+                  summary: groupId already exists for the tenant
+                  value:
+                    title: Conflict
+                    status: 409
+                    detail: HWA-FEE-GROUP-001 - A Fee Group with groupId SMITHSPLT01 already exists for this tenant.
+                    instance: /fee-groups
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -7889,13 +10103,83 @@ paths:
                       }
                     }
         "400":
-          $ref: "#/components/responses/400-BadRequest"
+          description: Bad request - validation or business rule failure.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                MissingProductId:
+                  summary: productId is required when generating a hypothetical illustration
+                  value:
+                    errorCode: HWA-ILLUSTRATION-001
+                    message: Validation Error(s) occurred.
+                    errors:
+                      - field: illustrationDetails.account.productId
+                        resource: /non-pension-illustrations
+                        message: productId is required for a hypothetical account illustration.
+                NoMovementOrTransfer:
+                  summary: At least one money movement or transfer is required
+                  value:
+                    errorCode: HWA-ILLUSTRATION-002
+                    message: At least one money movement or transfer must be provided for a hypothetical account illustration.
+                InvalidForecastPeriod:
+                  summary: Forecast period is outside the allowed range
+                  value:
+                    errorCode: HWA-ILLUSTRATION-003
+                    message: The forecast period must be between 1 and 40 years.
+                ModelNotFound:
+                  summary: The specified model does not exist
+                  value:
+                    errorCode: HWA-ILLUSTRATION-005
+                    message: Investment model HW000000090 does not exist or is not accessible.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                MissingProductId:
+                  summary: productId is required for hypothetical illustration
+                  value:
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-ILLUSTRATION-001 - productId is required for a hypothetical account illustration.
+                    instance: /non-pension-illustrations
+                    errors:
+                      - detail: productId is required for a hypothetical account illustration.
+                        pointer: /illustrationDetails/account/productId
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          $ref: "#/components/responses/404-NotFound"
+          description: Account not found (when accountId is provided but does not exist).
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    errorCode: HWA-ACCOUNT-001
+                    message: Account HW000000108 does not exist.
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+              examples:
+                AccountNotFound:
+                  summary: The specified account ID does not exist
+                  value:
+                    title: Not Found
+                    status: 404
+                    detail: HWA-ACCOUNT-001 - Account HW000000108 does not exist.
+                    instance: /non-pension-illustrations
         "500":
           $ref: "#/components/responses/500-ServerError"
 

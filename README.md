@@ -1,4 +1,7 @@
 # hw-api-specs
+Changelog for v0.8.13 API spec
+
+ - Add error details for each endpoint
 
 Changelog for v0.8.12 API spec
 
