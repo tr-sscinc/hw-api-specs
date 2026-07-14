@@ -2162,6 +2162,100 @@ paths:
                       }
                     ]
                   }
+              Ex5:
+                summary: Add a GIA Multiple Investment Strategy Account with models
+                value:
+                  {
+                    "productId": "GIA",
+                    "type": "ADVISED",
+                    "adviserId": "E001428",
+                    "baseCurrency": "GBP",
+                    "marketSettlementCurrency": "GBP",
+                    "name": "Mr John Doe",
+                    "investors": [
+                      {
+                        "id": "HWI04003371",
+                        "relationship": "OWNER"
+                      }
+                    ],
+                    "model": {
+                      "allocations": [
+                        {
+                          "modelId": "HW000001984",
+                          "percentage": 60,
+                          "date": "2024-07-01"
+                        },
+                        {
+                          "modelId": "HW000001985",
+                          "providerId": "DFM0001",
+                          "percentage": 40
+                        }
+                      ]
+                    },
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "TARGET_MARKET",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+              Ex6:
+                summary: Add a GIA Multiple Investment Strategy Account with models and instruments
+                value:
+                  {
+                    "productId": "GIA",
+                    "type": "ADVISED",
+                    "adviserId": "E001428",
+                    "baseCurrency": "GBP",
+                    "marketSettlementCurrency": "GBP",
+                    "name": "Mr John Doe",
+                    "investors": [
+                      {
+                        "id": "HWI04003371",
+                        "relationship": "OWNER"
+                      }
+                    ],
+                    "model": {
+                      "name": "Sam John MIS Strategy",
+                      "date": "2026-04-28",
+                      "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                      "allocations": [
+                        {
+                          "modelId": "HW000000068",
+                          "percentage": 40
+                        },
+                        {
+                          "modelId": "HW000001985",
+                          "providerId": "DFM0001",
+                          "percentage": 40
+                        },
+                        {
+                          "instruments": [
+                            {
+                              "isin": "LU0252633754",
+                              "exchange": "XLON",
+                              "currency": "GBP",
+                              "percentage": 10
+                            },
+                            {
+                              "isin": "LU1390062245",
+                              "exchange": "XLON",
+                              "currency": "GBP",
+                              "percentage": 10
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "TARGET_MARKET",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
       responses:
         "201":
           description: Account created successfully.
@@ -2289,7 +2383,7 @@ paths:
                       "tenantId": "HUBWISE",
                       "productId": "JIS",
                       "type": "ADVISED",
-                      "status": "PENDING", 
+                      "status": "PENDING",
                       "baseCurrency": "GBP",
                       "marketSettlementCurrency": "GBP",
                       "name": "YAYAH JISA",
@@ -2298,7 +2392,7 @@ paths:
                           {
                             "reference": "d8d3a6b1-f1e5-4b0a-8d2c-0a3f5b7e9d1c",
                             "provider": "CRM"
-                          },
+                          }
                         ],
                       "investors": [
                         {
@@ -2315,6 +2409,97 @@ paths:
                           "providerId": "HUBWISE",
                           "date": "2020-04-28"
                         }
+                    }
+                Ex5:
+                  summary: GIA Multiple Investment Strategy account with models
+                  value:
+                    {
+                      "id": "HW04003261A",
+                      "adviserId": "E001428",
+                      "tenantId": "HUBWISE",
+                      "productId": "GIA",
+                      "type": "ADVISED",
+                      "status": "PENDING",
+                      "baseCurrency": "GBP",
+                      "marketSettlementCurrency": "GBP",
+                      "name": "Mr John Doe",
+                      "investors": [
+                        {
+                          "id": "HWI04003371",
+                          "relationship": "OWNER"
+                        }
+                      ],
+                      "model": {
+                        "allocations": [
+                          {
+                            "accountId": "HW04003261B",
+                            "modelId": "HW000001984",
+                            "providerId": "HUBWISE",
+                            "percentage": 60,
+                            "date": "2024-07-01"
+                          },
+                          {
+                            "accountId": "HW04003261C",
+                            "modelId": "HW000001985",
+                            "providerId": "DFM0001",
+                            "percentage": 40
+                          }
+                        ]
+                      }
+                    }
+                Ex6:
+                  summary: GIA Multiple Investment Strategy account with models and instruments
+                  value:
+                    {
+                      "id": "HW04003261A",
+                      "adviserId": "E001428",
+                      "tenantId": "HUBWISE",
+                      "productId": "GIA",
+                      "type": "ADVISED",
+                      "status": "PENDING",
+                      "baseCurrency": "GBP",
+                      "marketSettlementCurrency": "GBP",
+                      "name": "Mr John Doe",
+                      "investors": [
+                        {
+                          "id": "HWI04003371",
+                          "relationship": "OWNER"
+                        }
+                      ],
+                      "model": {
+                        "allocations": [
+                          {
+                            "accountId": "HW04003261B",
+                            "modelId": "HW000001984",
+                            "providerId": "HUBWISE",
+                            "percentage": 60,
+                            "date": "2024-07-01"
+                          },
+                          {
+                            "accountId": "HW04003261C",
+                            "modelId": "HW000001985",
+                            "providerId": "DFM0001",
+                            "percentage": 40
+                          },
+                          {
+                            "accountId": "HW00019237D",
+                            "instruments": [
+                                {
+                                    "isin": "GB00B77P8461",
+                                    "exchange": "XOFF",
+                                    "currency": "GBX",
+                                    "percentage": 10
+                                },
+                                {
+                                    "isin": "GB00B8HW5S74",
+                                    "exchange": "XOFF",
+                                    "currency": "GBX",
+                                    "percentage": 10
+                                }
+                            ]
+                        }
+                        ]
+                      }
                     }
         "400":
           $ref: "#/components/responses/400-BadRequest"
@@ -3202,12 +3387,12 @@ paths:
                     ]
                   } 
               Ex4:
-                summary: create a maximum one off UFPLS for a SIPP
+                summary: create a maximum PCLS for a SIPP
                 value:
                   {
                     "moneyMovements": [
                       {
-                        "type": "UFPLS",
+                        "type": "FLEXI_ACCESS_PCLS",
                         "payer": "SELF",
                         "frequency": "ONE_OFF",
                         "nextDate": "2026-02-02",
@@ -3227,7 +3412,7 @@ paths:
                     ]
                   }
               Ex5:
-                summary: create a regular income for a SIPP with hmrc protection 
+                summary: create a regular income for a SIPP with hmrc protection
                 value:
                   {
                     "moneyMovements": [
@@ -3467,7 +3652,7 @@ paths:
                       ]
                     }
                 Ex4:
-                  summary: Created maximum one off UFPLS for a SIPP
+                  summary: Created maximum PCLS for a SIPP
                   value:
                     {
                       "moneyMovements": [
@@ -3477,7 +3662,7 @@ paths:
                           "tenantId": "HUBWISE",
                           "adviserId": "E008469",
                           "status": "NEW",
-                          "type": "UFPLS",
+                          "type": "FLEXI_ACCESS_PCLS",
                           "payer": "SELF",
                           "frequency": "ONE_OFF",
                           "nextDate": "2026-02-02",
@@ -8752,24 +8937,49 @@ components:
             $ref: "#/components/schemas/Taxation"
 
     Model:
-      description: Investment model linked to the account
-      required:
-        - id
+      description: >-
+        Investment model linked to the account.
+
+
+        For standard accounts, provide `id` to reference a single model portfolio.
+
+
+        For Multiple Investment Strategy (MIS) accounts, omit `id` and instead provide an
+        `allocations` array. Each allocation references a sub-account model and specifies the
+        percentage of the portfolio to allocate to it. Allocations may reference a model by
+        `modelId` or contain a direct `instruments` array; the percentages across all allocations
+        must sum to 100.
       type: object
       additionalProperties: false
       properties:
         id:
           format: string
-          description: Unique SS&C Wealth Platform Model identifier
+          description: >-
+            Unique SS&C Wealth Platform Model identifier. Must not be provided when `allocations` is present.
           maxLength: 11
           minLength: 11
           type: string
           example: HW000000090
+        name:
+          format: string
+          description: >-
+            Display name for the MIS strategy. Applies to MIS accounts only.
+          maxLength: 100
+          minLength: 1
+          type: string
+          example: Sam John MIS Strategy
+        type:
+          description: >-
+            The type of investment strategy. Use `MULTIPLE_INVESTMENT_STRATEGY` for MIS accounts.
+          type: string
+          enum:
+            - MULTIPLE_INVESTMENT_STRATEGY
+          example: MULTIPLE_INVESTMENT_STRATEGY
         providerId:
           format: string
           description: >-
             Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId
-            against the token will be used.
+            against the token will be used. Applies to standard accounts only.
           maxLength: 7
           minLength: 7
           type: string
@@ -8779,6 +8989,121 @@ components:
           description: The date against the model. If not provided the latest date will be selected.
           type: string
           example: "2020-04-28"
+        allocations:
+          description: >-
+            Array of model allocations for a Multiple Investment Strategy (MIS) account. Each entry
+            specifies either a sub-account model or a direct instrument list, along with its
+            percentage of the total portfolio. 
+          type: array
+          minItems: 2
+          items:
+            $ref: "#/components/schemas/MisModelAllocation"
+
+    MisModelAllocation:
+      description: >-
+        Defines a single sub-account allocation within a Multiple Investment Strategy (MIS).
+        Each allocation creates a sub-account for either a specified model or a set of
+        directly held instruments. Exactly one of `modelId` or `instruments` must be provided.
+      type: object
+      additionalProperties: false
+      properties:
+        accountId:
+          format: string
+          description: >-
+            The SS&C Wealth Platform Account identifier for the sub-account created for this
+            allocation. Populated in the response only; read-only.
+          maxLength: 11
+          minLength: 11
+          type: string
+          readOnly: true
+          example: HW04003261B
+        modelId:
+          format: string
+          description: >-
+            Unique SS&C Wealth Platform Model identifier for this sub-account allocation.
+            Required when `instruments` is not provided.
+          maxLength: 11
+          minLength: 11
+          type: string
+          example: HW000001984
+        providerId:
+          format: string
+          description: >-
+            Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId
+            against the token will be used. Applies to model-based allocations only.
+          maxLength: 7
+          minLength: 7
+          type: string
+          example: DFM0001
+        percentage:
+          type: number
+          format: double
+          description: >-
+            The percentage of the total portfolio to allocate to this sub-account.
+            Must be a positive number. All allocation percentages must sum to 100.
+            Required when `modelId` is provided.
+          minimum: 0.01
+          maximum: 99.99
+          example: 60
+        date:
+          format: date
+          description: >-
+            The model date for this allocation. If not provided the latest model date will be used.
+            Applies to model-based allocations only.
+          type: string
+          example: "2024-07-01"
+        instruments:
+          description: >-
+            Array of directly held instruments for this sub-account allocation.
+            Required when `modelId` is not provided. The percentage of each instrument
+            represents its share of the total portfolio; all instrument percentages within
+            this allocation must sum to the allocation's contribution to the portfolio total.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/MisInstrument"
+
+    MisInstrument:
+      description: >-
+        Defines a directly held instrument within a MIS instrument-based allocation.
+      required:
+        - isin
+        - exchange
+        - currency
+        - percentage
+      type: object
+      additionalProperties: false
+      properties:
+        isin:
+          format: string
+          description: International Securities Identification Number for the instrument.
+          maxLength: 12
+          minLength: 12
+          type: string
+          example: LU0252633754
+        exchange:
+          format: string
+          description: Market Identifier Code (MIC) of the exchange on which the instrument is traded.
+          maxLength: 4
+          minLength: 4
+          type: string
+          example: XLON
+        currency:
+          format: string
+          description: currency code for the instrument.
+          maxLength: 3
+          minLength: 3
+          type: string
+          example: GBP
+        percentage:
+          type: number
+          format: double
+          description: >-
+            The percentage of the total portfolio to allocate to this instrument.
+            Must be a positive number.
+          minimum: 0.01
+          maximum: 99.99
+          example: 10
 
     CorrespondenceHeader:
       required:
@@ -9439,8 +9764,9 @@ components:
         type:
           description: >-
             The type of money movement being specified, the API can support payments into and out
-            of the account. Withdrawals are only valid for non pension products. UFPLS,
-            FLEXI_ACCESS_INCOME, FLEXI_ACCESS_PCLS are only valid for pension products.
+            of the account. WITHDRAWALS are only valid for non pension products. UFPLS,
+            FLEXI_ACCESS_INCOME, and FLEXI_ACCESS_PCLS are only valid for pension products.
+            UFPLS does not support `isMaximum`; use a specific `value` instead.
           enum:
             - CONTRIBUTIONS
             - WITHDRAWALS
@@ -9503,9 +9829,16 @@ components:
           example: HW000134514
         isMaximum:
           description: >-
-            Indicates if the maximum allowable amount. Can only be used for WITHDRAWAL, UFPLS,
-            FLEXI_ACCESS_INCOME, FLEXI_ACCESS_PCLS.
-          type: boolean
+            Indicates the maximum allowable amount. Can only be used for WITHDRAWAL, FLEXI_ACCESS_INCOME,
+            and FLEXI_ACCESS_PCLS. 
+
+
+            For FLEXI_ACCESS_INCOME and FLEXI_ACCESS_PCLS, this field may be set to `true` to request the full maximum PCLS
+            entitlement and a numeric value can also be specified.
+          oneOf:
+            - type: boolean
+            - type: number
+              format: double
         includeNonDailyAssets:
           description: >-
             Allows a customer to indicate if they want to include or exclude non-daily traded assets from one off contributions and withdrawals. Defaults to false for one off contributions and true for one off withdrawals.
@@ -9577,7 +9910,7 @@ components:
     Value:
       description: >-
         Value object representing amounts and currency. This is mandatory for money movements unless
-        isMaximum is true and type is WITHDRAWAL, UFPLS, FLEXI_ACCESS_INCOME, FLEXI_ACCESS_PCLS
+        isMaximum is true and type is WITHDRAWAL, FLEXI_ACCESS_INCOME, or FLEXI_ACCESS_PCLS
       required:
         - amount
         - currency
