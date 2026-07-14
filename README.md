@@ -1,4 +1,10 @@
 # hw-api-specs
+Changelog for v0.8.11 API spec
+
+ - create account updated for MIS
+ - removed is maximum for UFPLS and 
+ - allow is maximum value for PCLS and Income 
+
 Changelog for v0.8.10 API spec
 
  - Updated portfolio adjustments endpoint parameter validation and response description
