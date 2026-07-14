@@ -6325,9 +6325,11 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            minLength: 11
+            maxLength: 11
           example: HW00013451A
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -6366,7 +6368,7 @@ paths:
                   }
       responses:
         "201":
-          description: Third parties created successfully.
+          description: Portfolio adjustment created successfully.
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
