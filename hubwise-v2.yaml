@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.11
+  version: 0.8.12
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -18,7 +18,6 @@ tags:
 
 security:
   - bearer-token: []
-  - x-api-key: []
 
 paths:
 
@@ -12132,8 +12131,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
-    x-api-key:
-      type: apiKey
-      name: x-api-key
-      in: header
