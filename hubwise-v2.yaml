@@ -13,6 +13,7 @@ servers:
 tags:
   - name: Investors
   - name: Accounts
+  - name: MoneyMovement
   - name: Fee Groups
   - name: Illustrations
 
@@ -3274,7 +3275,7 @@ paths:
     
     post:
       tags:
-        - Accounts
+        - MoneyMovement
       summary: Create Money Movement(s)
       description: |
         Creates one or more money movement transaction records for an existing investment account.
@@ -3546,6 +3547,46 @@ paths:
                       }
                     ]
                   }
+              Ex6:
+                summary: create a one off contribution split across MIS sub-accounts
+                value:
+                  {
+                    "moneyMovements": [
+                      {
+                        "type": "CONTRIBUTIONS",
+                        "contributionMethod": "ELECTRONIC",
+                        "payer": "SELF",
+                        "frequency": "ONE_OFF",
+                        "value": {
+                          "amount": 15000,
+                          "currency": "GBP"
+                        },
+                        "nextDate": "2026-02-02",
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "bank": {
+                          "number": "50220369",
+                          "sortCode": "700125"
+                        },
+                        "allocations": [
+                          {
+                            "accountId": "HW04003261B",
+                            "percentage": 60
+                          },
+                          {
+                            "accountId": "HW04003262B",
+                            "percentage": 40
+                          }
+                        ]
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E121191",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
         required: true
       responses:
         "201":
@@ -3807,6 +3848,44 @@ paths:
                         }
                       ]
                     }
+                Ex6:
+                  summary: Created one off contribution split across MIS sub-accounts
+                  value:
+                    {
+                      "moneyMovements": [
+                        {
+                          "id": 5,
+                          "accountId": "HW04003260A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E008469",
+                          "status": "NEW",
+                          "type": "CONTRIBUTIONS",
+                          "contributionMethod": "ELECTRONIC",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "nextDate": "2026-02-02",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "bank": {
+                            "number": "50220369",
+                            "sortCode": "700125"
+                          },
+                          "allocations": [
+                            {
+                              "accountId": "HW04003261B",
+                              "percentage": 60
+                            },
+                            {
+                              "accountId": "HW04003262B",
+                              "percentage": 40
+                            }
+                          ]
+                        }
+                      ]
+                    }
         "400":
           $ref: "#/components/responses/400-BadRequest"
         "401":
@@ -3817,10 +3896,10 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
     get:
       tags:
-        - Accounts
+        - MoneyMovement
       summary: Retrieves the money movements on an account
       description:
         Retrieves the money movements against a specific investment account record.
@@ -3930,10 +4009,48 @@ paths:
                       ]
                     }
                 Ex2:
-                  summary: No money movements on the account 
+                  summary: No money movements on the account
                   value:
                     {
                       "moneyMovements": []
+                    }
+                Ex3:
+                  summary: A contribution split across MIS sub-accounts
+                  value:
+                    {
+                      "moneyMovements": [
+                        {
+                          "id": 5,
+                          "accountId": "HW04003260A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E008469",
+                          "status": "NEW",
+                          "type": "CONTRIBUTIONS",
+                          "contributionMethod": "ELECTRONIC",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "nextDate": "2026-02-02",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "bank": {
+                            "number": "50220369",
+                            "sortCode": "700125"
+                          },
+                          "allocations": [
+                            {
+                              "accountId": "HW04003261B",
+                              "percentage": 60
+                            },
+                            {
+                              "accountId": "HW04003262B",
+                              "percentage": 40
+                            }
+                          ]
+                        }
+                      ]
                     }
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
@@ -3950,7 +4067,7 @@ paths:
     
     patch:
       tags:
-        - Accounts
+        - MoneyMovement
       summary: Update regular active money movements
       description: >-
         
@@ -4044,7 +4161,7 @@ paths:
                         "acknowledgement": true
                       }
                     ]
-                  }      
+                  }
       responses:
         "200":
           description: Money movement modified successfully
@@ -4136,7 +4253,7 @@ paths:
                     }    
                 Ex3:
                   summary: Update Regular Contirubtion Bank Details
-                  value: 
+                  value:
                     {
                       "moneyMovements": [
                         {
@@ -4181,7 +4298,7 @@ paths:
 
     delete:
       tags:
-        - Accounts
+        - MoneyMovement
       summary: Delete money movements
       description: >-
         
@@ -10374,6 +10491,17 @@ components:
           $ref: "#/components/schemas/HMRCProtection"
         sourceOfFunds:
           $ref: "#/components/schemas/SourceOfFunding"
+        allocations:
+          description: >-
+            MIS sub-account allocation splits for this movement. Applies to CONTRIBUTIONS and to
+            disinvestments (WITHDRAWALS, UFPLS, FLEXI_ACCESS_PCLS, FLEXI_ACCESS_INCOME) on Multiple
+            Investment Strategy (MIS) accounts. When provided, the percentages must sum to 100 and
+            each sub-account must be unique. When omitted for a MIS account, the default allocation
+            held against the primary account is used. Ignored for non-MIS accounts. Returned in the
+            response when present.
+          type: array
+          items:
+            $ref: "#/components/schemas/MovementAllocation"
 
     MovementPatch:
       description: patch regular money movements in and out of an account
@@ -10412,6 +10540,36 @@ components:
           $ref: "#/components/schemas/BankAccountDetails"
         fee:
           $ref: "#/components/schemas/MovementFee"
+
+    MovementAllocation:
+      description: >-
+        Allocation of a money movement across a sub-account of a Multiple Investment Strategy (MIS)
+        account. When provided, each entry references a valid sub-account of the primary account and
+        all percentages must sum to exactly 100. Each sub-account may appear once. When omitted for a
+        MIS account, the default allocation held against the primary account is used. Ignored for
+        non-MIS accounts.
+      required:
+        - accountId
+        - percentage
+      type: object
+      additionalProperties: false
+      properties:
+        accountId:
+          format: string
+          description: The SS&C Wealth Platform Account identifier of the MIS sub-account.
+          maxLength: 11
+          minLength: 11
+          type: string
+          example: HW00013451B
+        percentage:
+          type: number
+          format: double
+          description: >-
+            The percentage of the movement to allocate to this sub-account. All allocation
+            percentages must sum to 100.
+          minimum: 0
+          maximum: 100
+          example: 20
 
     Value:
       description: >-
