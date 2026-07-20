@@ -2,11 +2,7 @@
 
 Changelog for v0.8.13 API spec
 
-- Corrected the Investor status enumerations to match the Data Lists Investor-Statuses API values (HWIT-10250)
-- Renamed Investor.status values: INCEPTED -> ACTIVE, NEW -> PENDING, FAS -> FEE_AGREEMENT_SENT
-- Added BLOCKED to Investor.status
-- Removed FROZEN, PRE_AML, FLD_AML, WAITING_AML_DOCUMENTATION and ARCHIVED from Investor.status (not in the Data List)
-- InvestorPatch.status now accepts ACTIVE (was INCEPTED), DECEASED, NON_UK_RESIDENT; updated the PATCH /investors/{investorId} description to match
+- Corrected the Investor status enumerations
 
 Changelog for v0.8.12 API spec
 
