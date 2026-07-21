@@ -10536,11 +10536,6 @@ components:
       type: object
       additionalProperties: false
       properties:
-        movementId:
-          format: int64
-          description: The identifier of the movement to update.
-          type: integer
-          example: 2
         frequency:
           description: >-
             The frequency of this specific money movement. One Off Direct Debit contributions are
