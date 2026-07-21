@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.13 API spec
+
+- Corrected the Investor status enumerations
+
 Changelog for v0.8.12 API spec
 
  - Made income option in account read-only

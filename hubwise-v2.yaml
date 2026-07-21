@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.12
+  version: 0.8.13
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -1005,7 +1005,7 @@ paths:
       summary: Updates an investor
       description: >-
         Allows the modification of some of the investor details, including updating the
-        investor status. Only INCEPTED, DECEASED and NON_UK_RESIDENT can be set via the API.
+        investor status. Only ACTIVE, DECEASED and NON_UK_RESIDENT can be set via the API.
       operationId: modifyInvestor
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -8647,15 +8647,15 @@ components:
           type: string
           format: date
           readOnly: true
-        withdrawalFrequency: 
+        withdrawalFrequency:
           type: string
           readOnly: true
-          enum: 
+          enum:
             - MONTHLY
             - QUARTERLY
             - HALF_YEARLY
             - YEARLY
-        accountNumber: 
+        accountNumber:
           type: string
           pattern: ^[0-9]{8}$
           readOnly: true
@@ -9239,24 +9239,19 @@ components:
           type: string
           description: The current status of the investor
           readOnly: true
-          example: NEW
+          example: PENDING
           enum:
-            - NEW
-            - DELETED
-            - INCEPTED
-            - SUSPENDED
-            - FROZEN
-            - DECEASED
             - PENDING
-            - PRE_AML
+            - DELETED
+            - ACTIVE
+            - SUSPENDED
+            - DECEASED
+            - BLOCKED
             - REFERRED
-            - FLD_AML
             - INTENTION_TO_CLOSE
-            - WAITING_AML_DOCUMENTATION
             - CLOSED
-            - ARCHIVED
             - NON_UK_RESIDENT
-            - FAS
+            - FEE_AGREEMENT_SENT
         externalReferences:
           type: array
           items:
@@ -9287,7 +9282,7 @@ components:
           description: >-
             The status to update the investor to. Only the following statuses can be set via the API.
           enum:
-            - INCEPTED
+            - ACTIVE
             - DECEASED
             - NON_UK_RESIDENT
           type: string
@@ -9499,7 +9494,7 @@ components:
           description: >-
             Array of model allocations for a Multiple Investment Strategy (MIS) account. Each entry
             specifies either a sub-account model or a direct instrument list, along with its
-            percentage of the total portfolio. 
+            percentage of the total portfolio.
           type: array
           minItems: 2
           items:
