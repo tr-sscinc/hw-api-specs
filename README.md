@@ -3,6 +3,8 @@
 Changelog for v0.8.14 API spec
 
 - Added money movements MIS changes
+- Addressed logical issues with some descriptions
+- Restrict investorId / advisorId to max length 11
 
 Changelog for v0.8.13 API spec
 

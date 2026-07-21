@@ -702,7 +702,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HWI04003219
       responses:
         "200":
@@ -1015,7 +1015,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HWI04003219
       requestBody:
         content:
@@ -1121,7 +1121,7 @@ paths:
 
       responses:
         "200":
-          description: Invesstor modified successfully
+          description: Investor modified successfully
           headers:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
@@ -1260,7 +1260,7 @@ paths:
     post:
       tags:
         - Investors
-      summary: Create an investors vulnerabilities
+      summary: Create an investor's vulnerabilities
       description: >
         Creates one or more characteristics of vulnerability records for an existing investor.
 
@@ -1285,7 +1285,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HWI04003219
       requestBody:
         content:
@@ -1390,7 +1390,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HWI04003219
       responses:
         "200":
@@ -1470,7 +1470,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HWI04003219
       requestBody:
         content:
@@ -1555,7 +1555,7 @@ paths:
     post:
       tags:
         - Investors
-      summary: Create an investors correspondences
+      summary: Create an investor's correspondences
       description: >
         Creates one or more correspondence preference records for an existing investor.
         
@@ -1580,7 +1580,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HWI04003219
       requestBody:
         content:
@@ -1662,18 +1662,18 @@ paths:
         - Investors
       summary: Retrieves the correspondence preferences of an investor
       description: 
-        Retrieves the correspondences of vulnerabilities for a specific investor record.
+        Retrieves the special correspondence needs for a specific investor record.
 
 
-        This endpoint supports the retrieval of one or more correspondences of vulnerabilities for Individual and Court Appointed Deputy investors using their unique SS&C Wealth Platform Investor ID.
+        This endpoint supports the retrieval of one or more special correspondence needs for Individual and Court Appointed Deputy investors using their unique SS&C Wealth Platform Investor ID.
         
         
-        The response includes the investors correspondences of vulnerabilities, along with the associated start date, and expiry date. All correspondences associated with the investor will be returned, regardless of their start date or expiry date.
+        The response includes the investors special correspondence needs, along with the associated start date, and expiry date. All correspondences associated with the investor will be returned, regardless of their start date or expiry date.
         
 
-        The endpoint must be called once for each investor record to be retrieved.  If the investor exists but has no correspondences of vulnerabilities, a valid response with empty collections will be returned.
+        The endpoint must be called once for each investor record to be retrieved.  If the investor exists but has no special correspondence needs, a valid response with empty collections will be returned.
        
-      operationId: retrieveInvestorCorresponsences
+      operationId: retrieveInvestorCorrespondences
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: investorId
@@ -1682,7 +1682,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HWI04003219
       responses:
         "200":
@@ -1759,7 +1759,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HWI04003219
       requestBody:
         content:
@@ -1842,7 +1842,7 @@ paths:
     delete:
       tags:
         - Investors
-      summary: Delete an Investors Taxation
+      summary: Delete an Investor's Taxation
       description: This endpoint allows the hard deletion of a single taxation record associated with a specific investor. Primary taxations cannot be deleted unless another taxation is promoted to primary.
       operationId: removeInvestorTaxation
       parameters:
@@ -1851,6 +1851,7 @@ paths:
           required: true
           schema:
             type: string
+            maxLength: 11
           example: HWI04003219
         - name: taxationId
           in: path
@@ -1859,21 +1860,8 @@ paths:
             type: integer
           example: 1
       responses:
-        '200':
+        '204':
           description: Taxation deleted successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeletedInfo'
-              examples:
-                Ex1:
-                  summary: Taxation deleted
-                  value:
-                    {
-                      "records": 1,
-                      "accountId": "HW00013451A",
-                      "ids": [1]
-                    }
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -1890,7 +1878,7 @@ paths:
     delete:
       tags:
         - Investors
-      summary: Delete an Investors nationality
+      summary: Delete an Investor's Nationality
       description: This endpoint allows the hard deletion of a single nationality record associated with a specific investor. Primary nationalities cannot be deleted unless another nationality is promoted to primary. Nationalities cannot be deleted for Corporates and Trusts.
       operationId: removeInvestorNationality
       parameters:
@@ -1899,6 +1887,7 @@ paths:
           required: true
           schema:
             type: string
+            maxLength: 11
           example: HWI04003219
         - name: nationalityId
           in: path
@@ -1907,21 +1896,8 @@ paths:
             type: integer
           example: 1
       responses:
-        '200':
+        '204':
           description: Nationality deleted successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeletedInfo'
-              examples:
-                Ex1:
-                  summary: Nationality deleted
-                  value:
-                    {
-                      "records": 1,
-                      "accountId": "HW00013451A",
-                      "ids": [1]
-                    }
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -1938,7 +1914,7 @@ paths:
     delete:
       tags:
         - Investors
-      summary: Delete an Investors Address
+      summary: Delete an Investor's Address
       description: This endpoint allows the soft deletion of a single address record associated with a specific investor. Primary addresses cannot be deleted unless another address is promoted to primary.
       operationId: removeInvestorAddress
       parameters:
@@ -1948,6 +1924,7 @@ paths:
           required: true
           schema:
             type: string
+            maxLength: 11
           example: HWI04003219
         - name: addressId
           in: path
@@ -1957,21 +1934,8 @@ paths:
             type: integer
           example: 1
       responses:
-        '200':
+        '204':
           description: Address deleted successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeletedInfo'
-              examples:
-                Ex1:
-                  summary: Address deleted
-                  value:
-                    {
-                      "records": 1,
-                      "accountId": "HW00013451A",
-                      "ids": [1]
-                    }
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -2565,7 +2529,7 @@ paths:
     get:
       tags:
         - Accounts
-      summary: Retrieve an investment account by it's ID.
+      summary: Retrieve an investment account by its ID.
       description: 
         Retrieves the details of a specific investment account record.
 
@@ -2587,7 +2551,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       responses:
         "200":
@@ -2737,9 +2701,9 @@ paths:
       description:
         Updates an activated investment account.
 
-        This endpoint supports the modification of the account name for activated Individual, Corporate, Trust, and Joint accounts. If an investors name is being updated, the account name should be updated in line with this where applicable.
-
-        The account name is used in documentation and displayed in the Adviser Portal.
+        This endpoint supports the modification of the account name or status for activated Individual, Corporate, Trust, and Joint accounts. 
+        
+        If an investors name is being updated, the account name should be updated in line with this where applicable. The account name is used in documentation and displayed in the Adviser Portal.
 
 
         1.	Corporate or Trust accounts - Organisation name
@@ -2765,7 +2729,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -2906,7 +2870,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -3166,7 +3130,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       responses:
         "200":
@@ -3308,7 +3272,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -3599,7 +3563,7 @@ paths:
         required: true
       responses:
         "201":
-          description: Money Movement(s) created successfully or redirect
+          description: Money Movement(s) created successfully
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
@@ -3928,7 +3892,7 @@ paths:
         This endpoint supports the retrieval of an investment accounts money movements (contributions and withdrawals) using the unique SS&C Wealth Platform Account ID.
         
         
-        The response includes the investors core movement information, such as the type of movement, payment method, frequency, and start and end dates. It also provides details of the associated bank account, any applicable fees, and where relevant to pension account types, any associated HMRC protection details.
+        The response includes the account's core movement information, such as the type of movement, payment method, frequency, and start and end dates. It also provides details of the associated bank account, any applicable fees, and where relevant to pension account types, any associated HMRC protection details.
 
 
         The endpoint must be called once for each investment accounts money movements to be retrieved.
@@ -3941,11 +3905,11 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       responses:
         "200":
-          description: Money Movemens retrieved successfully
+          description: Money Movements retrieved successfully
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
@@ -4112,16 +4076,15 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
         - name: moneyMovementId
           in: path
           description: Unique SS&C Wealth Platform Money Movement identifier
           required: true
           schema:
-            type: string
-            maxLength: 14
-          example: '1'
+            type: integer
+          example: 1
       requestBody:
         content:
           application/json:
@@ -4171,7 +4134,7 @@ paths:
                     ]
                   }
               Ex3:
-                summary: Update Regular Contirubtion Bank Details
+                summary: Update Regular Contribution Bank Details
                 value:
                   {
                     "moneyMovements": [
@@ -4340,16 +4303,15 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
         - name: moneyMovementId
           in: path
           description: Unique SS&C Wealth Platform Money Movement identifier
           required: true
           schema:
-            type: string
-            maxLength: 14
-          example: '1'
+            type: integer
+          example: 1
       responses:
         "204":
           description: Money movement removed successfully
@@ -4414,7 +4376,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -4727,11 +4689,11 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       responses:
         "200":
-          description: Transfers created successfully
+          description: Transfers retrieved successfully
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
@@ -5240,7 +5202,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -5421,7 +5383,7 @@ paths:
     get:
       tags:
         - Accounts
-      summary: Get account fees
+      summary: Retrieves account fees
       description: 
         Retrieves the account level fees against a specific investment account record.
 
@@ -5443,7 +5405,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       responses:
         "200":
@@ -5557,7 +5519,7 @@ paths:
         
         Archives an existing active fee record for an active investment account.
 
-        This endpoint supports the modification of the end date for an active account fee. The end date can only be set to yesterdays date. To add a new fee the Create fee API will need to be used. 
+        This endpoint supports the modification of the end date for an active account fee. The end date can only be set to yesterday's date. To add a new fee the Create fee API will need to be used. 
         
         The end date can only be set for the following fee types:
 
@@ -5567,7 +5529,7 @@ paths:
 
         3. INVESTMENT_MANAGEMENT
 
-      operationId: modifyFee
+      operationId: archiveAccountFee
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
@@ -5576,16 +5538,15 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW04003259A
         - name: feeId
           in: path
           description: Unique SS&C Wealth Platform Fee identifier
           required: true
           schema:
-            type: string
-            maxLength: 14
-          example: '1'
+            type: integer
+          example: 1
       requestBody:
         content:
           application/json:
@@ -5681,7 +5642,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -5792,7 +5753,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       responses:
         "200":
@@ -5982,7 +5943,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -6227,7 +6188,7 @@ paths:
     get:
       tags:
         - Accounts
-      summary: Get Third Parties on an account
+      summary: Retrieves Third Parties on an account
       description: >-
         Returns third parties linked to an Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
 
@@ -6248,7 +6209,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       responses:
         "200":
@@ -6369,7 +6330,7 @@ paths:
     patch:
       tags:
         - Accounts
-      summary: Third Parties on an account
+      summary: Modify third parties on an account
       description: >-
         Allows partial updates to existing third parties associated with a specified investment account.
         
@@ -6401,7 +6362,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -6512,7 +6473,7 @@ paths:
         - Accounts
       summary: Update Beneficiaries on an account
       description: >-
-        Supports full replacement of all third party beneficies associated with a specified pension account.
+        Supports full replacement of all third party beneficiaries associated with a specified pension account.
 
 
         This endpoint is intended for pension accounts that already have one or more beneficiaries. The request must include the complete set of beneficiaries to be associated with the account. Any existing beneficiaries that should be retained must be included in the request, as the submitted list will replace the current set.
@@ -6528,7 +6489,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -6593,7 +6554,7 @@ paths:
                   }
       responses:
         "200":
-          description: Beneficiaries resplaced successfully.
+          description: Beneficiaries replaced successfully.
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
@@ -6673,7 +6634,7 @@ paths:
     post:
       tags:
         - Accounts
-      summary: Create Third Parties on an account
+      summary: Create portfolio adjustments
       description: >-
         This endpoint is used to adjust portfolio holdings.
 
@@ -6813,7 +6774,7 @@ paths:
           required: true
           schema:
             type: string
-            maxLength: 14
+            maxLength: 11
           example: HW00013451A
       requestBody:
         content:
@@ -8681,12 +8642,12 @@ components:
           type: boolean
           example: true
         acknowledgementReason:
-          description: The declaration acknowledgement reason, if the decalaration has not been agreed
+          description: The declaration acknowledgement reason, if the declaration has not been agreed
           type: string
           maxLength: 500
 
     LinkedInvestor:
-      description: And Investor linked to the account and their relationship to the account
+      description: An Investor linked to the account and their relationship to the account
       required:
         - id
         - relationship
@@ -8720,7 +8681,7 @@ components:
           example: 20000
         subscribedAmount:
           type: number
-          description: The amoune the investor has subscribed in current tax year
+          description: The amount the investor has subscribed in current tax year
           readOnly: true
           example: 0
       description: The investor allowance information for the current tax year for and ISA or JISA
@@ -11425,33 +11386,6 @@ components:
         address:
           $ref: "#/components/schemas/AddressPatch"
 
-    DeletedInfo:
-      type: object
-      description: Information once a delete operation is performed.
-      additionalProperties: false
-      properties:
-        records:
-          maxLength: 3
-          type: integer
-          description: Number of records deleted during the delete operation
-          readOnly: true
-          example: 2
-        accountId:
-          maxLength: 11
-          type: string
-          description: Account for which the action is being called.
-          format: string
-          readOnly: true
-          example: HW00013451A
-        ids:
-          type: array
-          description: The ids that were deleted.
-          readOnly: true
-          items:
-            type: integer
-            description: List of ids which are being deleted.
-            readOnly: true
-
     PortfolioAdjustment:
       type: object
       additionalProperties: false
@@ -12173,7 +12107,7 @@ components:
         Examples of `Bad Request` problem detail responses:
 
          - Missing or invalid request header parameter
-         - Missing os invalid query parameter         
+         - Missing or invalid query parameter         
          - Missing or invalid request body property
       headers:
         Request-Id:
@@ -12238,7 +12172,7 @@ components:
               $ref: '#/components/examples/400-InvalidRequestHeader'
     
     401-Unauthorized:
-      description: Unauththenticated request
+      description: Unauthenticated request
       headers:
         Request-Id:
           $ref: '#/components/headers/Request-Id'
@@ -12263,7 +12197,7 @@ components:
                 }
                 
     403-Forbidden:
-      description: Unorthorised request
+      description: Unauthorized request
       headers:
         Request-Id:
           $ref: '#/components/headers/Request-Id'
