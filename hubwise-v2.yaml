@@ -1934,7 +1934,7 @@ paths:
             type: integer
           example: 1
       responses:
-        '200':
+        '204':
           description: Address deleted successfully.
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
