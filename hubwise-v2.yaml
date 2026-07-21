@@ -10571,16 +10571,6 @@ components:
             - EMPLOYER
           type: string
           example: SELF
-        reference:
-          description: A reference associated with this movement.
-          type: string
-          pattern: ^[A-Z0-9]{2}-[A-Z0-9]+-\d+$
-          example: HW-04003258A-2
-        isMaximum:
-          description: >-
-            Indicates if the maximum allowable amount should be considered. Applicable for
-            draw-downs only.
-          type: boolean
         value:
           $ref: "#/components/schemas/ValuePatch"
         bank:
