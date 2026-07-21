@@ -13,7 +13,6 @@ servers:
 tags:
   - name: Investors
   - name: Accounts
-  - name: MoneyMovement
   - name: Fee Groups
   - name: Illustrations
 
@@ -3275,7 +3274,7 @@ paths:
     
     post:
       tags:
-        - MoneyMovement
+        - Accounts
       summary: Create Money Movement(s)
       description: |
         Creates one or more money movement transaction records for an existing investment account.
@@ -3300,52 +3299,6 @@ paths:
         
         
         The account record and bank details must exist before creating money movements.
-
-
-        ### Possible errors
-
-        Validation failures (schema / field constraints) are returned as `HWA-EXCEPTION-001`. The
-        business rules below are enforced during processing.
-
-        | Error code | HTTP | Meaning |
-        |---|---|---|
-        | HWA-EXCEPTION-001 | 400 | Validation error. Includes: contributionMethod mandatory for CONTRIBUTIONS; value mandatory for CONTRIBUTIONS; regular contributions must be paid by Direct Debit; single Direct Debit contributions are not supported; fee instalments only for regular Direct Debit; bank mandatory for all contributions except cheque; bank details cannot be provided for cheque contributions; contributionMethod must be null for withdrawals; bank mandatory for withdrawals; fee can only be specified for contributions; sourceOfFunds can only be provided for contributions; nextDate mandatory when frequency is not ONE_OFF; endDate must be after start date; endDate only allowed for FLEXI_ACCESS_PCLS/FLEXI_ACCESS_INCOME/UFPLS; HMRC protection only allowed for FLEXI_ACCESS_PCLS/FLEXI_ACCESS_INCOME/UFPLS; copyP45Provided only applicable for UFPLS or FLEXI_ACCESS_INCOME; isMaximum not supported for UFPLS. |
-        | HWA-MOVEMENT-001 | 400 | Movement type is only applicable to PENSION products. |
-        | HWA-MOVEMENT-002 | 400 | Withdrawals are not permitted for pension products. |
-        | HWA-MOVEMENT-006 | 400 | Money cannot be added to the account. |
-        | HWA-MOVEMENT-008 | 400 | Third Party ID not found. |
-        | HWA-MOVEMENT-011 | 400 | The source of funds is mandatory for one off contributions. |
-        | HWA-MOVEMENT-012 | 400 | No item code found for the supplied Source of Funds type. |
-        | HWA-MOVEMENT-013 | 400 | A request for a maximum withdrawal must include non-Daily Traded Assets. |
-        | HWA-MOVEMENT-014 | 400 | The maximum number of regular contributions has been reached. |
-        | HWA-MOVEMENT-015 | 400 | The maximum number of one off contributions has been reached. |
-        | HWA-MOVEMENT-016 | 400 | The contribution is below the minimum allowed for this contribution frequency. |
-        | HWA-MOVEMENT-017 | 400 | Contribution amount should not exceed the annual limit. |
-        | HWA-MOVEMENT-018 | 400 | Third Party ID is required for employer payments. |
-        | HWA-MOVEMENT-019 | 400 | Regular contributions must be paid by Direct Debit. |
-        | HWA-MOVEMENT-020 | 400 | Single withdrawals are not permitted for a new application. |
-        | HWA-MOVEMENT-021 | 400 | All regular money movements must include non-daily traded assets. |
-        | HWA-MOVEMENT-022 | 400 | You must either include a value in the request or select a full/maximum withdrawal. |
-        | HWA-MOVEMENT-023 | 400 | End date must be after start date. |
-        | HWA-MOVEMENT-024 | 400 | Withdrawals can only be paid to the investor's bank account. |
-        | HWA-MOVEMENT-025 | 400 | The withdrawal requested is below the minimum allowed. |
-        | HWA-MOVEMENT-026 | 400 | This withdrawal can't be processed because there are insufficient available funds. |
-        | HWA-MOVEMENT-035 | 400 | A required field is missing. |
-        | HWA-MOVEMENT-036 | 400 | hmrcProtection is only applicable for pension products. |
-        | HWA-MOVEMENT-041 | 400 | Source of funds is not permitted for Trust or Corporate account entity types. |
-        | HWA-MOVEMENT-045 | 400 | Employer payer is not supported for GIA products. |
-        | HWA-MOVEMENT-046 | 400 | Source of funds is not permitted for Trust or Corporate account entity types. |
-        | HWA-MOVEMENT-047 | 400 | Source of funds is not applicable for this movement. |
-        | HWA-MOVEMENT-048 | 400 | (MIS) Contribution allocations must add up to 100% across all sub-accounts. |
-        | HWA-MOVEMENT-049 | 400 | (MIS) Invalid sub-Account ID. |
-        | HWA-MOVEMENT-050 | 400 | (MIS) Disinvestments must add up to 100% across all sub-accounts. |
-        | HWA-MOVEMENT-051 | 400 | (MIS) All allocations must be to a unique sub-account. |
-        | HWA-MOVEMENT-052 | 400 | isMaximum is not supported for UFPLS. |
-        | HWA-FEE-007 | 400 | Either amount or percentage fees are allowed, but not both. |
-        | HWA-FEE-008 | 400 | The fee specified is above the maximum allowed. |
-        | HWA-BANK-002 | 400 | Bank account not found for the account. |
-        | HWA-ACCOUNT-026 | 400 | The value currency does not match the base currency of the account. |
-        | HWA-ACCOUNT-001 | 404 | The account ID does not exist. |
       operationId: createAccountMovements
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -3954,45 +3907,7 @@ paths:
                       ]
                     }
         "400":
-          description: |
-            The request was malformed or violated a business rule. For MIS accounts this includes
-            allocation errors (percentages not totalling 100%, an invalid sub-account, or a
-            duplicated sub-account). Returned as application/problem+json, or as application/json
-            when the caller requests that media type.
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-              examples:
-                AllocationsTotal:
-                  $ref: '#/components/examples/mm-400-AllocationsTotal'
-                Disinvestment100:
-                  $ref: '#/components/examples/mm-400-Disinvestment100'
-                InvalidSubAccount:
-                  $ref: '#/components/examples/mm-400-InvalidSubAccount'
-                DuplicateSubAccount:
-                  $ref: '#/components/examples/mm-400-DuplicateSubAccount'
-                ValueOrMaximum:
-                  $ref: '#/components/examples/mm-400-ValueOrMaximum'
-                RegularDirectDebit:
-                  $ref: '#/components/examples/mm-400-RegularDirectDebit'
-                Validation:
-                  $ref: '#/components/examples/mm-400-Validation'
-                MissingBodyProperty:
-                  $ref: '#/components/examples/400-MissingBodyProperty'
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                AllocationsTotal:
-                  $ref: '#/components/examples/mm-400-AllocationsTotal-json'
-                InvalidSubAccount:
-                  $ref: '#/components/examples/mm-400-InvalidSubAccount-json'
-                Validation:
-                  $ref: '#/components/examples/mm-400-Validation-json'
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4004,7 +3919,7 @@ paths:
 
     get:
       tags:
-        - MoneyMovement
+        - Accounts
       summary: Retrieves the money movements on an account
       description: |-
         Retrieves the money movements against a specific investment account record.
@@ -4017,24 +3932,6 @@ paths:
 
 
         The endpoint must be called once for each investment accounts money movements to be retrieved.
-
-
-        ### Possible errors
-
-        When a supplied filter (`movementId`, `status`, `contributionMethod`, `type`) matches no
-        movements, the specific business error below is returned. Malformed query parameters
-        (out-of-range page/size/movementId, or an unsupported enum value) are returned as
-        `HWA-EXCEPTION-001`. When no movements exist at all for the account the endpoint returns
-        `204 No Content` rather than an error.
-
-        | Error code | HTTP | Meaning |
-        |---|---|---|
-        | HWA-EXCEPTION-001 | 400 | Validation error on a query parameter (e.g. movementId out of range, or an unsupported status/contributionMethod/type value). |
-        | HWA-MOVEMENT-031 | 400 | The supplied movement ID cannot be found for this account. |
-        | HWA-MOVEMENT-032 | 400 | No movements with the supplied status have been found. |
-        | HWA-MOVEMENT-033 | 400 | No movements with the supplied contributionMethod have been found. |
-        | HWA-MOVEMENT-034 | 400 | No movements with the supplied type have been found. |
-        | HWA-ACCOUNT-001 | 404 | The account ID does not exist. |
       operationId: retrieveAccountMovements
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4185,28 +4082,7 @@ paths:
                       ]
                     }
         "400":
-          description: |
-            A supplied query filter was invalid — for example an unsupported `status`,
-            `contributionMethod`, or `type` value. Returned as application/problem+json, or as
-            application/json when the caller requests that media type.
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-              examples:
-                InvalidTypeFilter:
-                  $ref: '#/components/examples/mm-400-InvalidTypeFilter'
-                InvalidQueryParam:
-                  $ref: '#/components/examples/400-InvalidQueryParam'
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -4220,32 +4096,13 @@ paths:
     
     patch:
       tags:
-        - MoneyMovement
+        - Accounts
       summary: Update regular active money movements
       description: |-
 
         Update an existing existing regular Contributions, Withdrawals and SIPP Withdrawal Arrangements.
 
         This endpoint supports the modification of the frequency, amount, start date, bank account and fee details. To add a new money movement the Create Money Movement API will need to be used.
-
-
-        ### Possible errors
-
-        Only the fields frequency, nextDate, endDate, value, bank, payer, reference, fee and
-        isMaximum may be amended. Supplying any other field is rejected with `HWA-MOVEMENT-040`.
-        Malformed field values are returned as `HWA-EXCEPTION-001`.
-
-        | Error code | HTTP | Meaning |
-        |---|---|---|
-        | HWA-EXCEPTION-001 | 400 | Validation error on a supplied field (e.g. reference does not match the required pattern). |
-        | HWA-MOVEMENT-037 | 400 | Pending movements cannot be updated. |
-        | HWA-MOVEMENT-038 | 400 | Completed or Archived movements cannot be updated. |
-        | HWA-MOVEMENT-040 | 400 | A field that cannot be updated was supplied. |
-        | HWA-MOVEMENT-045 | 400 | Employer payer is not supported for GIA products. |
-        | HWA-BANK-002 | 400 | Bank account not found for the account (when changing the bank). |
-        | HWA-MOVEMENT-039 | 404 | Only regular movements can be updated. |
-        | HWA-MOVEMENT-004 | 404 | The movement could not be found for this account. |
-        | HWA-ACCOUNT-001 | 404 | The account ID does not exist. |
       operationId: modifyMoneyMovement
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4457,84 +4314,23 @@ paths:
                       ]
                     }
         "400":
-          description: |
-            The update was malformed or not permitted — for example an attempt to update a pending
-            movement, a completed or archived movement, or a field that cannot be amended. Returned
-            as application/problem+json, or as application/json when the caller requests that media
-            type.
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-              examples:
-                CannotUpdatePending:
-                  $ref: '#/components/examples/mm-400-CannotUpdatePending'
-                FieldCannotBeUpdated:
-                  $ref: '#/components/examples/mm-400-FieldCannotBeUpdated'
-                Validation:
-                  $ref: '#/components/examples/mm-400-Validation'
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                Validation:
-                  $ref: '#/components/examples/mm-400-Validation-json'
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          description: |
-            The movement could not be found, or is not a regular movement that can be updated
-            (for example a ONE_OFF movement). Returned as application/problem+json, or as
-            application/json when the caller requests that media type.
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-              examples:
-                OnlyRegularUpdatable:
-                  $ref: '#/components/examples/mm-404-OnlyRegularUpdatable'
-                MovementNotFound:
-                  $ref: '#/components/examples/mm-404-MovementNotFound'
-                AccountNotFound:
-                  $ref: '#/components/examples/mm-404-AccountNotFound'
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                MovementNotFound:
-                  $ref: '#/components/examples/mm-404-MovementNotFound-json'
-                AccountNotFound:
-                  $ref: '#/components/examples/mm-404-AccountNotFound-json'
+          $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
 
     delete:
       tags:
-        - MoneyMovement
+        - Accounts
       summary: Delete money movements
       description: |-
 
         Archives (soft-deletes) an existing money movement against an investment account.
-
-
-        ### Possible errors
-
-        | Error code | HTTP | Meaning |
-        |---|---|---|
-        | HWA-MOVEMENT-042 | 400 | No movement found with those details. |
-        | HWA-MOVEMENT-043 | 400 | The movement has already been archived. |
-        | HWA-MOVEMENT-044 | 400 | One-off movements can only be deleted while the account is pending. |
-        | HWA-ACCOUNT-001 | 404 | The account ID does not exist. |
       operationId: removeMoneyMovement
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4560,54 +4356,12 @@ paths:
           headers:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
-        "400":
-          description: |
-            The movement cannot be deleted — for example it has already been archived, or it is a
-            one-off movement on an account that is no longer pending. Returned as
-            application/problem+json, or as application/json when the caller requests that media
-            type.
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-              examples:
-                MovementNotFound:
-                  $ref: '#/components/examples/mm-400-MovementNotFound'
-                AlreadyArchived:
-                  $ref: '#/components/examples/mm-400-AlreadyArchived'
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                MovementNotFound:
-                  $ref: '#/components/examples/mm-400-MovementNotFound-json'
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          description: |
-            The account ID does not exist. Returned as application/problem+json, or as
-            application/json when the caller requests that media type.
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-              examples:
-                AccountNotFound:
-                  $ref: '#/components/examples/mm-404-AccountNotFound'
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                AccountNotFound:
-                  $ref: '#/components/examples/mm-404-AccountNotFound-json'
+          $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -12429,231 +12183,6 @@ components:
         title: Internal Server Error
         status: 500
         detail: HWA-EXCEPTION-003 - An unexpected technical error occurred. Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After response header is returned, do not retry the call.
-
-    mm-400-AllocationsTotal:
-      summary: MIS contribution allocations do not total 100%
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-048 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements
-        errors:
-          - detail: Contribution allocations must add up to 100% across all sub-accounts.
-            pointer: "/moneyMovements/0/allocations/percentage"
-
-    mm-400-AllocationsTotal-json:
-      summary: MIS contribution allocations do not total 100% (application/json)
-      value:
-        errorCode: HWA-MOVEMENT-048
-        message: Business logic error encountered.
-        errors:
-          - field: allocations.percentage
-            resource: /accounts/HW04003260A/money-movements
-            message: Contribution allocations must add up to 100% across all sub-accounts.
-
-    mm-400-InvalidSubAccount:
-      summary: Allocation references a sub-account that is not valid for the primary account
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-049 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements
-        errors:
-          - detail: "Invalid sub-Account ID: 'HW04003299B'."
-            pointer: "/moneyMovements/0/allocations/accountId"
-
-    mm-400-InvalidSubAccount-json:
-      summary: Invalid sub-account ID (application/json)
-      value:
-        errorCode: HWA-MOVEMENT-049
-        message: Business logic error encountered.
-        errors:
-          - field: allocations.accountId
-            resource: /accounts/HW04003260A/money-movements
-            message: "Invalid sub-Account ID: 'HW04003299B'."
-
-    mm-400-DuplicateSubAccount:
-      summary: The same sub-account appears more than once in allocations
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-051 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements
-        errors:
-          - detail: All allocations must be to a unique sub-account.
-            pointer: "/moneyMovements/0/allocations/accountId"
-
-    mm-400-Disinvestment100:
-      summary: MIS disinvestment (withdrawal) allocations do not total 100%
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-050 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements
-        errors:
-          - detail: Disinvestments must add up to 100% across all sub-accounts.
-            pointer: "/moneyMovements/0/allocations/percentage"
-
-    mm-400-ValueOrMaximum:
-      summary: Neither a value nor a full/maximum withdrawal was supplied
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-022 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements
-        errors:
-          - detail: You must either include a value in the request or select a full/maximum withdrawal.
-            pointer: "/moneyMovements/0/value"
-
-    mm-400-RegularDirectDebit:
-      summary: Regular contribution not paid by Direct Debit
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-019 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements
-        errors:
-          - detail: Regular contributions must be paid by Direct Debit.
-            pointer: "/moneyMovements/0/contributionMethod"
-
-    mm-400-CannotUpdatePending:
-      summary: A pending movement cannot be updated
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-037 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements/2
-        errors:
-          - detail: Pending movements cannot be updated.
-            pointer: "/moneyMovements/0"
-
-    mm-400-FieldCannotBeUpdated:
-      summary: A field that cannot be amended was supplied on update
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-040 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements/2
-        errors:
-          - detail: The field cannot be updated.
-            pointer: "/moneyMovements/0/hmrcProtection"
-
-    mm-400-InvalidTypeFilter:
-      summary: Unsupported value supplied for the type query filter
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-034 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements
-        errors:
-          - detail: No movements with a type of TRANSFER have been found.
-            parameter: type
-
-    mm-400-AlreadyArchived:
-      summary: The movement has already been archived
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-043 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements/2
-        errors:
-          - detail: The movement has already been archived.
-            parameter: moneyMovementId
-
-    mm-400-MovementNotFound:
-      summary: No movement found for the supplied account and movement ID
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-MOVEMENT-042 - Business logic error encountered.
-        instance: /accounts/HW04003260A/money-movements/999
-        errors:
-          - detail: No movement found with those details.
-            parameter: moneyMovementId
-
-    mm-400-MovementNotFound-json:
-      summary: No movement found for the supplied account and movement ID (application/json)
-      value:
-        errorCode: HWA-MOVEMENT-042
-        message: Business logic error encountered.
-        errors:
-          - field: moneyMovementId
-            resource: /accounts/HW04003260A/money-movements/999
-            message: No movement found with those details.
-
-    mm-404-MovementNotFound:
-      summary: The movement could not be found for this account
-      value:
-        title: Not Found
-        status: 404
-        detail: HWA-MOVEMENT-004 - The requested resource could not be found.
-        instance: /accounts/HW04003260A/money-movements/999
-        errors:
-          - detail: "Some Money Movement IDs (999) are invalid or do not belong to the specified account."
-            pointer: "/moneyMovements/0/id"
-
-    mm-404-MovementNotFound-json:
-      summary: The movement could not be found for this account (application/json)
-      value:
-        errorCode: HWA-MOVEMENT-004
-        message: The requested resource could not be found.
-        errors:
-          - field: id
-            resource: /accounts/HW04003260A/money-movements/999
-            message: "Some Money Movement IDs (999) are invalid or do not belong to the specified account."
-
-    mm-404-AccountNotFound:
-      summary: The account ID does not exist
-      value:
-        title: Not Found
-        status: 404
-        detail: HWA-ACCOUNT-001 - The requested resource could not be found.
-        instance: /accounts/HW04003299A/money-movements/2
-        errors:
-          - detail: "Account ID 'HW04003299A' does not exist."
-            parameter: accountId
-
-    mm-404-AccountNotFound-json:
-      summary: The account ID does not exist (application/json)
-      value:
-        errorCode: HWA-ACCOUNT-001
-        message: The requested resource could not be found.
-        errors:
-          - field: accountId
-            resource: /accounts/HW04003299A/money-movements/2
-            message: "Account ID 'HW04003299A' does not exist."
-
-    mm-400-Validation:
-      summary: Schema / field validation failure
-      value:
-        title: Bad Request
-        status: 400
-        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
-        instance: /accounts/HW04003260A/money-movements
-        errors:
-          - detail: contributionMethod is mandatory for CONTRIBUTIONS type.
-            pointer: "/moneyMovements/0/contributionMethod"
-
-    mm-400-Validation-json:
-      summary: Schema / field validation failure (application/json)
-      value:
-        errorCode: HWA-EXCEPTION-001
-        message: Validation Error(s) occurred.
-        errors:
-          - field: contributionMethod
-            resource: /accounts/HW04003260A/money-movements
-            message: contributionMethod is mandatory for CONTRIBUTIONS type.
-
-    mm-404-OnlyRegularUpdatable:
-      summary: Only regular movements can be updated (e.g. a ONE_OFF movement)
-      value:
-        title: Not Found
-        status: 404
-        detail: HWA-MOVEMENT-039 - The requested resource could not be found.
-        instance: /accounts/HW04003260A/money-movements/2
-        errors:
-          - detail: Only regular movements can be updated.
-            pointer: "/moneyMovements/0"
 
   responses:
     
