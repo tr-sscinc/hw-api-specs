@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.13
+  version: 0.8.14
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -3425,6 +3425,7 @@ paths:
                         },
                         "nextDate": "2026-02-02",
                         "investmentInstruction": "INVEST_IN_MODEL",
+                        "thirdPartyId": "1",
                         "bank": {
                           "number": "50220369",
                           "sortCode": "700125"
@@ -3443,7 +3444,7 @@ paths:
                     ]
                   }
               Ex3:
-                summary: create a one off and regular withdrawal for a GIA/ISA 
+                summary: create a one off and regular withdrawal for a GIA/ISA
                 value:
                   {
                     "moneyMovements": [
@@ -3499,6 +3500,7 @@ paths:
                         "frequency": "ONE_OFF",
                         "nextDate": "2026-02-02",
                         "isMaximum": true,
+                        "includeNonDailyAssets": true,
                         "bank": {
                           "number": "50220369",
                           "sortCode": "700125"
@@ -3527,15 +3529,63 @@ paths:
                           "currency": "GBP"
                         },
                         "nextDate": "2026-02-02",
+                        "copyP45Provided": true,
                         "bank": {
                           "number": "50220369",
                           "sortCode": "700125"
                         },
-                        "hrmcProtection": {
+                        "hmrcProtection": {
                           "type": "FIXED_PROTECTION",
-                          "copyP45Provided": true,
                           "certificateNumber": "IP141234567890A"
                         },
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E121191",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+              Ex6:
+                summary: create a one off contribution split across MIS sub-accounts
+                value:
+                  {
+                    "moneyMovements": [
+                      {
+                        "type": "CONTRIBUTIONS",
+                        "contributionMethod": "ELECTRONIC",
+                        "payer": "SELF",
+                        "frequency": "ONE_OFF",
+                        "value": {
+                          "amount": 15000,
+                          "currency": "GBP"
+                        },
+                        "nextDate": "2026-02-02",
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "bank": {
+                          "number": "50220369",
+                          "sortCode": "700125"
+                        },
+                        "sourceOfFunds": {
+                          "type": "EARNINGS",
+                          "fields": {
+                            "annualSalary": 100000.0,
+                            "jobDescription": "Contractor",
+                            "natureOfBusiness": "Financial Services"
+                          }
+                        },
+                        "allocations": [
+                          {
+                            "accountId": "HW04003261B",
+                            "percentage": 60
+                          },
+                          {
+                            "accountId": "HW04003262B",
+                            "percentage": 40
+                          }
+                        ]
                       }
                     ],
                     "declarations": [
@@ -3691,6 +3741,7 @@ paths:
                           "nextDate": "2026-02-02",
                           "reference": "reference",
                           "investmentInstruction": "INVEST_IN_MODEL",
+                          "thirdPartyId": "1",
                           "bank": {
                             "number": "50220369",
                             "sortCode": "700125"
@@ -3769,6 +3820,7 @@ paths:
                           "frequency": "ONE_OFF",
                           "nextDate": "2026-02-02",
                           "isMaximum": true,
+                          "includeNonDailyAssets": true,
                           "bank": {
                             "number": "50220369",
                             "sortCode": "700125"
@@ -3795,15 +3847,62 @@ paths:
                             "currency": "GBP"
                           },
                           "nextDate": "2026-02-02",
+                          "copyP45Provided": true,
                           "bank": {
                             "number": "50220369",
                             "sortCode": "700125"
                           },
-                          "hrmcProtection": {
+                          "hmrcProtection": {
                             "type": "FIXED_PROTECTION",
-                            "copyP45Provided": true,
                             "certificateNumber": "IP141234567890A"
                           }
+                        }
+                      ]
+                    }
+                Ex6:
+                  summary: Created one off contribution split across MIS sub-accounts
+                  value:
+                    {
+                      "moneyMovements": [
+                        {
+                          "id": 5,
+                          "accountId": "HW04003260A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E008469",
+                          "status": "NEW",
+                          "type": "CONTRIBUTIONS",
+                          "contributionMethod": "ELECTRONIC",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "nextDate": "2026-02-02",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "bank": {
+                            "number": "50220369",
+                            "sortCode": "700125"
+                          },
+                          "sourceOfFunds": {
+                            "id": 0,
+                            "type": "EARNINGS",
+                            "fields": {
+                              "annualSalary": 100000.0,
+                              "jobDescription": "Contractor",
+                              "natureOfBusiness": "Financial Services"
+                            }
+                          },
+                          "allocations": [
+                            {
+                              "accountId": "HW04003261B",
+                              "percentage": 60
+                            },
+                            {
+                              "accountId": "HW04003262B",
+                              "percentage": 40
+                            }
+                          ]
                         }
                       ]
                     }
@@ -3817,12 +3916,12 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-    
+
     get:
       tags:
         - Accounts
       summary: Retrieves the money movements on an account
-      description:
+      description: |-
         Retrieves the money movements against a specific investment account record.
 
 
@@ -3930,10 +4029,57 @@ paths:
                       ]
                     }
                 Ex2:
-                  summary: No money movements on the account 
+                  summary: No money movements on the account
                   value:
                     {
                       "moneyMovements": []
+                    }
+                Ex3:
+                  summary: A contribution split across MIS sub-accounts
+                  value:
+                    {
+                      "moneyMovements": [
+                        {
+                          "id": 5,
+                          "accountId": "HW04003260A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E008469",
+                          "status": "NEW",
+                          "type": "CONTRIBUTIONS",
+                          "contributionMethod": "ELECTRONIC",
+                          "payer": "SELF",
+                          "frequency": "ONE_OFF",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "nextDate": "2026-02-02",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "bank": {
+                            "number": "50220369",
+                            "sortCode": "700125"
+                          },
+                          "sourceOfFunds": {
+                            "id": 0,
+                            "type": "EARNINGS",
+                            "fields": {
+                              "annualSalary": 100000.0,
+                              "jobDescription": "Contractor",
+                              "natureOfBusiness": "Financial Services"
+                            }
+                          },
+                          "allocations": [
+                            {
+                              "accountId": "HW04003261B",
+                              "percentage": 60
+                            },
+                            {
+                              "accountId": "HW04003262B",
+                              "percentage": 40
+                            }
+                          ]
+                        }
+                      ]
                     }
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
@@ -3952,12 +4098,11 @@ paths:
       tags:
         - Accounts
       summary: Update regular active money movements
-      description: >-
-        
+      description: |-
+
         Update an existing existing regular Contributions, Withdrawals and SIPP Withdrawal Arrangements.
 
-        This endpoint supports the modification of the frequency, amount, start date, bank account and fee details. To add a new money movement the Create Money Movement API will need to be used. 
-
+        This endpoint supports the modification of the frequency, amount, start date, bank account and fee details. To add a new money movement the Create Money Movement API will need to be used.
       operationId: modifyMoneyMovement
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4044,7 +4189,7 @@ paths:
                         "acknowledgement": true
                       }
                     ]
-                  }      
+                  }
       responses:
         "200":
           description: Money movement modified successfully
@@ -4136,7 +4281,7 @@ paths:
                     }    
                 Ex3:
                   summary: Update Regular Contirubtion Bank Details
-                  value: 
+                  value:
                     {
                       "moneyMovements": [
                         {
@@ -4183,10 +4328,9 @@ paths:
       tags:
         - Accounts
       summary: Delete money movements
-      description: >-
-        
-        Archives (soft-deletes) an existing money movement against an investment account.
+      description: |-
 
+        Archives (soft-deletes) an existing money movement against an investment account.
       operationId: removeMoneyMovement
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -10344,6 +10488,12 @@ components:
           description: >-
             Allows a customer to indicate if they want to include or exclude non-daily traded assets from one off contributions and withdrawals. Defaults to false for one off contributions and true for one off withdrawals.
           type: boolean
+        copyP45Provided:
+          description: >-
+            Where any drawdown event is selected, a copy of the investor's P45 is required to ensure
+            the correct tax code is applied. Only applicable for UFPLS or FLEXI_ACCESS_INCOME.
+          default: false
+          type: boolean
         investmentInstruction:
           description: >-
             The choice of whether to invest immediately into a model or hold in cash for a
@@ -10365,10 +10515,21 @@ components:
           $ref: "#/components/schemas/BankAccountDetails"
         fee:
           $ref: "#/components/schemas/MovementFee"
-        hrmcProtection:
+        hmrcProtection:
           $ref: "#/components/schemas/HMRCProtection"
         sourceOfFunds:
           $ref: "#/components/schemas/SourceOfFunding"
+        allocations:
+          description: >-
+            MIS sub-account allocation splits for this movement. Applies to CONTRIBUTIONS and to
+            disinvestments (WITHDRAWALS, UFPLS, FLEXI_ACCESS_PCLS, FLEXI_ACCESS_INCOME) on Multiple
+            Investment Strategy (MIS) accounts. When provided, the percentages must sum to 100 and
+            each sub-account must be unique. When omitted for a MIS account, the default allocation
+            held against the primary account is used. Ignored for non-MIS accounts. Returned in the
+            response when present.
+          type: array
+          items:
+            $ref: "#/components/schemas/MovementAllocation"
 
     MovementPatch:
       description: patch regular money movements in and out of an account
@@ -10388,11 +10549,11 @@ components:
             - ONE_OFF
           type: string
           example: ONE_OFF
-        startDate:
+        nextDate:
           format: date
           description: >-
-            The intended start date of the money movement. The available dates will depend on the
-            type of movement and the contribution method.
+            The collection or withdrawal date for this movement. Mandatory if the frequency is not
+            ONE_OFF.
           type: string
           example: "2025-01-22"
         endDate:
@@ -10401,12 +10562,69 @@ components:
             The date on which the movement is intended to cease, this would be used, for example,
             for regular withdrawals or drawdown arrangements.
           type: string
+        payer:
+          description: >-
+            Indicates who the payer is; typically SELF or EMPLOYER. Defaults to SELF if not
+            supplied.
+          enum:
+            - SELF
+            - EMPLOYER
+          type: string
+          example: SELF
         value:
           $ref: "#/components/schemas/ValuePatch"
         bank:
           $ref: "#/components/schemas/BankAccountDetails"
         fee:
-          $ref: "#/components/schemas/MovementFee"
+          $ref: "#/components/schemas/MovementFeeUpdate"
+
+    MovementFeeUpdate:
+      description: >-
+        Partial fee update for an existing movement. Only amount, percentage and instalmentPlan can
+        be changed.
+      type: object
+      additionalProperties: false
+      properties:
+        amount:
+          description: Fixed fee amount (in currency).
+          type: number
+          example: 100.00
+        percentage:
+          description: Fee as a percentage (e.g. 0.75 = 0.75%).
+          type: number
+          example: 0.75
+        instalmentPlan:
+          $ref: "#/components/schemas/FeeInstalmentPlan"
+
+    MovementAllocation:
+      description: >-
+        Allocation of a money movement across a sub-account of a Multiple Investment Strategy (MIS)
+        account. When provided, each entry references a valid sub-account of the primary account and
+        all percentages must sum to exactly 100. Each sub-account may appear once. When omitted for a
+        MIS account, the default allocation held against the primary account is used. Ignored for
+        non-MIS accounts.
+      required:
+        - accountId
+        - percentage
+      type: object
+      additionalProperties: false
+      properties:
+        accountId:
+          format: string
+          description: The SS&C Wealth Platform Account identifier of the MIS sub-account.
+          maxLength: 11
+          minLength: 11
+          type: string
+          example: HW00013451B
+        percentage:
+          type: number
+          format: double
+          description: >-
+            The percentage of the movement to allocate to this sub-account. All allocation
+            percentages must sum to 100.
+          minimum: 0
+          maximum: 100
+          example: 20
 
     Value:
       description: >-
@@ -10529,12 +10747,6 @@ components:
             - INDIVIDUAL_PROTECTION_2014
             - INDIVIDUAL_PROTECTION_2016
           type: string
-        copyP45Provided:
-          description: >-
-            Where any drawdown event is selected, then we require a copy of the investor's P45 to
-            ensure we have the correct Tax Code.
-          default: false
-          type: boolean
         certificateNumber:
           description: >-
             The unique reference issued by HMRC for the protection afforded to this pension
@@ -11948,8 +12160,9 @@ components:
     500-serverError:
       summary: Server error
       value:
-        title: Server Error
-        detail: An unexpected technical error occurred. Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After header is returned, do not retry the call.
+        title: Internal Server Error
+        status: 500
+        detail: HWA-EXCEPTION-003 - An unexpected technical error occurred. Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After response header is returned, do not retry the call.
 
   responses:
     
@@ -12106,14 +12319,10 @@ components:
             $ref: "#/components/schemas/Error"
           examples:
             Ex1:
-              summary: Unexpected technical error.
+              summary: Unexpected technical error
               value:
                 errorCode: HWA-EXCEPTION-003
-                message: |-
-                  An unexpected technical error occurred. 
-
-
-                  Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After header is returned, do not retry the call.
+                message: An unexpected technical error occurred. Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After response header is returned, do not retry the call.
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetails'

@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.14 API spec
+
+- Added money movements MIS changes
+
 Changelog for v0.8.13 API spec
 
 - Corrected the Investor status enumerations
