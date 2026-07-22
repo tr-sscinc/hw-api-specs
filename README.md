@@ -1,5 +1,8 @@
 # hw-api-specs
 
+Changelog for v0.8.15 API spec
+- Added Executed Trades endpoint
+
 Changelog for v0.8.14 API spec
 
 - Added money movements MIS changes
