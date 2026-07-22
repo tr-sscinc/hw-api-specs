@@ -6,6 +6,7 @@ Changelog for v0.8.14 API spec
 - Addressed logical issues with some descriptions
 - Restrict investorId / advisorId to max length 11
 - Added Executed Trades endpoint
+- Removed old error format
 
 Changelog for v0.8.13 API spec
 
