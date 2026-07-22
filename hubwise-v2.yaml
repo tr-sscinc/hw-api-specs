@@ -14,13 +14,13 @@ servers:
 
 tags:
   - name: Investors
-    description: Capability to create, retrieve, and update investors, including the ability to manage vulnerability information for investors.
+    description: Create, retrieve, and update investors, including the ability to manage vulnerability information for investors.
   - name: Accounts
-    description: Capability to create and service accounts, including the ability to retrieve account details and manage account-related operations.
+    description: Create and service accounts, including the ability to retrieve account details and manage account-related operations.
   - name: Fee Groups
-    description: Capability to manage fee groups, allowing for the definition and retrieval of fee structures applicable to investors and accounts.
+    description: Manage fee groups, allowing for the definition and retrieval of fee structures applicable to investors and accounts.
   - name: Illustrations
-    description: Capability to generate illustrations for investors and accounts, providing visual representations of financial scenarios and projections.
+    description: Generate illustrations for investors and accounts, providing visual representations of financial scenarios and projections.
 
 security:
   - bearer-token: []
