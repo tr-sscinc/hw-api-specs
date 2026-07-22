@@ -7399,6 +7399,9 @@ paths:
                             "exchange": "XLON",
                             "marketSettlementCurrency": "GBP"
                           },
+                          "orderDetails": {
+                            "quantity": 1250.50
+                          },
                           "executedTradeDetails": {
                             "priceExecuted": 10.123456,
                             "exchangeRate": 1.000000,
@@ -7421,6 +7424,9 @@ paths:
                             "isin": "GB00B4L5A675",
                             "exchange": "XLON",
                             "marketSettlementCurrency": "GBP"
+                          },
+                          "orderDetails": {
+                            "quantity": 10125.00
                           },
                           "executedTradeDetails": {
                             "priceExecuted": 1.234567,
