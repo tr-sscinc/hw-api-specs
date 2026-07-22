@@ -5,16 +5,22 @@ info:
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
-  - url: "https://rest-qd.hubwise.co.uk"
+  - url: "https://rest-qd.hubwise.co.uk/adviser/v2"
     description: Pilot/UAT environment
-  - url: "https://rest-qi.hubwise.co.uk"
+  - url: "https://rest-qi.hubwise.co.uk/adviser/v2"
     description: Preproduction environment
+  - url: "https://rest.hubwise.co.uk/adviser/v2"
+    description: Production environment
 
 tags:
   - name: Investors
+    description: Capability to create, retrieve, and update investors, including the ability to manage vulnerability information for investors.
   - name: Accounts
+    description: Capability to create and service accounts, including the ability to retrieve account details and manage account-related operations.
   - name: Fee Groups
+    description: Capability to manage fee groups, allowing for the definition and retrieval of fee structures applicable to investors and accounts.
   - name: Illustrations
+    description: Capability to generate illustrations for investors and accounts, providing visual representations of financial scenarios and projections.
 
 security:
   - bearer-token: []
@@ -1207,25 +1213,6 @@ paths:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
-                ValidationFailure:
-                  summary: A supplied field failed validation
-                  value:
-                    errorCode: HWA-EXCEPTION-001
-                    message: Validation Error(s) occurred.
-                    errors:
-                      - field: status
-                        message: Status must be ACTIVE, DECEASED, or NON_UK_RESIDENT
-                StatusCannotBeUpdated:
-                  summary: The current investor status cannot be changed to the requested status
-                  value:
-                    errorCode: HWA-INVESTOR-023
-                    message: Investor status cannot be further updated.
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
@@ -1862,6 +1849,9 @@ paths:
       responses:
         '204':
           description: Taxation deleted successfully.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -1898,6 +1888,9 @@ paths:
       responses:
         '204':
           description: Nationality deleted successfully.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -1936,6 +1929,9 @@ paths:
       responses:
         '204':
           description: Address deleted successfully.
+          headers:
+            Request-Id:
+              $ref: "#/components/headers/Request-Id"
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -2752,7 +2748,7 @@ paths:
 
       responses:
         "200":
-          description: Invesstor modified successfully
+          description: Account modified successfully
           headers:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
@@ -2762,7 +2758,7 @@ paths:
                 $ref: "#/components/schemas/Account"
               examples:
                 Ex1:
-                  summary: Update accounts name
+                  summary: Update account name
                   value:
                     {
                       "id": "HW00013451A",
@@ -2798,25 +2794,6 @@ paths:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
-                ValidationFailure:
-                  summary: A supplied field failed validation
-                  value:
-                    errorCode: HWA-EXCEPTION-001
-                    message: Validation Error(s) occurred.
-                    errors:
-                      - field: status
-                        message: status must be one of ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, NON_UK_RESIDENT
-                StatusCannotBeUpdated:
-                  summary: The current account status cannot be changed to the requested status
-                  value:
-                    errorCode: HWA-ACCOUNT-038
-                    message: Account status cannot be further updated.
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
@@ -4318,6 +4295,8 @@ paths:
           headers:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -7535,33 +7514,22 @@ paths:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
           content:
-            application/json:
+            application/problem+json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
               examples:
                 DuplicateGroupId:
                   summary: groupId already exists for the tenant
                   value:
-                    errorCode: HWA-FEE-GROUP-001
-                    message: The Group ID must be unique.
+                    detail: The Group ID must be unique.
                 AccountNotEligibleOrMissing:
                   summary: An account does not exist or does not qualify for the requested fee type / fee code
                   value:
-                    errorCode: HWA-FEE-GROUP-002
-                    message: "Account HW04003258A cannot be added to this Fee Group because it does not meet the required criteria."
+                    detail: "Account HW04003258A cannot be added to this Fee Group because it does not meet the required criteria."
                 NonGbpAccount:
                   summary: An account base currency is not GBP
                   value:
-                    errorCode: HWA-FEE-GROUP-007
-                    message: "Account HW04003258A cannot be added to a Fee Group because its base currency is not GBP."
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-              examples:
-                400-InvalidQueryParam:
-                  $ref: '#/components/examples/400-InvalidQueryParam'
-                400-InvalidRequestHeader:
-                  $ref: '#/components/examples/400-InvalidRequestHeader'
+                    detail: "Account HW04003258A cannot be added to a Fee Group because its base currency is not GBP."
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -7631,12 +7599,6 @@ paths:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
@@ -7650,20 +7612,7 @@ paths:
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          description: The Fee Group was not found.
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                NotFound:
-                  summary: groupId does not exist for the tenant
-                  value:
-                    errorCode: HWA-FEE-GROUP-004
-                    message: "Fee Group SMITHSPLT01 does not exist."
+          $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -7786,57 +7735,32 @@ paths:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
           content:
-            application/json:
+            application/problem+json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
               examples:
                 NoOperations:
                   summary: operations array is empty
                   value:
-                    errorCode: HWA-FEE-GROUP-008
-                    message: 'At least one "add" or "delete" action is required.'
+                    detail: 'At least one "add" or "delete" action is required.'
                 AccountNotEligibleOrMissing:
                   summary: Account does not exist or does not qualify for the group's fee type / fee code
                   value:
-                    errorCode: HWA-FEE-GROUP-002
-                    message: "Account HW04003261D cannot be added to this Fee Group because it does not meet the required criteria."
+                    detail: "Account HW04003261D cannot be added to this Fee Group because it does not meet the required criteria."
                 NonGbpAccount:
                   summary: Account base currency is not GBP
                   value:
-                    errorCode: HWA-FEE-GROUP-007
-                    message: "Account HW04003261D cannot be added to a Fee Group because its base currency is not GBP."
+                    detail: "Account HW04003261D cannot be added to a Fee Group because its base currency is not GBP."
                 NotMember:
                   summary: Account targeted for delete is not currently a member
                   value:
-                    errorCode: HWA-FEE-GROUP-009
-                    message: "Account HW04003258A cannot be removed from this Fee Group as it is not currently a member."
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-              examples:
-                400-InvalidQueryParam:
-                  $ref: '#/components/examples/400-InvalidQueryParam'
-                400-InvalidRequestHeader:
-                  $ref: '#/components/examples/400-InvalidRequestHeader'
+                    detail: "Account HW04003258A cannot be removed from this Fee Group as it is not currently a member."
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          description: The Fee Group was not found.
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                NotFound:
-                  summary: groupId does not exist for the tenant
-                  value:
-                    errorCode: HWA-FEE-GROUP-004
-                    message: "Fee Group SMITHSPLT01 does not exist."
+          $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -7872,12 +7796,6 @@ paths:
             Request-Id:
               $ref: "#/components/headers/Request-Id"
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                RequestBody:
-                  $ref: "#/components/examples/400-BadRequest"
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
@@ -7891,25 +7809,7 @@ paths:
         "403":
           $ref: "#/components/responses/403-Forbidden"
         "404":
-          description: The Fee Group was not found or is already inactive.
-          headers:
-            Request-Id:
-              $ref: "#/components/headers/Request-Id"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-              examples:
-                NotFound:
-                  summary: groupId does not exist for the tenant
-                  value:
-                    errorCode: HWA-FEE-GROUP-005
-                    message: The Fee Group cannot be found.
-                AlreadyDeleted:
-                  summary: Fee Group is already inactive
-                  value:
-                    errorCode: HWA-FEE-GROUP-006
-                    message: This Fee Group has already been deleted.
+          $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
 
@@ -7943,6 +7843,7 @@ paths:
             type: boolean
             enum: [true, false]
             default: true
+          example: true
           description: Indicates whether illustration data should be generated.
         - name: generateDocument
           in: query
@@ -7951,6 +7852,7 @@ paths:
             type: boolean
             enum: [true, false]
             default: true
+          example: true
           description: Indicates whether an illustration document should be generated.    
       requestBody:
         required: true
@@ -8259,76 +8161,14 @@ components:
         
         
         Can be provided by the caller, or if the caller does not provide it, it will be generated by the server and returned to the caller once the request has been processed. 
-      required: false
+      required: true
       schema:
         type: string
         format: uuid
       example: 5cc9dc98-c5a4-481d-bd3b-3c0d3af67c25
   
   schemas:
-    
-    Error:
-      type: object
-      description: A standard error response.
-      required:
-        - errorCode
-        - message
-      additionalProperties: false
-      properties:
-        errorCode:
-          type: string
-          maxLength: 25
-          description: Application-specific error code that uniquely identifies the error.
-        message:
-          type: string
-          maxLength: 2000
-          description: Human-readable error message providing more context about the error.
-        errors:
-          type: array
-          items:
-            $ref: "#/components/schemas/ValidationFailure"
 
-    ValidationFailure:
-      type: object
-      description: |
-        If applicable, describes a single request validation failure.
-      required:
-        - message
-      additionalProperties: false
-      properties:
-        field:
-          description: |
-            The exact data which caused the validation failure. 
-            
-            For example: 
-            
-            - *investorId* in the path,
-            - *details.bankReferenceType* in the request body,
-            - *X-API-KEY* in the headers collection
-            
-            If a request body is passed, this field can contain the JSON Path expression pointing to the value in the request body which caused the validation failure.
-
-            The RFC standard for JSON Path: https://www.rfc-editor.org/rfc/rfc9535.html
-          type: string
-          maxLength: 250
-        resource:
-          type: string
-          maxLength: 100
-          description: |-
-            The part of the request which caused the problem. 
-            
-            Can be one of: 
-            
-             - path
-             - query
-             - header
-             - body
-             
-        message:
-          type: string
-          maxLength: 2000
-          description: Detailed message about the request validation failure.
-    
     ProblemDetails:
       readOnly: true
       type: object
@@ -10849,7 +10689,7 @@ components:
 
             For FLEXI_ACCESS_INCOME and FLEXI_ACCESS_PCLS, this field may be set to `true` to request the full maximum PCLS
             entitlement and a numeric value can also be specified.
-          oneOf:
+          anyOf:
             - type: boolean
             - type: number
               format: double
@@ -12521,12 +12361,6 @@ components:
         Request-Id:
           $ref: '#/components/headers/Request-Id'
       content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-          examples:
-            RequestBody:
-              $ref: "#/components/examples/400-BadRequest"  
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
@@ -12560,12 +12394,6 @@ components:
         Request-Id:
           $ref: '#/components/headers/Request-Id'
       content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-          examples:
-            RequestBody:
-              $ref: "#/components/examples/400-BadRequest"  
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
@@ -12585,23 +12413,15 @@ components:
         Request-Id:
           $ref: '#/components/headers/Request-Id'
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "#/components/schemas/ProblemDetails"
           examples:
             Ex1:
               summary: Invalid API token
               value:
                 {
-                   "errorCode": "HWA-EXCEPTION-006",
-                    "message": "Authentication process failed.",
-                    "errors": [
-                        {
-                            "field": "Authentication",
-                            "resource": "/accounts/HW00013451A/activate",
-                            "message": "Authentication token is missing or invalid."
-                        }
-                    ]
+                    "detail": "Authentication process failed."
                 }
                 
     403-Forbidden:
@@ -12610,16 +12430,6 @@ components:
         Request-Id:
           $ref: '#/components/headers/Request-Id'
       content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-          examples:
-            Ex1:
-              summary: Requester not allowed access to the resource
-              description: Forbidden
-              value:
-                errorCode: HWA-EXCEPTION-004
-                message: You do not have permission to access this resource
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
@@ -12633,16 +12443,6 @@ components:
         Request-Id:
           $ref: '#/components/headers/Request-Id'
       content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-          examples:
-            Ex1:
-              summary: Resource not found
-              description: NotFound
-              value:
-                errorCode: HWA-INVESTOR-001
-                message: The requested resource could not be found.
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
@@ -12656,15 +12456,6 @@ components:
         Request-Id:
           $ref: '#/components/headers/Request-Id'
       content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-          examples:
-            Ex1:
-              summary: Unexpected technical error
-              value:
-                errorCode: HWA-EXCEPTION-003
-                message: An unexpected technical error occurred. Do not retry the call before the time specified in the Retry-After HTTP response header. If no Retry-After response header is returned, do not retry the call.
         application/problem+json:
           schema:
             $ref: '#/components/schemas/ProblemDetails'
