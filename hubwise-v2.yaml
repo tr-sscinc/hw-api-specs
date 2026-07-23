@@ -5161,6 +5161,24 @@ paths:
         
         
         4.	Discretionary Model Management
+
+        For a Multiple Investment Strategy (MIS) account, fees cannot be set on the
+        primary account. Supplying the primary account ID returns a 400 with the message
+        "For MIS accounts, fees can only be set on sub-accounts." When the `accountId`                                                                                                                                                     
+        in the path is an MIS sub-account, only the following fee types may be created;                                                                                                                                                    
+        any other type returns a 400 "Invalid fee type {FEE_TYPE} for a sub-account.":                                                                                                                                                     
+                                                                                                                                                                                                                                           
+                                                                                                                                                                                                                                             
+        1.   ADVISER_ANNUAL                                                                                                                                                                                                                
+
+
+        2.   ADVISER_ONE_OFF                                                                                                                                                                                                               
+                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                             
+        3.   PORTFOLIO_MANAGEMENT                                                                                                                                                                                                          
+                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                             
+        4.   INVESTMENT_SERVICE 
         
         
         Fees associated with money movements or transfers must be created and maintained using the money movement or transfer endpoints.
@@ -5177,7 +5195,10 @@ paths:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Wealth Platform Account identifier
+          description: >-                                                                                                                                                                                                                  
+              Unique SS&C Wealth Platform Account identifier. For a Multiple                                                                                                                                                                 
+              Investment Strategy (MIS) account this must be a sub-account ID, as                                                                                                                                                            
+              fees cannot be set on the primary account. 
           required: true
           schema:
             type: string
@@ -5249,6 +5270,20 @@ paths:
                       }
                     ]
                   }
+              Ex4:                                                                                                                                                                                                                         
+                summary: Add fees directly to an MIS sub-account (accountId in path is the sub-account).                                                                                                                                   
+                value:                                                                                                                                                                                                                     
+                  {                                                                                                                                                                                                                        
+                    "fees": [                                                                                                                                                                                                              
+                      { "type": "ADVISER_ANNUAL", "percentage": 0.5, "vatIncluded": true, "startDate": "2026-07-01" },                                                                                                                     
+                      { "type": "ADVISER_ONE_OFF", "amount": 450.00, "vatIncluded": true },                                                                                                                                                
+                      { "type": "PORTFOLIO_MANAGEMENT", "percentage": 0.25, "vatIncluded": true, "startDate": "2026-07-15" },  
+                      { "type": "INVESTMENT_SERVICE", "percentage": 0.15, "vatIncluded": true, "startDate": "2026-07-15" }                                                                                                              
+                    ],                                                                                                                                                                                                                     
+                    "declarations": [                                                                                                                                                                                                      
+                      { "templateId": "AMENDMENT_CONSENT", "adviserId": "E008469", "acknowledgement": true }                                                                                                                               
+                    ]                                                                                                                                                                                                                      
+                  }     
       responses:
         "201":
           description: Account fee(s) created successfully.
@@ -5506,7 +5541,7 @@ paths:
 
         2.  PORTFOLIO_MANAGEMENT
 
-        3. INVESTMENT_MANAGEMENT
+        3. INVESTMENT_SERVICE
 
       operationId: archiveAccountFee
       parameters:
@@ -12338,6 +12373,17 @@ components:
             pointer: "/currency"
           - detail: Account holder with ID HWI00052961 does not exist
             pointer: "/holders/1/id"
+
+    400-SubAccountFeeRules:                                                                                                                                                                                                                
+      summary: MIS sub-account fee rule violation                                                                                                                                                                                          
+      value:                                                                                                                                                                                                                               
+        title: Invalid Request                                                                                                                                                                                                             
+        detail: The request body is invalid and not meeting business rules.                                                                                                                                                                
+        errors:                                                                                                                                                                                                                            
+          - detail: For MIS accounts, fees can only be set on sub-accounts.                                                                                                                                                                
+            pointer: "/fees"                                                                                                                                                                                                               
+          - detail: Invalid fee type PLATFORM_ANNUAL for a sub-account.                                                                                                                                                                    
+            pointer: "/fees/0/type"
             
     500-serverError:
       summary: Server error
@@ -12381,6 +12427,8 @@ components:
               $ref: '#/components/examples/400-BusinessRules'
             400-AlreadyExists:
               $ref: '#/components/examples/400-AlreadyExists'
+            400-SubAccountFeeRules:                                                                                                                                                                                                        
+              $ref: '#/components/examples/400-SubAccountFeeRules'
     
     400-BadRequest-NoBody:
       description: |
