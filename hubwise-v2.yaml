@@ -5409,13 +5409,16 @@ paths:
 
 
         The endpoint must be called once for each investment accounts account level fees to be retrieved.
- 
+
+
+        For a Multiple Investment Strategy (MIS) account, the `accountId` may be either the primary account or a sub-account. When a sub-account ID is supplied, only the fees applicable to that sub-account are returned; when the primary account ID is supplied, only the fees applicable to the primary account are returned. Fees are not aggregated across the MIS group.
+
       operationId: retrieveAccountFees
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Wealth Platform Account identifier
+          description: Unique SS&C Wealth Platform Account identifier. For MIS accounts this may be the primary account ID or a sub-account ID.
           required: true
           schema:
             type: string
@@ -5543,12 +5546,15 @@ paths:
 
         3. INVESTMENT_SERVICE
 
+
+        For a Multiple Investment Strategy (MIS) account, the `accountId` may be either the primary account or a sub-account. When a sub-account ID is supplied, the fee identified by that account and fee ID is archived and no further fees will be deducted for that sub-account.
+
       operationId: archiveAccountFee
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Wealth Platform Account identifier
+          description: Unique SS&C Wealth Platform Account identifier. For MIS accounts this may be the primary account ID or a sub-account ID.
           required: true
           schema:
             type: string
