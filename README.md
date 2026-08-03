@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.15 API spec
+
+- Update API response for retire the old error format
+
 Changelog for v0.8.14 API spec
 
 - Added money movements MIS changes
