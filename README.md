@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.20 API spec
+
+- Added intra-account transfers endpoints
+
 Changelog for v0.8.19 API spec
 
 - Remove reference field from money movement

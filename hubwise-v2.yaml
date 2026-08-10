@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.19
+  version: 0.8.20
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -5390,6 +5390,201 @@ paths:
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /accounts/{accountId}/intra-account-transfers:
+
+    post:
+      tags:
+        - Accounts
+      summary: Create intra-account transfer(s)
+      description: >-
+        Creates one or more intra-account transfer records to move cash or stock between sub-accounts (including the primary account) within the same MIS (Model Investment Service) structure.
+
+        Transfers can be used to rebalance holdings across sub-accounts, or to redistribute assets when moving between MIS and non-MIS structures.
+
+        All accounts involved must belong to the same MIS. The source account must hold sufficient balance to cover the transfer. Both the source and destination accounts must belong to the same investor.
+      operationId: createIntraAccountTransfers
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier (destination account)
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013451A
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IntraAccountTransfersHeader"
+            examples:
+              Ex1:
+                summary: Transfer cash from a sub-account to the primary account
+                value:
+                  {
+                    "intraAccountTransfers": [
+                      {
+                        "transferType": "CASH",
+                        "value": 2500.00,
+                        "currency": "GBP",
+                        "sourceAccountId": "HW00013452A"
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+              Ex2:
+                summary: Transfer stock between two sub-accounts
+                value:
+                  {
+                    "intraAccountTransfers": [
+                      {
+                        "transferType": "STOCK",
+                        "sourceAccountId": "HW00013452A",
+                        "sedol": "B3KJDS0",
+                        "units": 150.00
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "AMENDMENT_CONSENT",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+      responses:
+        "201":
+          description: Intra-account transfer(s) created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntraAccountTransfersResponse"
+              examples:
+                Ex1:
+                  summary: Cash intra-account transfer created
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": 2001,
+                          "accountId": "HW00013451A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E273053",
+                          "transferType": "CASH",
+                          "value": 2500.00,
+                          "currency": "GBP",
+                          "sourceAccountId": "HW00013452A",
+                          "status": "INCEPTED"
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: Stock intra-account transfer created
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": 2002,
+                          "accountId": "HW00013451A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E273053",
+                          "transferType": "STOCK",
+                          "sourceAccountId": "HW00013452A",
+                          "sedol": "B3KJDS0",
+                          "units": 150.00,
+                          "status": "INCEPTED"
+                        }
+                      ]
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve intra-account transfers
+      description: >-
+        Retrieves all intra-account transfer records for a specific investment account.
+
+        Returns an empty collection if no records exist.
+      operationId: retrieveIntraAccountTransfers
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013451A
+      responses:
+        "200":
+          description: Intra-account transfers retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntraAccountTransfersResponse"
+              examples:
+                Ex1:
+                  summary: Intra-account transfers found
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": 2001,
+                          "accountId": "HW00013451A",
+                          "tenantId": "HUBWISE",
+                          "adviserId": "E273053",
+                          "transferType": "CASH",
+                          "value": 2500.00,
+                          "currency": "GBP",
+                          "sourceAccountId": "HW00013452A",
+                          "status": "INCEPTED"
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: No intra-account transfers found
+                  value:
+                    {
+                      "intraAccountTransfers": []
+                    }
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -12038,7 +12233,123 @@ components:
           items:
             $ref: "#/components/schemas/Declaration"
 
+    IntraAccountTransfersHeader:
+      additionalProperties: false
+      required:
+        - intraAccountTransfers
+      type: object
+      properties:
+        intraAccountTransfers:
+          type: array
+          items:
+            $ref: "#/components/schemas/IntraAccountTransfer"
+        declarations:
+          writeOnly: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Declaration"
 
+    IntraAccountTransfer:
+      additionalProperties: false
+      required:
+        - transferType
+        - sourceAccountId
+      type: object
+      properties:
+        id:
+          description: SS&C Wealth Platform intra-account transfer identifier
+          type: integer
+          format: int64
+          readOnly: true
+          example: 2001
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier (destination account)
+          type: string
+          minLength: 11
+          maxLength: 11
+          readOnly: true
+          example: HW00013451A
+        tenantId:
+          description: Unique SS&C Wealth Platform Tenant identifier
+          type: string
+          minLength: 7
+          maxLength: 7
+          readOnly: true
+          example: HUBWISE
+        adviserId:
+          description: Unique SS&C Wealth Platform Adviser identifier
+          type: string
+          maxLength: 7
+          readOnly: true
+          example: E273053
+        transferType:
+          description: Indicates whether the transfer moves cash or stock holdings
+          type: string
+          enum:
+            - CASH
+            - STOCK
+          x-enum-descriptions:
+            - Transfer a cash amount between accounts
+            - Transfer stock holdings between accounts
+          example: CASH
+        sourceAccountId:
+          description: Unique SS&C Wealth Platform Account identifier for the source account
+          type: string
+          minLength: 11
+          maxLength: 11
+          example: HW00013452A
+        value:
+          description: Cash transfer value. Required when transferType is CASH.
+          type: number
+          format: double
+          minimum: 0
+          example: 2500.00
+        currency:
+          description: ISO 4217 currency code. Required when transferType is CASH.
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: GBP
+        sedol:
+          description: SEDOL code identifying the stock to transfer. Required when transferType is STOCK.
+          type: string
+          minLength: 7
+          maxLength: 7
+          example: B3KJDS0
+        units:
+          description: Number of stock units to transfer. Required when transferType is STOCK.
+          type: number
+          format: double
+          minimum: 0
+          exclusiveMinimum: true
+          example: 150.00
+        status:
+          description: Transfer status
+          type: string
+          enum:
+            - INCEPTED
+            - NEW
+            - COMPLETE
+            - PENDING
+            - ARCHIVED
+          x-enum-descriptions:
+            - Transfer has been created and is awaiting processing
+            - Transfer is newly submitted
+            - Transfer has been completed
+            - Transfer is pending review or action
+            - Transfer has been archived
+          readOnly: true
+          example: INCEPTED
+
+    IntraAccountTransfersResponse:
+      additionalProperties: false
+      type: object
+      properties:
+        intraAccountTransfers:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/IntraAccountTransfer"
 
     AccountTransfersHeader:
       additionalProperties: false
