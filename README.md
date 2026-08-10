@@ -1,5 +1,10 @@
 # hw-api-specs
 
+Changelog for v0.8.16 API spec
+
+- Added ring-fence cash endpoints for accounts: GET, POST, PATCH and DELETE on /accounts/{accountId}/ring-fence-cash
+- DELETE releases the ring-fence in full or in part, returns a response body and retains the ring-fence record
+
 Changelog for v0.8.15 API spec
 
 - Update API response for retire the old error format
