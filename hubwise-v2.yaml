@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.14
+  version: 0.8.15
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -1220,16 +1220,18 @@ paths:
                 StatusValidationFailure:
                   summary: The supplied status is not an allowed value
                   value:
-                    title: Invalid Request
-                    detail: The request body contains an invalid body property value.
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
                     errors:
                       - detail: Status must be ACTIVE, DECEASED, or NON_UK_RESIDENT
                         pointer: "/status"
                 StatusCannotBeUpdated:
                   summary: The current investor status cannot be changed to the requested status
                   value:
-                    title: Business rule violation
-                    detail: Investor status cannot be further updated.
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-INVESTOR-023 - Business logic error encountered.
                     errors:
                       - detail: Investor status cannot be further updated.
                         pointer: "/status"
@@ -2801,16 +2803,18 @@ paths:
                 StatusValidationFailure:
                   summary: The supplied status is not an allowed value
                   value:
-                    title: Invalid Request
-                    detail: The request body contains an invalid body property value.
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
                     errors:
-                      - detail: status must be one of ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, NON_UK_RESIDENT
+                      - detail: Status must be ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, or NON_UK_RESIDENT
                         pointer: "/status"
                 StatusCannotBeUpdated:
                   summary: The current account status cannot be changed to the requested status
                   value:
-                    title: Business rule violation
-                    detail: Account status cannot be further updated.
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-ACCOUNT-038 - Business logic error encountered.
                     errors:
                       - detail: Account status cannot be further updated.
                         pointer: "/status"
@@ -7562,15 +7566,30 @@ paths:
                 DuplicateGroupId:
                   summary: groupId already exists for the tenant
                   value:
-                    detail: The Group ID must be unique.
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-GROUP-001 - Business logic error encountered.
+                    errors:
+                      - detail: The Group ID must be unique.
+                        pointer: "/groupId"
                 AccountNotEligibleOrMissing:
                   summary: An account does not exist or does not qualify for the requested fee type / fee code
                   value:
-                    detail: "Account HW04003258A cannot be added to this Fee Group because it does not meet the required criteria."
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-GROUP-002 - Business logic error encountered.
+                    errors:
+                      - detail: "Account HW04003258A cannot be added to this Fee Group because it does not meet the required criteria."
+                        pointer: "/accounts/id"
                 NonGbpAccount:
                   summary: An account base currency is not GBP
                   value:
-                    detail: "Account HW04003258A cannot be added to a Fee Group because its base currency is not GBP."
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-GROUP-007 - Business logic error encountered.
+                    errors:
+                      - detail: "Account HW04003258A cannot be added to a Fee Group because its base currency is not GBP."
+                        pointer: "/accounts/id"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -7783,19 +7802,39 @@ paths:
                 NoOperations:
                   summary: operations array is empty
                   value:
-                    detail: 'At least one "add" or "delete" action is required.'
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-GROUP-008 - Business logic error encountered.
+                    errors:
+                      - detail: 'At least one "add" or "delete" action is required.'
+                        pointer: "/operations"
                 AccountNotEligibleOrMissing:
                   summary: Account does not exist or does not qualify for the group's fee type / fee code
                   value:
-                    detail: "Account HW04003261D cannot be added to this Fee Group because it does not meet the required criteria."
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-GROUP-002 - Business logic error encountered.
+                    errors:
+                      - detail: "Account HW04003261D cannot be added to this Fee Group because it does not meet the required criteria."
+                        pointer: "/accounts/id"
                 NonGbpAccount:
                   summary: Account base currency is not GBP
                   value:
-                    detail: "Account HW04003261D cannot be added to a Fee Group because its base currency is not GBP."
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-GROUP-007 - Business logic error encountered.
+                    errors:
+                      - detail: "Account HW04003261D cannot be added to a Fee Group because its base currency is not GBP."
+                        pointer: "/accounts/id"
                 NotMember:
                   summary: Account targeted for delete is not currently a member
                   value:
-                    detail: "Account HW04003258A cannot be removed from this Fee Group as it is not currently a member."
+                    title: Bad Request
+                    status: 400
+                    detail: HWA-FEE-GROUP-009 - Business logic error encountered.
+                    errors:
+                      - detail: "Account HW04003258A cannot be removed from this Fee Group as it is not currently a member."
+                        pointer: "/accounts/id"
         "401":
           $ref: "#/components/responses/401-Unauthorized"
         "403":
@@ -12278,26 +12317,12 @@ components:
 
   examples:
     
-    400-BadRequest:
-      summary: Path parameter does not conform to API schema
-      value:
-        {
-          "errorCode": "HWA-EXCEPTION-001",
-          "message": "Validation Error(s) occurred.",
-          "errors": [
-              {
-                  "field": "productId",
-                  "resource": "/accounts",
-                  "message": "Product Id is mandatory while creating an account."
-              }
-          ]
-        }
-
     400-MissingBodyProperty:
       summary: Request body is missing a required property
       value:
-        title: Invalid Request
-        detail: The request is missing an expected body property.
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
         errors:
           - detail: The body property {name} is required.
             pointer: "/name"
@@ -12305,8 +12330,9 @@ components:
     400-MissingQueryParameter:
       summary: Request is missing an expected query parameter
       value:
-        title: Invalid Request
-        detail: The request is missing an expected query parameter.
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
         errors:
           - detail: The query parameter {name} is required.
             parameter: name
@@ -12314,8 +12340,9 @@ components:
     400-MissingRequestHeader:
       summary: Request is missing an expected HTTP request header
       value:
-        title: Invalid Request
-        detail: The request is missing an expected HTTP request header.
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-003 - An unexpected technical error occurred.
         errors:
           - detail: The header {Accept} is required
             header: Accept
@@ -12323,8 +12350,9 @@ components:
     400-InvalidQueryParam:
       summary: Request contains a malformed query parameter
       value:
-        title: Invalid Request
-        detail: The request contains a malformed query parameter.
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
         errors:
           - detail: The expected string values are ASC or DSC
             parameter: sort
@@ -12332,8 +12360,9 @@ components:
     400-InvalidRequestHeader:
       summary: Request contains a malformed request header
       value:
-        title: Invalid Request
-        detail: The request contains a malformed request header parameter.
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
         errors:
           - detail: The request header was malformed
             header: Accept            
@@ -12341,8 +12370,9 @@ components:
     400-InvalidBodyPropertyValue:
       summary: Request contains an invalid body property value
       value:
-        title: Invalid Request
-        detail: The request body contains an invalid body property value.
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
         errors:
           - detail: A value `Never` is an invalid. Please provide `monthly` or `quarterly`
             pointer: "/marketingCommunication/frequency"
@@ -12353,25 +12383,31 @@ components:
       summary: Access is forbidden
       value:
         title: Forbidden
-        detail: The action could not be completed
+        status: 403
+        detail: HWA-EXCEPTION-004 - Access denied. The user is either unauthorized or unauthenticated to access the requested resource.
         
     404-NotFound:
       summary: Resource not found
       value:
-        title: Not found
-        detail: The requested resource was not found       
+        title: Not Found
+        status: 404
+        detail: HWA-EXCEPTION-005 - The requested resource could not be found.
             
     400-AlreadyExists:
       summary: Resource already exists
       value:
-        title: Already exists
-        detail: The resource being created already exists.
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-002 - Business logic error encountered.
+        errors:
+          - detail: The resource being created already exists.
           
     400-BusinessRules:
       summary: Business rule violation
       value: 
-        title: Multiple business rule violations
-        detail: The request body is invalid and not meeting business rules.
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
         errors:
           - detail: Cannot withdraw all income from a SIPP account
             pointer: "/incomeOption/type"
@@ -12474,9 +12510,12 @@ components:
             Ex1:
               summary: Invalid API token
               value:
-                {
-                    "detail": "Authentication process failed."
-                }
+                title: Unauthorized
+                status: 401
+                detail: HWA-EXCEPTION-006 - Authentication process failed.
+                errors:
+                  - detail: Authentication token is missing or invalid.
+                    header: Authorization
                 
     403-Forbidden:
       description: Unauthorized request
