@@ -3,6 +3,7 @@
 Changelog for v0.8.15 API spec
 
 - Update API response for retire the old error format
+- Added fees MIS changes
 
 Changelog for v0.8.14 API spec
 
