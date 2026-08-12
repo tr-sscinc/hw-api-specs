@@ -4473,8 +4473,95 @@ paths:
                       }
                     ]
                   }
+              Ex4:
+                summary: Create a SIPP cash transfer in split across MIS sub-accounts
+                value:
+                  {
+                    "transfers": [
+                      {
+                        "type": "CASH",
+                        "isPartial": false,
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "value": {
+                          "amount": 600000,
+                          "currency": "GBP",
+                          "crystallised": 30000
+                        },
+                        "fee": {
+                          "percentage": 0.25
+                        },
+                        "plan": {
+                          "reference": "896547",
+                          "holderName": "Mr Hub Wise Person",
+                          "type": "SIPP"
+                        },
+                        "provider": {
+                          "id": "HW009"
+                        },
+                        "allocations": [
+                          {
+                            "accountId": "HW00013451B",
+                            "percentage": 20
+                          },
+                          {
+                            "accountId": "HW00013451C",
+                            "percentage": 60
+                          },
+                          {
+                            "accountId": "HW00013451D",
+                            "percentage": 20
+                          }
+                        ]
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "TRANSFR_IN",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+              Ex5:
+                summary: Create an in-specie transfer in for a MIS account (single sub-account)
+                value:
+                  {
+                    "transfers": [
+                      {
+                        "type": "INSPECIE",
+                        "isPartial": false,
+                        "value": {
+                          "amount": 554035,
+                          "currency": "GBP"
+                        },
+                        "fee": {
+                          "percentage": 0.25
+                        },
+                        "plan": {
+                          "reference": "K123896547",
+                          "holderName": "Mr John Jackson"
+                        },
+                        "provider": {
+                          "id": "HW009"
+                        },
+                        "allocations": [
+                          {
+                            "accountId": "HW00013451B",
+                            "percentage": 100
+                          }
+                        ]
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "TRANSFR_IN",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
       responses:
-        "200":
+        "201":
           description: Transfers created successfully
           headers:
             Request-Id:
@@ -4633,6 +4720,128 @@ paths:
                             "email": "platforms_transfers_out@standardlife.com"
                           }
                         }
+                      }
+                    ]
+                  }
+                Ex4:
+                  summary: Created a SIPP cash transfer in split across MIS sub-accounts
+                  value:
+                    {
+                    "transfers": [
+                      {
+                        "id": 1,
+                        "accountId": "HW04003260A",
+                        "adviserId": "E273053",
+                        "tenantId": "HUBWISE",
+                        "type": "CASH",
+                        "direction": "IN",
+                        "status": "CREATED",
+                        "startDate": "2022-03-24",
+                        "isPartial": false,
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "isElectronic": false,
+                        "value": {
+                          "amount": 600000,
+                          "currency": "GBP",
+                          "crystallised": 30000,
+                          "uncrystallised": 570000
+                        },
+                        "fee": {
+                          "id": 1,
+                          "type": "ADVISER_INITIAL",
+                          "percentage": 0.25
+                        },
+                        "plan": {
+                          "reference": "896547",
+                          "holderName": "Mr Hub Wise Person",
+                          "type": "SIPP"
+                        },
+                        "provider": {
+                          "id": "HW009",
+                          "name": "Standard Life",
+                          "address": {
+                            "line1": "Standard Life House",
+                            "line2": "30 Lothian Road",
+                            "line3": "Edinburgh",
+                            "line4": "EH1 2DH",
+                            "postCode": "EH1 2DH"
+                          },
+                          "contactDetails": {
+                            "contactPhone": "0345 279 1001",
+                            "email": "platforms_transfers_out@standardlife.com"
+                          }
+                        },
+                        "allocations": [
+                          {
+                            "id": 1,
+                            "accountId": "HW00013451B",
+                            "percentage": 20
+                          },
+                          {
+                            "id": 2,
+                            "accountId": "HW00013451C",
+                            "percentage": 60
+                          },
+                          {
+                            "id": 3,
+                            "accountId": "HW00013451D",
+                            "percentage": 20
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                Ex5:
+                  summary: Created an in-specie transfer in for a MIS account (single sub-account)
+                  value:
+                    {
+                    "transfers": [
+                      {
+                        "id": 2,
+                        "accountId": "HW04003260A",
+                        "adviserId": "E273053",
+                        "tenantId": "HUBWISE",
+                        "type": "INSPECIE",
+                        "direction": "IN",
+                        "status": "CREATED",
+                        "startDate": "2022-03-24",
+                        "isPartial": false,
+                        "isElectronic": false,
+                        "value": {
+                          "amount": 554035,
+                          "currency": "GBP"
+                        },
+                        "fee": {
+                          "id": 1,
+                          "type": "ADVISER_INITIAL",
+                          "percentage": 0.25
+                        },
+                        "plan": {
+                          "reference": "K123896547",
+                          "holderName": "Mr John Jackson"
+                        },
+                        "provider": {
+                          "id": "HW009",
+                          "name": "Standard Life",
+                          "address": {
+                            "line1": "Standard Life House",
+                            "line2": "30 Lothian Road",
+                            "line3": "Edinburgh",
+                            "line4": "EH1 2DH",
+                            "postCode": "EH1 2DH"
+                          },
+                          "contactDetails": {
+                            "contactPhone": "0345 279 1001",
+                            "email": "platforms_transfers_out@standardlife.com"
+                          }
+                        },
+                        "allocations": [
+                          {
+                            "id": 1,
+                            "accountId": "HW00013451B",
+                            "percentage": 100
+                          }
+                        ]
                       }
                     ]
                   }
@@ -4828,7 +5037,65 @@ paths:
                   value:
                     {
                       "transfers": [
-                        
+
+                      ]
+                    }
+                Ex3:
+                  summary: Transfers against a MIS account with sub-account allocations
+                  value:
+                    {
+                      "transfers": [
+                        {
+                          "id": 1,
+                          "accountId": "HW04003260A",
+                          "adviserId": "E008469",
+                          "tenantId": "HUBWISE",
+                          "type": "CASH",
+                          "direction": "IN",
+                          "status": "CREATED",
+                          "startDate": "2022-03-24",
+                          "isPartial": false,
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "isElectronic": true,
+                          "value": {
+                            "amount": 20000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "id": 1,
+                            "type": "ADVISER_INITIAL",
+                            "amount": 50
+                          },
+                          "plan": {
+                            "reference": "896549",
+                            "holderName": "Mr John Doe"
+                          },
+                          "provider": {
+                            "id": "HW009",
+                            "name": "Standard Life",
+                            "address": {
+                              "line1": "Standard Life House",
+                              "line2": "30 Lothian Road",
+                              "line3": "Edinburgh",
+                              "line4": "EH1 2DH",
+                              "postCode": "EH1 2DH"
+                            },
+                            "contactDetails": {
+                              "contactPhone": "0345 279 1001",
+                              "email": "platforms_transfers_out@standardlife.com"
+                            }
+                          },
+                          "allocations": [
+                            {
+                              "accountId": "HW04003261B",
+                              "percentage": 60
+                            },
+                            {
+                              "accountId": "HW04003262B",
+                              "percentage": 40
+                            }
+                          ]
+                        }
                       ]
                     }
         "400":
@@ -10898,6 +11165,12 @@ components:
       type: object
       additionalProperties: false
       properties:
+        id:
+          type: integer
+          format: int64
+          description: System-generated allocation identifier.
+          readOnly: true
+          example: 1
         accountId:
           format: string
           description: The SS&C Wealth Platform Account identifier of the MIS sub-account.
@@ -11446,6 +11719,17 @@ components:
           $ref: "#/components/schemas/AccountTransferPlan"
         provider:
           $ref: "#/components/schemas/CedingProvider"
+        allocations:
+          description: >-
+            MIS sub-account allocation splits for this transfer. When provided, the percentages
+            must sum to 100 and each sub-account must be unique. When omitted for a MIS account,
+            the default allocation held against the primary account is used. Ignored for
+            non-MIS accounts. For INSPECIE transfers, exactly one allocation with percentage 100
+            must be provided — splitting an in-specie transfer across multiple sub-accounts is
+            not supported.
+          type: array
+          items:
+            $ref: "#/components/schemas/MovementAllocation"
 
     AccountTransferSubscription:
       additionalProperties: false
@@ -12416,7 +12700,19 @@ components:
           - detail: Account holder with ID HWI00052961 does not exist
             pointer: "/holders/1/id"
 
-    400-SubAccountFeeRules:                                                                                                                                                                                                                
+    400-MISAllocationRules:
+      summary: MIS allocation rule violation
+      value:
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+        errors:
+          - detail: Allocation percentages must sum to 100
+            pointer: "/transfers/0/allocations"
+          - detail: Sub-account HW04003261B appears more than once in allocations
+            pointer: "/transfers/0/allocations/1/accountId"
+
+    400-SubAccountFeeRules:
       summary: MIS sub-account fee rule violation                                                                                                                                                                                          
       value:                                                                                                                                                                                                                               
         title: Invalid Request                                                                                                                                                                                                             
@@ -12469,8 +12765,10 @@ components:
               $ref: '#/components/examples/400-BusinessRules'
             400-AlreadyExists:
               $ref: '#/components/examples/400-AlreadyExists'
-            400-SubAccountFeeRules:                                                                                                                                                                                                        
+            400-SubAccountFeeRules:
               $ref: '#/components/examples/400-SubAccountFeeRules'
+            400-MISAllocationRules:
+              $ref: '#/components/examples/400-MISAllocationRules'
     
     400-BadRequest-NoBody:
       description: |
