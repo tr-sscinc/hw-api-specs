@@ -7565,9 +7565,6 @@ paths:
 
 
         The currency is not supplied by the caller. It is taken from the account's base currency.
-
-
-        Where `testMode` is `true` the create is validated and simulated, then rolled back, so no ring-fence record is left behind.
       operationId: createRingFenceCash
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -7580,14 +7577,6 @@ paths:
             minLength: 11
             maxLength: 11
           example: HW00013567B
-        - name: testMode
-          in: query
-          description: Validates and simulates the ring-fence creation, then rolls back the changes.
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: false
       requestBody:
         required: true
         content:
@@ -7650,9 +7639,6 @@ paths:
 
 
         Only the amount can be updated. The currency cannot be changed and the ring-fence keeps the currency it was created with.
-
-
-        Where `testMode` is `true` the update is validated and simulated, then rolled back, so the ring-fence record is left unchanged.
       operationId: modifyRingFenceCash
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -7665,14 +7651,6 @@ paths:
             minLength: 11
             maxLength: 11
           example: HW00013567B
-        - name: testMode
-          in: query
-          description: Validates and simulates the ring-fence update, then rolls back the changes.
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: false
       requestBody:
         required: true
         content:
@@ -7744,9 +7722,6 @@ paths:
 
 
         The release is a soft delete. The ring-fenced amount is reduced, to zero for a full release, but the record is retained, so a later `GET` still returns it with an amount of zero. The response carries a body describing the release, rather than a `204` with no content.
-
-
-        Where `testMode` is `true` the release is validated and simulated, then rolled back, so the ring-fence record is left unchanged.
       operationId: releaseRingFenceCash
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -7759,14 +7734,6 @@ paths:
             minLength: 11
             maxLength: 11
           example: HW00013567B
-        - name: testMode
-          in: query
-          description: Validates and simulates the ring-fence release, then rolls back the changes.
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: false
       requestBody:
         required: false
         description: Omit entirely to release the whole ring-fence.
