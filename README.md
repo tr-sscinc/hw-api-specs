@@ -1,5 +1,15 @@
 # hw-api-specs
 
+Changelog for v0.8.16 API spec
+
+- Added MIS transfers support to `POST /accounts/{accountId}/transfers`
+- Added `allocations` field to `AccountTransfer` schema referencing `MovementAllocation`
+- Added `id` (read-only) field to `MovementAllocation` schema
+- Added MIS cash transfer example (3 sub-accounts) and MIS in-specie transfer example (single sub-account)
+- Added INSPECIE single sub-account constraint to `allocations` field description
+- Added `400-MISAllocationRules` error example for allocation validation failures
+- Updated `POST /accounts/{accountId}/transfers` response code from 200 to 201
+
 Changelog for v0.8.15 API spec
 
 - Update API response for retire the old error format
