@@ -3,9 +3,9 @@
 Changelog for v0.8.15 API spec
 
 - Update API response for retire the old error format
-- Updated get fees allocation for MIS accounts, only info for the specified primary or sub-account is shown (HWIT-11046). 
-- Updated patch fees for MIS accounts so only the specified primary or sub-account is archived (HWIT-11046). 
-- Updated create fees are only on sub-accounts and are of valid type (HWIT-9925).
+- Updated get fees allocation for MIS accounts, only info for the specified primary or sub-account is shown
+- Updated patch fees for MIS accounts so only the specified primary or sub-account is archived
+- Create fees are only on sub-accounts and are of valid types
 
 Changelog for v0.8.14 API spec
 
@@ -41,10 +41,10 @@ Changelog for v0.8.9 API spec
 
 Changelog for v0.8.8 API spec
 
- - Added account status updates to PATCH /accounts/{accountId} (HWIT-5629, HWIT-6458)
+ - Added account status updates to PATCH /accounts/{accountId} 
  - status now accepts ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, NON_UK_RESIDENT
  - Documented 400/401/403/404/500 responses on PATCH /accounts/{accountId}, including the HWA-ACCOUNT-038 status error
- - Added investor status updates to PATCH /investors/{investorId} (HWIT-5629, HWIT-6460)
+ - Added investor status updates to PATCH /investors/{investorId} 
  - InvestorPatch.status now accepts INCEPTED, DECEASED, NON_UK_RESIDENT
  - Documented 400 validation (HWA-EXCEPTION-001) and business-logic (HWA-INVESTOR-023) responses on PATCH /investors/{investorId}
 
@@ -91,12 +91,12 @@ Changelog for v0.8.3 API spec
 Changelog for v0.8.1 API spec
 
  - Added missing responses and fixed advisorId -> adviserId
- - Income options HWIT-8413 and HWIT-8679
+ - Income options changes
  - Declarations are now write only not read only
  - API spec version number to 0.8
  - Removed vulnerability info from GET investor response
  - Removed bank accounts from GET account response
- - Added GET bank accounts endpoint (HWIT-8411)
+ - Added GET bank accounts endpoint
  - Consolidate API specs so we have only one
  - reordered the endpoints to be in a logical order
  - remove investor vulnerabilities and correspondences deletes
@@ -104,9 +104,9 @@ Changelog for v0.8.1 API spec
  - Add PATCH money movements
  - Add PATCH fees
  - Added PATCH account
- - HWIT-7844: add full withdrawals
+ - Add full withdrawals
  - fixed a typo in the decscriptions
- - HWIT-8550: Rename completed to status in fees endpoints
+ - Rename completed to status in fees endpoints
  - added source of funds
  - Added PATCH investor and PUT vulnerability and PUT correspondences
  - read-only decs and reinstated vulnerabilities on investor model
