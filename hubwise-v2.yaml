@@ -7528,7 +7528,6 @@ paths:
                   summary: Account holding no ring-fence
                   value:
                     {
-                      "id": null,
                       "accountId": "HW00013567B",
                       "amount": 0,
                       "currency": "GBP"
@@ -12074,11 +12073,10 @@ components:
       properties:
         id:
           description: >-
-            The ring-fence movement identifier. Returned as `null` where the account holds no
-            ring-fence record.
+            The ring-fence movement identifier. Present only where the account holds a ring-fence
+            record; omitted otherwise.
           format: int64
           type: integer
-          nullable: true
           readOnly: true
           example: 12345
         accountId:
