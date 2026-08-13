@@ -3,7 +3,9 @@
 Changelog for v0.8.15 API spec
 
 - Update API response for retire the old error format
-- Added fees MIS changes
+- Updated get fees allocation for MIS accounts, only info for the specified primary or sub-account is shown (HWIT-11046). 
+- Updated patch fees for MIS accounts so only the specified primary or sub-account is archived (HWIT-11046). 
+- Updated create fees are only on sub-accounts and are of valid type (HWIT-9925).
 
 Changelog for v0.8.14 API spec
 
@@ -49,7 +51,7 @@ Changelog for v0.8.8 API spec
 Changelog for v0.8.7 API spec
 
  - Added descriptions for the GET investor and account endpoints
- - Updated investor email field description to be optional for childrem
+ - Updated investor email field description to be optional for children
  - Updated investor POST, PATCH and GET examples
  - Added descriptions for the PUT vulnerability and correspondence endpoints
  - Added server information for QI environment
