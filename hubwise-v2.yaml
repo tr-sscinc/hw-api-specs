@@ -7634,7 +7634,10 @@ paths:
         Updates the amount on an investment account's existing ring-fence.
 
 
-        The ring-fence must already exist, otherwise `HWA-RINGFENCE-003` is returned — use `POST` to create one. A lower amount reduces the ring-fence; an amount of zero releases it in full, which is the same end result as `DELETE`. The amount must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-004` is returned.
+        The ring-fence must already exist, otherwise `HWA-RINGFENCE-003` is returned — use `POST` to create one. The amount must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-004` is returned.
+
+
+        The amount is the absolute amount to keep, not a delta, so `PATCH` is also how a ring-fence is partially released. To release 3000.00 of a 5000.00 ring-fence, send an amount of 2000.00. An amount of zero releases it in full, which is the same end result as `DELETE`.
 
 
         Only the amount can be updated. The currency cannot be changed and the ring-fence keeps the currency it was created with.
@@ -7717,10 +7720,13 @@ paths:
         Releases ring-fenced (protected) cash back to the account's available balance. This is a book entry only — no cash leaves the account.
 
 
-        Omit the request body for a full release of the whole ring-fence, or supply an amount for a partial release. A release amount greater than the amount currently ring-fenced is rejected with `HWA-RINGFENCE-002`. An account holding no ring-fence, or one already at zero, is rejected with `HWA-RINGFENCE-001`.
+        The whole ring-fence is always released. There is no request body. An account holding no ring-fence, or one already at zero, is rejected with `HWA-RINGFENCE-001`, so a repeated call on an already released ring-fence returns `400` rather than `204`.
 
 
-        The release is a soft delete. The ring-fenced amount is reduced, to zero for a full release, but the record is retained, so a later `GET` still returns it with an amount of zero. The response carries a body describing the release, rather than a `204` with no content.
+        The release is a soft delete. The ring-fenced amount is set to zero but the record is retained, so a later `GET` still returns it with an amount of zero.
+
+
+        To reduce a ring-fence without releasing all of it, use `PATCH` with the amount to keep.
       operationId: releaseRingFenceCash
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -7733,52 +7739,12 @@ paths:
             minLength: 11
             maxLength: 11
           example: HW00013567B
-      requestBody:
-        required: false
-        description: Omit entirely to release the whole ring-fence.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RingFenceReleaseRequest"
-            examples:
-              Ex1:
-                summary: Partial release of a specified amount
-                value:
-                  {
-                    "amount": 3000.00
-                  }
-              Ex2:
-                summary: Full release, amount omitted
-                value: {}
       responses:
-        "200":
-          description: Ring-fenced cash released successfully.
+        "204":
+          description: Ring-fenced cash released. No response body.
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RingFenceReleaseResponse"
-              examples:
-                Ex1:
-                  summary: Partial release, ring-fence remaining
-                  value:
-                    {
-                      "accountId": "HW00013567B",
-                      "releasedAmount": 3000.00,
-                      "currency": "GBP",
-                      "remainingRingfence": 2000.00
-                    }
-                Ex2:
-                  summary: Full release, nothing remaining
-                  value:
-                    {
-                      "accountId": "HW00013567B",
-                      "releasedAmount": 5000.00,
-                      "currency": "GBP",
-                      "remainingRingfence": 0.00
-                    }
         "400":
           $ref: "#/components/responses/400-BadRequest"
         "401":
@@ -12106,44 +12072,6 @@ components:
           readOnly: true
           example: GBP
 
-    RingFenceReleaseResponse:
-      description: >-
-        The outcome of releasing ring-fenced (protected) cash back to an investment account's
-        available balance.
-      type: object
-      additionalProperties: false
-      properties:
-        accountId:
-          description: Unique SS&C Wealth Platform Account identifier the ring-fence belongs to.
-          maxLength: 11
-          minLength: 11
-          type: string
-          readOnly: true
-          example: HW00013567B
-        releasedAmount:
-          description: The amount released from the ring-fence.
-          maximum: 99999999999.99
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-          readOnly: true
-          example: 3000.00
-        currency:
-          description: Currency of the released amount.
-          maxLength: 3
-          minLength: 3
-          type: string
-          readOnly: true
-          example: GBP
-        remainingRingfence:
-          description: The ring-fenced amount remaining after the release. Zero after a full release.
-          maximum: 99999999999.99
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-          readOnly: true
-          example: 2000.00
-
     RingFenceCreateRequest:
       description: >-
         Request payload for creating a ring-fence on an investment account. The currency is not
@@ -12174,30 +12102,13 @@ components:
       properties:
         amount:
           description: >-
-            The new ring-fenced amount. Zero releases the ring-fence in full, which is the same end
-            result as a `DELETE`. Must not exceed the cash available to ring-fence, and is allowed
-            up to 11 digits with 2 decimal places.
-          maximum: 99999999999.99
-          minimum: 0
-          exclusiveMinimum: false
-          type: number
-          example: 3000.00
-
-    RingFenceReleaseRequest:
-      description: >-
-        Optional request payload for releasing ring-fenced cash. Omit the body, or the amount, to
-        release the whole ring-fence.
-      type: object
-      additionalProperties: false
-      properties:
-        amount:
-          description: >-
-            The amount to release. Omit for a full release, or supply a smaller value for a partial
-            release. Must be positive, must not exceed the amount currently ring-fenced, and is
+            The new ring-fenced amount to keep, absolute rather than a delta. A lower value than the
+            current amount partially releases the ring-fence; zero releases it in full, which is the
+            same end result as a `DELETE`. Must not exceed the cash available to ring-fence, and is
             allowed up to 11 digits with 2 decimal places.
           maximum: 99999999999.99
           minimum: 0
-          exclusiveMinimum: true
+          exclusiveMinimum: false
           type: number
           example: 3000.00
 
