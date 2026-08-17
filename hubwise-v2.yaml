@@ -7551,7 +7551,7 @@ paths:
                 summary: Raise a fixed cash amount
                 value:
                   {
-                    "amount": 2000,
+                    "amount": 2000.00,
                     "currency": "GBP"
                   }
       responses:
@@ -7571,7 +7571,7 @@ paths:
                     {
                       "id": "CI000013895",
                       "accountId": "HW000000143",
-                      "amount": 500,
+                      "amount": 500.00,
                       "currency": "GBP",
                       "status": "OPEN"
                     }
@@ -10165,7 +10165,7 @@ components:
           description: The cash amount to raise. Must be greater than 0.
           type: number
           format: double
-          example: 2000
+          example: 2000.00
         currency:
           description: The currency in which to perform the instruction. Must match the base currency of the account.
           type: string
@@ -10196,7 +10196,7 @@ components:
           type: number
           format: double
           readOnly: true
-          example: 500
+          example: 500.00
         currency:
           description: The currency of the amount
           type: string

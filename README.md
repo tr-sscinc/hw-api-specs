@@ -2,7 +2,7 @@
 
 Changelog for v0.8.17 API spec
 
-- Added create raise cash instruction endpoint (POST /accounts/{accountId}/raise-cash-instructions)
+- Added create raise cash instruction endpoint
 - Added RaiseCashInstruction and RaiseCashInstructionResponse schemas
 
 Changelog for v0.8.16 API spec
