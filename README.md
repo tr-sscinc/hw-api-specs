@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.16 API spec
+
+- Remove reference field from money movement
+
 Changelog for v0.8.15 API spec
 
 - Update API response for retire the old error format
