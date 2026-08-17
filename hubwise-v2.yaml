@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.16
+  version: 0.8.17
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -5469,7 +5469,7 @@ paths:
           description: >-                                                                                                                                                                                                                  
               Unique SS&C Wealth Platform Account identifier. For a Multiple                                                                                                                                                                 
               Investment Strategy (MIS) account this must be a sub-account ID, as                                                                                                                                                            
-              fees cannot be set on the primary account. 
+              fees cannot be set on the primary account.
           required: true
           schema:
             type: string
@@ -5541,20 +5541,20 @@ paths:
                       }
                     ]
                   }
-              Ex4:                                                                                                                                                                                                                         
-                summary: Add fees directly to an MIS sub-account (accountId in path is the sub-account).                                                                                                                                   
-                value:                                                                                                                                                                                                                     
-                  {                                                                                                                                                                                                                        
-                    "fees": [                                                                                                                                                                                                              
-                      { "type": "ADVISER_ANNUAL", "percentage": 0.5, "vatIncluded": true, "startDate": "2026-07-01" },                                                                                                                     
-                      { "type": "ADVISER_ONE_OFF", "amount": 450.00, "vatIncluded": true },                                                                                                                                                
-                      { "type": "PORTFOLIO_MANAGEMENT", "percentage": 0.25, "vatIncluded": true, "startDate": "2026-07-15" },  
-                      { "type": "INVESTMENT_SERVICE", "percentage": 0.15, "vatIncluded": true, "startDate": "2026-07-15" }                                                                                                              
-                    ],                                                                                                                                                                                                                     
-                    "declarations": [                                                                                                                                                                                                      
-                      { "templateId": "AMENDMENT_CONSENT", "adviserId": "E008469", "acknowledgement": true }                                                                                                                               
-                    ]                                                                                                                                                                                                                      
-                  }     
+              Ex4:
+                summary: Add fees directly to an MIS sub-account (accountId in path is the sub-account).
+                value:
+                  {
+                    "fees": [
+                      { "type": "ADVISER_ANNUAL", "percentage": 0.5, "vatIncluded": true, "startDate": "2026-07-01" },
+                      { "type": "ADVISER_ONE_OFF", "amount": 450.00, "vatIncluded": true },
+                      { "type": "PORTFOLIO_MANAGEMENT", "percentage": 0.25, "vatIncluded": true, "startDate": "2026-07-15" },
+                      { "type": "INVESTMENT_SERVICE", "percentage": 0.15, "vatIncluded": true, "startDate": "2026-07-15" }
+                    ],
+                    "declarations": [
+                      { "templateId": "AMENDMENT_CONSENT", "adviserId": "E008469", "acknowledgement": true }
+                    ]
+                  }
       responses:
         "201":
           description: Account fee(s) created successfully.
@@ -7514,6 +7514,78 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /accounts/{accountId}/raise-cash-instructions:
+
+    post:
+      tags:
+        - Accounts
+      summary: Create a raise cash instruction on an account
+      description: >-
+        Creates a raise cash investment instruction against an investment account.
+
+        A raise cash instruction realises a monetary amount of cash on the account. The amount must be greater than zero, and the currency must match the account's base currency.
+
+        The account must exist and must not be in PENDING status.
+
+        The instruction identifier returned in the response uniquely identifies the instruction and reflects its processing status at the point of creation. The status is subsequently maintained by back office processing.
+      operationId: createRaiseCashInstruction
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW000000143
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RaiseCashInstruction"
+            examples:
+              Ex1:
+                summary: Raise a fixed cash amount
+                value:
+                  {
+                    "amount": 2000,
+                    "currency": "GBP"
+                  }
+      responses:
+        "201":
+          description: Raise cash instruction created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RaiseCashInstructionResponse"
+              examples:
+                Ex1:
+                  summary: Raise cash instruction created
+                  value:
+                    {
+                      "id": "CI000013895",
+                      "accountId": "HW000000143",
+                      "amount": 500,
+                      "currency": "GBP",
+                      "status": "OPEN"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /accounts/{accountId}/create-executed-trades:
 
     post:
@@ -8200,7 +8272,7 @@ paths:
             enum: [true, false]
             default: true
           example: true
-          description: Indicates whether an illustration document should be generated.    
+          description: Indicates whether an illustration document should be generated.
       requestBody:
         required: true
         content:
@@ -10078,8 +10150,70 @@ components:
           description: The percentage of the instrument the requester want to sell or re-invest as the proceeds or sells or redemptions. Only whole percentages accepted.
           format: integer
           maxLength: 3
-          minLength: 1 
+          minLength: 1
           example: 50
+
+    RaiseCashInstruction:
+      description: A request to raise a cash amount on an investment account
+      additionalProperties: false
+      required:
+        - amount
+        - currency
+      type: object
+      properties:
+        amount:
+          description: The cash amount to raise. Must be greater than 0.
+          type: number
+          format: double
+          example: 2000
+        currency:
+          description: The currency in which to perform the instruction. Must match the base currency of the account.
+          type: string
+          maxLength: 3
+          example: GBP
+
+    RaiseCashInstructionResponse:
+      description: A raise cash instruction on an investment account
+      additionalProperties: false
+      readOnly: true
+      type: object
+      properties:
+        id:
+          description: The unique SS&C Wealth Platform identifier for the instruction
+          type: string
+          maxLength: 11
+          readOnly: true
+          example: CI000013895
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier the cash amount is raised against
+          type: string
+          minLength: 11
+          maxLength: 11
+          readOnly: true
+          example: HW000000143
+        amount:
+          description: The cash amount to raise in the instruction
+          type: number
+          format: double
+          readOnly: true
+          example: 500
+        currency:
+          description: The currency of the amount
+          type: string
+          maxLength: 3
+          readOnly: true
+          example: GBP
+        status:
+          description: The processing status of the instruction
+          enum:
+            - OPEN
+            - COMPLETE
+            - FAILED
+            - REJECTED
+            - EXPIRED
+          type: string
+          readOnly: true
+          example: OPEN
 
     Taxation:
       type: object
@@ -12600,7 +12734,7 @@ components:
           example: GBP
 
   examples:
-    
+
     400-MissingBodyProperty:
       summary: Request body is missing a required property
       value:
@@ -12713,16 +12847,16 @@ components:
             pointer: "/transfers/0/allocations/1/accountId"
 
     400-SubAccountFeeRules:
-      summary: MIS sub-account fee rule violation                                                                                                                                                                                          
-      value:                                                                                                                                                                                                                               
-        title: Invalid Request                                                                                                                                                                                                             
-        detail: The request body is invalid and not meeting business rules.                                                                                                                                                                
-        errors:                                                                                                                                                                                                                            
-          - detail: For MIS accounts, fees can only be set on sub-accounts.                                                                                                                                                                
-            pointer: "/fees"                                                                                                                                                                                                               
-          - detail: Invalid fee type PLATFORM_ANNUAL for a sub-account.                                                                                                                                                                    
+      summary: MIS sub-account fee rule violation
+      value:
+        title: Invalid Request
+        detail: The request body is invalid and not meeting business rules.
+        errors:
+          - detail: For MIS accounts, fees can only be set on sub-accounts.
+            pointer: "/fees"
+          - detail: Invalid fee type PLATFORM_ANNUAL for a sub-account.
             pointer: "/fees/0/type"
-            
+
     500-serverError:
       summary: Server error
       value:
@@ -12769,7 +12903,7 @@ components:
               $ref: '#/components/examples/400-SubAccountFeeRules'
             400-MISAllocationRules:
               $ref: '#/components/examples/400-MISAllocationRules'
-    
+
     400-BadRequest-NoBody:
       description: |
         The request had one of the following issues:

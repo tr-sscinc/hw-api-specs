@@ -1,5 +1,10 @@
 # hw-api-specs
 
+Changelog for v0.8.17 API spec
+
+- Added create raise cash instruction endpoint (POST /accounts/{accountId}/raise-cash-instructions)
+- Added RaiseCashInstruction and RaiseCashInstructionResponse schemas
+
 Changelog for v0.8.16 API spec
 
 - Added MIS transfers support to `POST /accounts/{accountId}/transfers`
