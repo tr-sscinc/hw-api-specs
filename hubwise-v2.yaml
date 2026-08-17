@@ -7720,10 +7720,10 @@ paths:
         Releases ring-fenced (protected) cash back to the account's available balance. This is a book entry only — no cash leaves the account.
 
 
-        The whole ring-fence is always released. There is no request body. An account holding no ring-fence, or one already at zero, is rejected with `HWA-RINGFENCE-001`, so a repeated call on an already released ring-fence returns `400` rather than `204`.
+        The whole ring-fence is always released. There is no request body. An account holding no ring-fence, or one already at zero, is rejected with `HWA-RINGFENCE-001`, so a repeated call on an already released ring-fence returns `400` rather than `200`.
 
 
-        The release is a soft delete. The ring-fenced amount is set to zero but the record is retained, so a later `GET` still returns it with an amount of zero.
+        The release is a soft delete. The ring-fenced amount is set to zero but the record is retained, so a later `GET` still returns it with an amount of zero. The response is the released ring-fence itself, in the same shape returned by `GET`, `POST` and `PATCH`: the identifier is still present, the amount is zero, and the currency is unchanged.
 
 
         To reduce a ring-fence without releasing all of it, use `PATCH` with the amount to keep.
@@ -7740,11 +7740,25 @@ paths:
             maxLength: 11
           example: HW00013567B
       responses:
-        "204":
-          description: Ring-fenced cash released. No response body.
+        "200":
+          description: Ring-fenced cash released successfully.
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Ring-fence released in full, record retained at zero
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 0.00,
+                      "currency": "GBP"
+                    }
         "400":
           $ref: "#/components/responses/400-BadRequest"
         "401":
