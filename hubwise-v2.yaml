@@ -7827,7 +7827,7 @@ paths:
         Creates a ring-fence on an investment account that does not already hold one.
 
 
-        A ring-fence is a single-per-account resource, so an account that already holds one is rejected with `HWA-RINGFENCE-005` — use `PATCH` to change the amount instead. The amount must be positive and must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-004` is returned.
+        A ring-fence is a single-per-account resource, so an account that already holds one is rejected with `HWA-RINGFENCE-004` — use `PATCH` to change the amount instead. The amount must be positive and must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-003` is returned.
 
 
         The currency is not supplied by the caller. It is taken from the account's base currency.
@@ -7848,7 +7848,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RingFenceCreateRequest"
+              $ref: "#/components/schemas/RingFenceRequest"
             examples:
               Ex1:
                 summary: Ring-fence a whole-pound amount
@@ -7901,7 +7901,7 @@ paths:
         Updates the amount on an investment account's existing ring-fence.
 
 
-        The ring-fence must already exist, otherwise `HWA-RINGFENCE-003` is returned — use `POST` to create one. The amount must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-004` is returned.
+        The ring-fence must already exist, otherwise `HWA-RINGFENCE-002` is returned — use `POST` to create one. The amount must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-003` is returned.
 
 
         The amount is the absolute amount to keep, not a delta, so `PATCH` is also how a ring-fence is partially released. To release 3000.00 of a 5000.00 ring-fence, send an amount of 2000.00. An amount of zero releases it in full, which is the same end result as `DELETE`.
@@ -7925,7 +7925,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RingFenceUpdateRequest"
+              $ref: "#/components/schemas/RingFenceRequest"
             examples:
               Ex1:
                 summary: Reduce the ring-fenced amount
@@ -8023,7 +8023,7 @@ paths:
                     {
                       "id": 12345,
                       "accountId": "HW00013567B",
-                      "amount": 0.00,
+                      "amount": 0,
                       "currency": "GBP"
                     }
         "400":
@@ -12370,45 +12370,27 @@ components:
           readOnly: true
           example: GBP
 
-    RingFenceCreateRequest:
+    RingFenceRequest:
       description: >-
-        Request payload for creating a ring-fence on an investment account. The currency is not
-        supplied by the caller, it is taken from the account's base currency.
+        Request payload for creating or updating a ring-fence on an investment account. The currency
+        is never supplied by the caller: on creation it is taken from the account's base currency,
+        and an update cannot change it.
       required:
         - amount
       type: object
-      additionalProperties: false
       properties:
         amount:
           description: >-
-            The amount of cash to ring-fence. Must be positive, must not exceed the cash available
-            to ring-fence, and is allowed up to 11 digits with 2 decimal places.
-          maximum: 99999999999.99
-          minimum: 0
-          exclusiveMinimum: true
-          type: number
-          example: 5000.00
-
-    RingFenceUpdateRequest:
-      description: >-
-        Request payload for updating the amount on an investment account's existing ring-fence. The
-        currency cannot be changed by an update.
-      required:
-        - amount
-      type: object
-      additionalProperties: false
-      properties:
-        amount:
-          description: >-
-            The new ring-fenced amount to keep, absolute rather than a delta. A lower value than the
-            current amount partially releases the ring-fence; zero releases it in full, which is the
-            same end result as a `DELETE`. Must not exceed the cash available to ring-fence, and is
-            allowed up to 11 digits with 2 decimal places.
+            The amount of cash to ring-fence, absolute rather than a delta, allowed up to 11 digits
+            with 2 decimal places, and never more than the cash available to ring-fence. On `POST`
+            it must be positive: zero is rejected, because a ring-fence is created with an amount to
+            protect. On `PATCH` zero is permitted and releases the ring-fence in full, the same end
+            result as a `DELETE`, while any value below the current amount partially releases it.
           maximum: 99999999999.99
           minimum: 0
           exclusiveMinimum: false
           type: number
-          example: 3000.00
+          example: 5000.00
 
     IllustrationNPAccountMovement:
       type: object
