@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.16
+  version: 0.8.17
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -7745,6 +7745,298 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /accounts/{accountId}/ring-fence-cash:
+
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve the ring-fenced cash on an investment account
+      description: >-
+        Retrieves the ring-fenced (protected) cash currently held against an investment account.
+
+
+        A ring-fence is a single-per-account resource. Where one exists it is returned with its amount, including when that amount is zero because the ring-fence has been released and its record retained.
+
+
+        Where the account holds no ring-fence at all the endpoint still returns `200` with an amount of zero and the account's base currency. It is never a `404` and never an empty body.
+      operationId: retrieveRingFenceCash
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013567B
+      responses:
+        "200":
+          description: Ring-fenced cash retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Account holding a ring-fence
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 5000.00,
+                      "currency": "GBP"
+                    }
+                Ex2:
+                  summary: Account holding no ring-fence
+                  value:
+                    {
+                      "accountId": "HW00013567B",
+                      "amount": 0,
+                      "currency": "GBP"
+                    }
+                Ex3:
+                  summary: Fully released ring-fence, record retained
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 0.00,
+                      "currency": "GBP"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    post:
+      tags:
+        - Accounts
+      summary: Create a ring-fence on an investment account
+      description: >-
+        Creates a ring-fence on an investment account that does not already hold one.
+
+
+        A ring-fence is a single-per-account resource, so an account that already holds one is rejected with `HWA-RINGFENCE-004` — use `PATCH` to change the amount instead. The amount must be positive and must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-003` is returned.
+
+
+        The currency is not supplied by the caller. It is taken from the account's base currency.
+      operationId: createRingFenceCash
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013567B
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RingFenceRequest"
+            examples:
+              Ex1:
+                summary: Ring-fence a whole-pound amount
+                value:
+                  {
+                    "amount": 5000.00
+                  }
+              Ex2:
+                summary: Ring-fence an amount with pence
+                value:
+                  {
+                    "amount": 1234.56
+                  }
+      responses:
+        "201":
+          description: Ring-fenced cash created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Ring-fence created, currency taken from the account base currency
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 5000.00,
+                      "currency": "GBP"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    patch:
+      tags:
+        - Accounts
+      summary: Update the ring-fenced cash on an investment account
+      description: >-
+        Updates the amount on an investment account's existing ring-fence.
+
+
+        The ring-fence must already exist, otherwise `HWA-RINGFENCE-002` is returned — use `POST` to create one. The amount must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-003` is returned.
+
+
+        The amount is the absolute amount to keep, not a delta, so `PATCH` is also how a ring-fence is partially released. To release 3000.00 of a 5000.00 ring-fence, send an amount of 2000.00. An amount of zero releases it in full, which is the same end result as `DELETE`.
+
+
+        Only the amount can be updated. The currency cannot be changed and the ring-fence keeps the currency it was created with.
+      operationId: modifyRingFenceCash
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013567B
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RingFenceRequest"
+            examples:
+              Ex1:
+                summary: Reduce the ring-fenced amount
+                value:
+                  {
+                    "amount": 3000.00
+                  }
+              Ex2:
+                summary: Release the ring-fence in full by setting the amount to zero
+                value:
+                  {
+                    "amount": 0.00
+                  }
+      responses:
+        "200":
+          description: Ring-fenced cash updated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Ring-fenced amount reduced
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 3000.00,
+                      "currency": "GBP"
+                    }
+                Ex2:
+                  summary: Ring-fence released by an update to zero, record retained
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 0.00,
+                      "currency": "GBP"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    delete:
+      tags:
+        - Accounts
+      summary: Release the ring-fenced cash on an investment account
+      description: >-
+        Releases ring-fenced (protected) cash back to the account's available balance. This is a book entry only — no cash leaves the account.
+
+
+        The whole ring-fence is always released. There is no request body. An account holding no ring-fence, or one already at zero, is rejected with `HWA-RINGFENCE-001`, so a repeated call on an already released ring-fence returns `400` rather than `200`.
+
+
+        The release is a soft delete. The ring-fenced amount is set to zero but the record is retained, so a later `GET` still returns it with an amount of zero. The response is the released ring-fence itself, in the same shape returned by `GET`, `POST` and `PATCH`: the identifier is still present, the amount is zero, and the currency is unchanged.
+
+
+        To reduce a ring-fence without releasing all of it, use `PATCH` with the amount to keep.
+      operationId: releaseRingFenceCash
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013567B
+      responses:
+        "200":
+          description: Ring-fenced cash released successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Ring-fence released in full, record retained at zero
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 0,
+                      "currency": "GBP"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /fee-groups:
 
     post:
@@ -12037,6 +12329,69 @@ components:
           items:
             $ref: '#/components/schemas/Declaration'
     
+    RingFenceResponse:
+      description: >-
+        The ring-fenced (protected) cash held against an investment account.
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          description: >-
+            The ring-fence movement identifier. Present only where the account holds a ring-fence
+            record; omitted otherwise.
+          format: int64
+          type: integer
+          readOnly: true
+          example: 12345
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier the ring-fence belongs to.
+          maxLength: 11
+          minLength: 11
+          type: string
+          readOnly: true
+          example: HW00013567B
+        amount:
+          description: >-
+            The ring-fenced amount. Zero where the account holds no ring-fence, or where an
+            existing ring-fence has been released in full.
+          maximum: 99999999999.99
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          readOnly: true
+          example: 5000.00
+        currency:
+          description: >-
+            Currency of the ring-fenced amount, taken from the account's base currency. Omitted
+            where the account holds no base currency.
+          maxLength: 3
+          minLength: 3
+          type: string
+          readOnly: true
+          example: GBP
+
+    RingFenceRequest:
+      description: >-
+        Request payload for creating or updating a ring-fence on an investment account. The currency
+        is never supplied by the caller: on creation it is taken from the account's base currency,
+        and an update cannot change it.
+      required:
+        - amount
+      type: object
+      properties:
+        amount:
+          description: >-
+            The amount of cash to ring-fence, absolute rather than a delta, allowed up to 11 digits
+            with 2 decimal places, and never more than the cash available to ring-fence. On `POST`
+            it must be positive: zero is rejected, because a ring-fence is created with an amount to
+            protect. On `PATCH` zero is permitted and releases the ring-fence in full, the same end
+            result as a `DELETE`, while any value below the current amount partially releases it.
+          maximum: 99999999999.99
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          example: 5000.00
+
     IllustrationNPAccountMovement:
       type: object
       additionalProperties: false
