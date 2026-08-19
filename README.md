@@ -1,12 +1,13 @@
 # hw-api-specs
-Changelog for v0.8.17 API spec
 
-- Added ring-fence cash endpoints for accounts: GET, POST, PATCH and DELETE on /accounts/{accountId}/ring-fence-cash
-
-Changelog for v0.8.17 API spec
+Changelog for v0.8.18 API spec
 
 - Added create raise cash instruction endpoint
 - Added RaiseCashInstruction and RaiseCashInstructionResponse schemas
+
+Changelog for v0.8.17 API spec
+
+- Added ring-fence cash endpoints for accounts: GET, POST, PATCH and DELETE on /accounts/{accountId}/ring-fence-cash
 
 Changelog for v0.8.16 API spec
 
