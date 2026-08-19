@@ -5408,17 +5408,23 @@ paths:
         - Accounts
       summary: Create intra-account transfer(s)
       description: >-
-        Creates one or more intra-account transfer records to move cash or stock between sub-accounts (including the primary account) within the same MIS (Model Investment Service) structure.
+        Creates one or more internal transfers of cash or stock between sub-accounts, or between a sub-account and the primary account, within the same MIS account group.
 
-        Transfers can be used to rebalance holdings across sub-accounts, or to redistribute assets when moving between MIS and non-MIS structures.
+        The `{accountId}` path parameter is the funding account - the account that funds every transfer in the batch. This is the opposite of the adjacent `POST /accounts/{accountId}/inter-account-transfers` endpoint, where `{accountId}` is the destination account. Each element of the request names its own `receivingAccountId`.
 
-        All accounts involved must belong to the same MIS. The source account must hold sufficient balance to cover the transfer. Both the source and destination accounts must belong to the same investor.
+        There is no transfer type field. The kind of each transfer is inferred from the value fields supplied. For a cash transfer, supply `amount` only and omit `instrumentDetails`, `quantity` and `percentage`. For a stock transfer, supply `instrumentDetails` together with `quantity`, `percentage`, or both, and omit `amount`.
+
+        The funding and receiving accounts must be different, must both be activated, and must belong to the same MIS account group. The `currency` must match the base currency of both the funding and the receiving account.
+
+        Cash transfers are validated against the cleared cash held by the funding account, summed across every element in the batch, and are only permitted where the funding account is on a discretionary model. Stock transfers require the funding account to hold the requested instrument, with the units also assessed across the whole batch.
+
+        Validation is all-or-nothing. If any element fails, the entire request is rejected, every failure is reported in the error response, and nothing is written. A transfer that the back office subsequently declines is still created and is reported as `REJECTED` in its own `status`.
       operationId: createIntraAccountTransfers
       parameters:
         - $ref: '#/components/parameters/Request-Id'
         - name: accountId
           in: path
-          description: Unique SS&C Wealth Platform Account identifier (destination account)
+          description: Unique SS&C Wealth Platform Account identifier for the funding account - the account that cash or stock is transferred from
           required: true
           schema:
             type: string
@@ -5430,51 +5436,59 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/IntraAccountTransfersHeader"
+              $ref: "#/components/schemas/IntraAccountTransferRequest"
             examples:
               Ex1:
-                summary: Transfer cash from a sub-account to the primary account
+                summary: Cash transfer to another account in the same MIS
                 value:
                   {
                     "intraAccountTransfers": [
                       {
-                        "transferType": "CASH",
-                        "value": 2500.00,
-                        "currency": "GBP",
-                        "sourceAccountId": "HW00013452A"
-                      }
-                    ],
-                    "declarations": [
-                      {
-                        "adviserId": "E273053",
-                        "templateId": "AMENDMENT_CONSENT",
-                        "acknowledgement": true
+                        "receivingAccountId": "HW00014052B",
+                        "amount": 1000.00,
+                        "currency": "GBP"
                       }
                     ]
                   }
               Ex2:
-                summary: Transfer stock between two sub-accounts
+                summary: Stock transfer by quantity
                 value:
                   {
                     "intraAccountTransfers": [
                       {
-                        "transferType": "STOCK",
-                        "sourceAccountId": "HW00013452A",
-                        "sedol": "B3KJDS0",
-                        "units": 150.00
+                        "receivingAccountId": "HW00014052B",
+                        "quantity": 150,
+                        "currency": "GBP",
+                        "instrumentDetails":
+                          {
+                            "isin": "GB0002405495",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          }
                       }
-                    ],
-                    "declarations": [
+                    ]
+                  }
+              Ex3:
+                summary: Stock transfer by percentage of the holding
+                value:
+                  {
+                    "intraAccountTransfers": [
                       {
-                        "adviserId": "E273053",
-                        "templateId": "AMENDMENT_CONSENT",
-                        "acknowledgement": true
+                        "receivingAccountId": "HW00014052B",
+                        "percentage": 20,
+                        "currency": "GBP",
+                        "instrumentDetails":
+                          {
+                            "isin": "GB0002405495",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          }
                       }
                     ]
                   }
       responses:
-        "201":
-          description: Intra-account transfer(s) created successfully.
+        "200":
+          description: Intra-account transfer(s) created successfully. One entry is returned per request element, in request order, each with its own status.
           headers:
             Request-Id:
               $ref: '#/components/headers/Request-Id'
@@ -5484,38 +5498,55 @@ paths:
                 $ref: "#/components/schemas/IntraAccountTransfersResponse"
               examples:
                 Ex1:
-                  summary: Cash intra-account transfer created
+                  summary: Cash transfer created
                   value:
                     {
                       "intraAccountTransfers": [
                         {
-                          "id": 2001,
-                          "accountId": "HW00013451A",
-                          "tenantId": "HUBWISE",
-                          "adviserId": "E273053",
-                          "transferType": "CASH",
-                          "value": 2500.00,
+                          "id": "CI00000001A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "amount": 1000.00,
                           "currency": "GBP",
-                          "sourceAccountId": "HW00013452A",
-                          "status": "INCEPTED"
+                          "status": "OPEN",
+                          "effectiveDate": "2026-08-18"
                         }
                       ]
                     }
                 Ex2:
-                  summary: Stock intra-account transfer created
+                  summary: Stock transfer created
                   value:
                     {
                       "intraAccountTransfers": [
                         {
-                          "id": 2002,
-                          "accountId": "HW00013451A",
-                          "tenantId": "HUBWISE",
-                          "adviserId": "E273053",
-                          "transferType": "STOCK",
-                          "sourceAccountId": "HW00013452A",
-                          "sedol": "B3KJDS0",
-                          "units": 150.00,
-                          "status": "INCEPTED"
+                          "id": "CI00000002A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "quantity": 150,
+                          "currency": "GBP",
+                          "instrumentDetails":
+                            {
+                              "isin": "GB0002405495",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                          "status": "OPEN",
+                          "effectiveDate": "2026-08-18"
+                        }
+                      ]
+                    }
+                Ex3:
+                  summary: Transfer created but declined by the back office
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": "CI00000003A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "amount": 1000.00,
+                          "currency": "GBP",
+                          "status": "REJECTED"
                         }
                       ]
                     }
@@ -5535,9 +5566,11 @@ paths:
         - Accounts
       summary: Retrieve intra-account transfers
       description: >-
-        Retrieves all intra-account transfer records for a specific investment account.
+        Retrieves the internal cash and stock transfer instructions recorded for an investment account.
 
-        Returns an empty collection if no records exist.
+        For a primary MIS account, the instructions across every sub-account in the same MIS account group are returned. For a sub-account, only the instructions on that account are returned.
+
+        Where an instruction has a status of `FAILED` or `REJECTED`, the `reason` array carries the rejection details.
       operationId: retrieveIntraAccountTransfers
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -5549,7 +5582,7 @@ paths:
             type: string
             minLength: 11
             maxLength: 11
-          example: HW00013451A
+          example: HW04003258A
       responses:
         "200":
           description: Intra-account transfers retrieved successfully.
@@ -5562,29 +5595,60 @@ paths:
                 $ref: "#/components/schemas/IntraAccountTransfersResponse"
               examples:
                 Ex1:
-                  summary: Intra-account transfers found
+                  summary: Cash and stock instructions on a MIS account group
                   value:
                     {
                       "intraAccountTransfers": [
                         {
-                          "id": 2001,
-                          "accountId": "HW00013451A",
-                          "tenantId": "HUBWISE",
-                          "adviserId": "E273053",
-                          "transferType": "CASH",
-                          "value": 2500.00,
+                          "id": "CI00000001A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "amount": 1000.00,
                           "currency": "GBP",
-                          "sourceAccountId": "HW00013452A",
-                          "status": "INCEPTED"
+                          "status": "COMPLETE",
+                          "effectiveDate": "2026-08-18"
+                        },
+                        {
+                          "id": "CI00000002A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "quantity": 150,
+                          "currency": "GBP",
+                          "instrumentDetails":
+                            {
+                              "isin": "GB0002405495",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                          "status": "OPEN",
+                          "effectiveDate": "2026-08-18"
                         }
                       ]
                     }
                 Ex2:
-                  summary: No intra-account transfers found
+                  summary: An instruction rejected by the back office
                   value:
                     {
-                      "intraAccountTransfers": []
+                      "intraAccountTransfers": [
+                        {
+                          "id": "CI00000003A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "amount": 1000.00,
+                          "currency": "GBP",
+                          "status": "REJECTED",
+                          "effectiveDate": "2026-08-18",
+                          "reason": [
+                            "HW00013451A - Insufficient cleared funds"
+                          ]
+                        }
+                      ]
                     }
+        "204":
+          description: No intra-account transfer instructions exist for the account.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
         "401":
@@ -5595,7 +5659,6 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-
   /accounts/{accountId}/fees:
     
     post:
@@ -12233,116 +12296,117 @@ components:
           items:
             $ref: "#/components/schemas/Declaration"
 
-    IntraAccountTransfersHeader:
+    IntraAccountTransferRequest:
       additionalProperties: false
+      description: A batch of internal cash or stock transfers to create out of a single funding account. Validation is all-or-nothing across the batch.
       required:
         - intraAccountTransfers
       type: object
       properties:
         intraAccountTransfers:
+          description: The transfers to create. At least one is required.
           type: array
+          minItems: 1
           items:
             $ref: "#/components/schemas/IntraAccountTransfer"
-        declarations:
-          writeOnly: true
-          type: array
-          items:
-            $ref: "#/components/schemas/Declaration"
 
     IntraAccountTransfer:
       additionalProperties: false
+      description: >-
+        A single internal transfer of cash or stock between two accounts in the same MIS account group.
+
+        The kind of transfer is inferred from the value fields supplied rather than from an explicit type. A cash transfer carries `amount` only. A stock transfer carries `instrumentDetails` with `quantity`, `percentage`, or both. Fields that do not apply to the kind of transfer are omitted from responses.
       required:
-        - transferType
-        - sourceAccountId
+        - receivingAccountId
+        - currency
       type: object
       properties:
         id:
-          description: SS&C Wealth Platform intra-account transfer identifier
-          type: integer
-          format: int64
+          description: SS&C Wealth Platform complex instruction identifier allocated to the transfer
+          type: string
+          minLength: 11
+          maxLength: 11
           readOnly: true
-          example: 2001
-        accountId:
-          description: Unique SS&C Wealth Platform Account identifier (destination account)
+          example: CI00000001A
+        fundingAccountId:
+          description: Unique SS&C Wealth Platform Account identifier for the funding account - the account the transfer was taken from
           type: string
           minLength: 11
           maxLength: 11
           readOnly: true
           example: HW00013451A
-        tenantId:
-          description: Unique SS&C Wealth Platform Tenant identifier
-          type: string
-          minLength: 7
-          maxLength: 7
-          readOnly: true
-          example: HUBWISE
-        adviserId:
-          description: Unique SS&C Wealth Platform Adviser identifier
-          type: string
-          maxLength: 7
-          readOnly: true
-          example: E273053
-        transferType:
-          description: Indicates whether the transfer moves cash or stock holdings
-          type: string
-          enum:
-            - CASH
-            - STOCK
-          x-enum-descriptions:
-            - Transfer a cash amount between accounts
-            - Transfer stock holdings between accounts
-          example: CASH
-        sourceAccountId:
-          description: Unique SS&C Wealth Platform Account identifier for the source account
+        receivingAccountId:
+          description: Unique SS&C Wealth Platform Account identifier for the receiving account. Must differ from the funding account and belong to the same MIS account group.
           type: string
           minLength: 11
           maxLength: 11
-          example: HW00013452A
-        value:
-          description: Cash transfer value. Required when transferType is CASH.
-          type: number
-          format: double
-          minimum: 0
-          example: 2500.00
-        currency:
-          description: ISO 4217 currency code. Required when transferType is CASH.
-          type: string
-          minLength: 3
-          maxLength: 3
-          example: GBP
-        sedol:
-          description: SEDOL code identifying the stock to transfer. Required when transferType is STOCK.
-          type: string
-          minLength: 7
-          maxLength: 7
-          example: B3KJDS0
-        units:
-          description: Number of stock units to transfer. Required when transferType is STOCK.
+          example: HW00014052B
+        amount:
+          description: Cash amount to move. Cash transfers only, and must be absent for a stock transfer. Must be greater than zero with no more than 2 decimal places.
           type: number
           format: double
           minimum: 0
           exclusiveMinimum: true
-          example: 150.00
+          maximum: 9999999999999.99
+          example: 1000.00
+        percentage:
+          description: Percentage of the holding to move. Stock transfers only, and may be supplied together with `quantity`. Must be greater than zero and no greater than 100.
+          type: number
+          format: double
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 100
+          example: 20
+        quantity:
+          description: Units of the instrument to move. Stock transfers only, and may be supplied together with `percentage`. Must be greater than zero with no more than 5 decimal places.
+          type: number
+          format: double
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 9999999999.99999
+          example: 150
+        currency:
+          description: ISO 4217 currency code. Must be a valid movement currency and must match the base currency of both the funding and the receiving account.
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: GBP
+        instrumentDetails:
+          $ref: "#/components/schemas/InstrumentDetails"
         status:
-          description: Transfer status
+          description: Status of the transfer instruction
           type: string
           enum:
-            - INCEPTED
-            - NEW
+            - OPEN
             - COMPLETE
-            - PENDING
-            - ARCHIVED
+            - REJECTED
+            - FAILED
+            - EXPIRED
           x-enum-descriptions:
-            - Transfer has been created and is awaiting processing
-            - Transfer is newly submitted
-            - Transfer has been completed
-            - Transfer is pending review or action
-            - Transfer has been archived
+            - In flight
+            - Completed
+            - Declined by the back office
+            - Failed
+            - Expired
           readOnly: true
-          example: INCEPTED
+          example: OPEN
+        effectiveDate:
+          description: Effective date set by the back office. Not returned until the back office has processed the instruction.
+          type: string
+          format: date
+          readOnly: true
+          example: "2026-08-18"
+        reason:
+          description: Rejection reason(s), each formatted as `<accountId> - <message>`. Returned on retrieval when the status is `FAILED` or `REJECTED`.
+          type: array
+          readOnly: true
+          items:
+            type: string
+            example: HW00013451A - Insufficient cleared funds
 
     IntraAccountTransfersResponse:
       additionalProperties: false
+      description: One entry per transfer. On creation the entries are returned in request order.
       type: object
       properties:
         intraAccountTransfers:
