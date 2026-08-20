@@ -8573,7 +8573,11 @@ paths:
                   {
                     "investors": [
                       {
-                          "name": "Anne Winfield",
+                          "title": "Miss",
+                          "firstName": "Anne",
+                          "surname": "Winfield",
+                          "trustName": "",
+                          "corpName": "",
                           "dateOfBirth": "1990-05-15"
                       }
                     ],
@@ -8643,7 +8647,11 @@ paths:
                     
                     "investors": [
                       {
-                          "name": "Anne Winfield",
+                          "title": "Miss",
+                          "firstName": "Anne",
+                          "surname": "Winfield",
+                          "trustName": "",
+                          "corpName": "",
                           "dateOfBirth": "1990-05-15"
                       }
                     ],
@@ -12677,22 +12685,39 @@ components:
            description: Unique SS&C Wealth Platform Account identifier
 
         investors:
-              type: array
-              description: |
-                The investor(s) associated with the illustration.
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    example: "Anne Winfield"
-                    description: The investor’s name.
-                  dateOfBirth:
-                    type: string
-                    format: date
-                    example: "2000-10-10"
-                    description: The investor’s date of birth. 
-        
+          type: array
+          description: |
+            The investor(s) associated with the illustration.
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                example: "Miss"
+                description: The investor's title.
+              firstName:
+                type: string
+                example: "Anne"
+                description: The investor's first name.
+              surname:
+                type: string
+                example: "Winfield"
+                description: The investor's surname.
+              trustName:
+                type: string
+                example: "ABC Family Trust"
+                description: The name of the trust, if applicable.
+              corpName:
+                type: string
+                example: "ABC Holding LTD"
+                description: The name of the corporation, if applicable.
+              dateOfBirth:
+                type: string
+                format: date
+                example: "1990-05-15"
+                description: The investor's date of birth.
+            
+      
           
         illustrationDetails:
           type: object
