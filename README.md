@@ -3,6 +3,7 @@
 Changelog for v0.8.19 API spec
 
 - Remove reference field from money movement
+- Updated illustration investor properties
 
 Changelog for v0.8.18 API spec
 
