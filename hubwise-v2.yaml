@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.16
+  version: 0.8.18
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -4468,8 +4468,95 @@ paths:
                       }
                     ]
                   }
+              Ex4:
+                summary: Create a SIPP cash transfer in split across MIS sub-accounts
+                value:
+                  {
+                    "transfers": [
+                      {
+                        "type": "CASH",
+                        "isPartial": false,
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "value": {
+                          "amount": 600000,
+                          "currency": "GBP",
+                          "crystallised": 30000
+                        },
+                        "fee": {
+                          "percentage": 0.25
+                        },
+                        "plan": {
+                          "reference": "896547",
+                          "holderName": "Mr Hub Wise Person",
+                          "type": "SIPP"
+                        },
+                        "provider": {
+                          "id": "HW009"
+                        },
+                        "allocations": [
+                          {
+                            "accountId": "HW00013451B",
+                            "percentage": 20
+                          },
+                          {
+                            "accountId": "HW00013451C",
+                            "percentage": 60
+                          },
+                          {
+                            "accountId": "HW00013451D",
+                            "percentage": 20
+                          }
+                        ]
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "TRANSFR_IN",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
+              Ex5:
+                summary: Create an in-specie transfer in for a MIS account (single sub-account)
+                value:
+                  {
+                    "transfers": [
+                      {
+                        "type": "INSPECIE",
+                        "isPartial": false,
+                        "value": {
+                          "amount": 554035,
+                          "currency": "GBP"
+                        },
+                        "fee": {
+                          "percentage": 0.25
+                        },
+                        "plan": {
+                          "reference": "K123896547",
+                          "holderName": "Mr John Jackson"
+                        },
+                        "provider": {
+                          "id": "HW009"
+                        },
+                        "allocations": [
+                          {
+                            "accountId": "HW00013451B",
+                            "percentage": 100
+                          }
+                        ]
+                      }
+                    ],
+                    "declarations": [
+                      {
+                        "adviserId": "E273053",
+                        "templateId": "TRANSFR_IN",
+                        "acknowledgement": true
+                      }
+                    ]
+                  }
       responses:
-        "200":
+        "201":
           description: Transfers created successfully
           headers:
             Request-Id:
@@ -4628,6 +4715,128 @@ paths:
                             "email": "platforms_transfers_out@standardlife.com"
                           }
                         }
+                      }
+                    ]
+                  }
+                Ex4:
+                  summary: Created a SIPP cash transfer in split across MIS sub-accounts
+                  value:
+                    {
+                    "transfers": [
+                      {
+                        "id": 1,
+                        "accountId": "HW04003260A",
+                        "adviserId": "E273053",
+                        "tenantId": "HUBWISE",
+                        "type": "CASH",
+                        "direction": "IN",
+                        "status": "CREATED",
+                        "startDate": "2022-03-24",
+                        "isPartial": false,
+                        "investmentInstruction": "INVEST_IN_MODEL",
+                        "isElectronic": false,
+                        "value": {
+                          "amount": 600000,
+                          "currency": "GBP",
+                          "crystallised": 30000,
+                          "uncrystallised": 570000
+                        },
+                        "fee": {
+                          "id": 1,
+                          "type": "ADVISER_INITIAL",
+                          "percentage": 0.25
+                        },
+                        "plan": {
+                          "reference": "896547",
+                          "holderName": "Mr Hub Wise Person",
+                          "type": "SIPP"
+                        },
+                        "provider": {
+                          "id": "HW009",
+                          "name": "Standard Life",
+                          "address": {
+                            "line1": "Standard Life House",
+                            "line2": "30 Lothian Road",
+                            "line3": "Edinburgh",
+                            "line4": "EH1 2DH",
+                            "postCode": "EH1 2DH"
+                          },
+                          "contactDetails": {
+                            "contactPhone": "0345 279 1001",
+                            "email": "platforms_transfers_out@standardlife.com"
+                          }
+                        },
+                        "allocations": [
+                          {
+                            "id": 1,
+                            "accountId": "HW00013451B",
+                            "percentage": 20
+                          },
+                          {
+                            "id": 2,
+                            "accountId": "HW00013451C",
+                            "percentage": 60
+                          },
+                          {
+                            "id": 3,
+                            "accountId": "HW00013451D",
+                            "percentage": 20
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                Ex5:
+                  summary: Created an in-specie transfer in for a MIS account (single sub-account)
+                  value:
+                    {
+                    "transfers": [
+                      {
+                        "id": 2,
+                        "accountId": "HW04003260A",
+                        "adviserId": "E273053",
+                        "tenantId": "HUBWISE",
+                        "type": "INSPECIE",
+                        "direction": "IN",
+                        "status": "CREATED",
+                        "startDate": "2022-03-24",
+                        "isPartial": false,
+                        "isElectronic": false,
+                        "value": {
+                          "amount": 554035,
+                          "currency": "GBP"
+                        },
+                        "fee": {
+                          "id": 1,
+                          "type": "ADVISER_INITIAL",
+                          "percentage": 0.25
+                        },
+                        "plan": {
+                          "reference": "K123896547",
+                          "holderName": "Mr John Jackson"
+                        },
+                        "provider": {
+                          "id": "HW009",
+                          "name": "Standard Life",
+                          "address": {
+                            "line1": "Standard Life House",
+                            "line2": "30 Lothian Road",
+                            "line3": "Edinburgh",
+                            "line4": "EH1 2DH",
+                            "postCode": "EH1 2DH"
+                          },
+                          "contactDetails": {
+                            "contactPhone": "0345 279 1001",
+                            "email": "platforms_transfers_out@standardlife.com"
+                          }
+                        },
+                        "allocations": [
+                          {
+                            "id": 1,
+                            "accountId": "HW00013451B",
+                            "percentage": 100
+                          }
+                        ]
                       }
                     ]
                   }
@@ -4823,7 +5032,65 @@ paths:
                   value:
                     {
                       "transfers": [
-                        
+
+                      ]
+                    }
+                Ex3:
+                  summary: Transfers against a MIS account with sub-account allocations
+                  value:
+                    {
+                      "transfers": [
+                        {
+                          "id": 1,
+                          "accountId": "HW04003260A",
+                          "adviserId": "E008469",
+                          "tenantId": "HUBWISE",
+                          "type": "CASH",
+                          "direction": "IN",
+                          "status": "CREATED",
+                          "startDate": "2022-03-24",
+                          "isPartial": false,
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "isElectronic": true,
+                          "value": {
+                            "amount": 20000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "id": 1,
+                            "type": "ADVISER_INITIAL",
+                            "amount": 50
+                          },
+                          "plan": {
+                            "reference": "896549",
+                            "holderName": "Mr John Doe"
+                          },
+                          "provider": {
+                            "id": "HW009",
+                            "name": "Standard Life",
+                            "address": {
+                              "line1": "Standard Life House",
+                              "line2": "30 Lothian Road",
+                              "line3": "Edinburgh",
+                              "line4": "EH1 2DH",
+                              "postCode": "EH1 2DH"
+                            },
+                            "contactDetails": {
+                              "contactPhone": "0345 279 1001",
+                              "email": "platforms_transfers_out@standardlife.com"
+                            }
+                          },
+                          "allocations": [
+                            {
+                              "accountId": "HW04003261B",
+                              "percentage": 60
+                            },
+                            {
+                              "accountId": "HW04003262B",
+                              "percentage": 40
+                            }
+                          ]
+                        }
                       ]
                     }
         "400":
@@ -5197,7 +5464,7 @@ paths:
           description: >-                                                                                                                                                                                                                  
               Unique SS&C Wealth Platform Account identifier. For a Multiple                                                                                                                                                                 
               Investment Strategy (MIS) account this must be a sub-account ID, as                                                                                                                                                            
-              fees cannot be set on the primary account. 
+              fees cannot be set on the primary account.
           required: true
           schema:
             type: string
@@ -5269,20 +5536,20 @@ paths:
                       }
                     ]
                   }
-              Ex4:                                                                                                                                                                                                                         
-                summary: Add fees directly to an MIS sub-account (accountId in path is the sub-account).                                                                                                                                   
-                value:                                                                                                                                                                                                                     
-                  {                                                                                                                                                                                                                        
-                    "fees": [                                                                                                                                                                                                              
-                      { "type": "ADVISER_ANNUAL", "percentage": 0.5, "vatIncluded": true, "startDate": "2026-07-01" },                                                                                                                     
-                      { "type": "ADVISER_ONE_OFF", "amount": 450.00, "vatIncluded": true },                                                                                                                                                
-                      { "type": "PORTFOLIO_MANAGEMENT", "percentage": 0.25, "vatIncluded": true, "startDate": "2026-07-15" },  
-                      { "type": "INVESTMENT_SERVICE", "percentage": 0.15, "vatIncluded": true, "startDate": "2026-07-15" }                                                                                                              
-                    ],                                                                                                                                                                                                                     
-                    "declarations": [                                                                                                                                                                                                      
-                      { "templateId": "AMENDMENT_CONSENT", "adviserId": "E008469", "acknowledgement": true }                                                                                                                               
-                    ]                                                                                                                                                                                                                      
-                  }     
+              Ex4:
+                summary: Add fees directly to an MIS sub-account (accountId in path is the sub-account).
+                value:
+                  {
+                    "fees": [
+                      { "type": "ADVISER_ANNUAL", "percentage": 0.5, "vatIncluded": true, "startDate": "2026-07-01" },
+                      { "type": "ADVISER_ONE_OFF", "amount": 450.00, "vatIncluded": true },
+                      { "type": "PORTFOLIO_MANAGEMENT", "percentage": 0.25, "vatIncluded": true, "startDate": "2026-07-15" },
+                      { "type": "INVESTMENT_SERVICE", "percentage": 0.15, "vatIncluded": true, "startDate": "2026-07-15" }
+                    ],
+                    "declarations": [
+                      { "templateId": "AMENDMENT_CONSENT", "adviserId": "E008469", "acknowledgement": true }
+                    ]
+                  }
       responses:
         "201":
           description: Account fee(s) created successfully.
@@ -7242,6 +7509,78 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /accounts/{accountId}/raise-cash-instructions:
+
+    post:
+      tags:
+        - Accounts
+      summary: Create a raise cash instruction on an account
+      description: >-
+        Creates a raise cash investment instruction against an investment account.
+
+        A raise cash instruction realises a monetary amount of cash on the account. The amount must be greater than zero, and the currency must match the account's base currency.
+
+        The account must exist and must not be in PENDING status.
+
+        The instruction identifier returned in the response uniquely identifies the instruction and reflects its processing status at the point of creation. The status is subsequently maintained by back office processing.
+      operationId: createRaiseCashInstruction
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW000000143
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RaiseCashInstruction"
+            examples:
+              Ex1:
+                summary: Raise a fixed cash amount
+                value:
+                  {
+                    "amount": 2000.00,
+                    "currency": "GBP"
+                  }
+      responses:
+        "201":
+          description: Raise cash instruction created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RaiseCashInstructionResponse"
+              examples:
+                Ex1:
+                  summary: Raise cash instruction created
+                  value:
+                    {
+                      "id": "CI000013895",
+                      "accountId": "HW000000143",
+                      "amount": 500.00,
+                      "currency": "GBP",
+                      "status": "OPEN"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
   /accounts/{accountId}/create-executed-trades:
 
     post:
@@ -7461,6 +7800,298 @@ paths:
                           }
                         }
                       ]
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+  /accounts/{accountId}/ring-fence-cash:
+
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve the ring-fenced cash on an investment account
+      description: >-
+        Retrieves the ring-fenced (protected) cash currently held against an investment account.
+
+
+        A ring-fence is a single-per-account resource. Where one exists it is returned with its amount, including when that amount is zero because the ring-fence has been released and its record retained.
+
+
+        Where the account holds no ring-fence at all the endpoint still returns `200` with an amount of zero and the account's base currency. It is never a `404` and never an empty body.
+      operationId: retrieveRingFenceCash
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013567B
+      responses:
+        "200":
+          description: Ring-fenced cash retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Account holding a ring-fence
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 5000.00,
+                      "currency": "GBP"
+                    }
+                Ex2:
+                  summary: Account holding no ring-fence
+                  value:
+                    {
+                      "accountId": "HW00013567B",
+                      "amount": 0,
+                      "currency": "GBP"
+                    }
+                Ex3:
+                  summary: Fully released ring-fence, record retained
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 0.00,
+                      "currency": "GBP"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    post:
+      tags:
+        - Accounts
+      summary: Create a ring-fence on an investment account
+      description: >-
+        Creates a ring-fence on an investment account that does not already hold one.
+
+
+        A ring-fence is a single-per-account resource, so an account that already holds one is rejected with `HWA-RINGFENCE-004` — use `PATCH` to change the amount instead. The amount must be positive and must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-003` is returned.
+
+
+        The currency is not supplied by the caller. It is taken from the account's base currency.
+      operationId: createRingFenceCash
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013567B
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RingFenceRequest"
+            examples:
+              Ex1:
+                summary: Ring-fence a whole-pound amount
+                value:
+                  {
+                    "amount": 5000.00
+                  }
+              Ex2:
+                summary: Ring-fence an amount with pence
+                value:
+                  {
+                    "amount": 1234.56
+                  }
+      responses:
+        "201":
+          description: Ring-fenced cash created successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Ring-fence created, currency taken from the account base currency
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 5000.00,
+                      "currency": "GBP"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    patch:
+      tags:
+        - Accounts
+      summary: Update the ring-fenced cash on an investment account
+      description: >-
+        Updates the amount on an investment account's existing ring-fence.
+
+
+        The ring-fence must already exist, otherwise `HWA-RINGFENCE-002` is returned — use `POST` to create one. The amount must not exceed the cash available to ring-fence, otherwise `HWA-RINGFENCE-003` is returned.
+
+
+        The amount is the absolute amount to keep, not a delta, so `PATCH` is also how a ring-fence is partially released. To release 3000.00 of a 5000.00 ring-fence, send an amount of 2000.00. An amount of zero releases it in full, which is the same end result as `DELETE`.
+
+
+        Only the amount can be updated. The currency cannot be changed and the ring-fence keeps the currency it was created with.
+      operationId: modifyRingFenceCash
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013567B
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RingFenceRequest"
+            examples:
+              Ex1:
+                summary: Reduce the ring-fenced amount
+                value:
+                  {
+                    "amount": 3000.00
+                  }
+              Ex2:
+                summary: Release the ring-fence in full by setting the amount to zero
+                value:
+                  {
+                    "amount": 0.00
+                  }
+      responses:
+        "200":
+          description: Ring-fenced cash updated successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Ring-fenced amount reduced
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 3000.00,
+                      "currency": "GBP"
+                    }
+                Ex2:
+                  summary: Ring-fence released by an update to zero, record retained
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 0.00,
+                      "currency": "GBP"
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    delete:
+      tags:
+        - Accounts
+      summary: Release the ring-fenced cash on an investment account
+      description: >-
+        Releases ring-fenced (protected) cash back to the account's available balance. This is a book entry only — no cash leaves the account.
+
+
+        The whole ring-fence is always released. There is no request body. An account holding no ring-fence, or one already at zero, is rejected with `HWA-RINGFENCE-001`, so a repeated call on an already released ring-fence returns `400` rather than `200`.
+
+
+        The release is a soft delete. The ring-fenced amount is set to zero but the record is retained, so a later `GET` still returns it with an amount of zero. The response is the released ring-fence itself, in the same shape returned by `GET`, `POST` and `PATCH`: the identifier is still present, the amount is zero, and the currency is unchanged.
+
+
+        To reduce a ring-fence without releasing all of it, use `PATCH` with the amount to keep.
+      operationId: releaseRingFenceCash
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013567B
+      responses:
+        "200":
+          description: Ring-fenced cash released successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RingFenceResponse"
+              examples:
+                Ex1:
+                  summary: Ring-fence released in full, record retained at zero
+                  value:
+                    {
+                      "id": 12345,
+                      "accountId": "HW00013567B",
+                      "amount": 0,
+                      "currency": "GBP"
                     }
         "400":
           $ref: "#/components/responses/400-BadRequest"
@@ -7928,7 +8559,7 @@ paths:
             enum: [true, false]
             default: true
           example: true
-          description: Indicates whether an illustration document should be generated.    
+          description: Indicates whether an illustration document should be generated.
       requestBody:
         required: true
         content:
@@ -9806,8 +10437,70 @@ components:
           description: The percentage of the instrument the requester want to sell or re-invest as the proceeds or sells or redemptions. Only whole percentages accepted.
           format: integer
           maxLength: 3
-          minLength: 1 
+          minLength: 1
           example: 50
+
+    RaiseCashInstruction:
+      description: A request to raise a cash amount on an investment account
+      additionalProperties: false
+      required:
+        - amount
+        - currency
+      type: object
+      properties:
+        amount:
+          description: The cash amount to raise. Must be greater than 0.
+          type: number
+          format: double
+          example: 2000.00
+        currency:
+          description: The currency in which to perform the instruction. Must match the base currency of the account.
+          type: string
+          maxLength: 3
+          example: GBP
+
+    RaiseCashInstructionResponse:
+      description: A raise cash instruction on an investment account
+      additionalProperties: false
+      readOnly: true
+      type: object
+      properties:
+        id:
+          description: The unique SS&C Wealth Platform identifier for the instruction
+          type: string
+          maxLength: 11
+          readOnly: true
+          example: CI000013895
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier the cash amount is raised against
+          type: string
+          minLength: 11
+          maxLength: 11
+          readOnly: true
+          example: HW000000143
+        amount:
+          description: The cash amount to raise in the instruction
+          type: number
+          format: double
+          readOnly: true
+          example: 500.00
+        currency:
+          description: The currency of the amount
+          type: string
+          maxLength: 3
+          readOnly: true
+          example: GBP
+        status:
+          description: The processing status of the instruction
+          enum:
+            - OPEN
+            - COMPLETE
+            - FAILED
+            - REJECTED
+            - EXPIRED
+          type: string
+          readOnly: true
+          example: OPEN
 
     Taxation:
       type: object
@@ -10900,6 +11593,12 @@ components:
       type: object
       additionalProperties: false
       properties:
+        id:
+          type: integer
+          format: int64
+          description: System-generated allocation identifier.
+          readOnly: true
+          example: 1
         accountId:
           format: string
           description: The SS&C Wealth Platform Account identifier of the MIS sub-account.
@@ -11448,6 +12147,17 @@ components:
           $ref: "#/components/schemas/AccountTransferPlan"
         provider:
           $ref: "#/components/schemas/CedingProvider"
+        allocations:
+          description: >-
+            MIS sub-account allocation splits for this transfer. When provided, the percentages
+            must sum to 100 and each sub-account must be unique. When omitted for a MIS account,
+            the default allocation held against the primary account is used. Ignored for
+            non-MIS accounts. For INSPECIE transfers, exactly one allocation with percentage 100
+            must be provided — splitting an in-specie transfer across multiple sub-accounts is
+            not supported.
+          type: array
+          items:
+            $ref: "#/components/schemas/MovementAllocation"
 
     AccountTransferSubscription:
       additionalProperties: false
@@ -11755,6 +12465,69 @@ components:
           items:
             $ref: '#/components/schemas/Declaration'
     
+    RingFenceResponse:
+      description: >-
+        The ring-fenced (protected) cash held against an investment account.
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          description: >-
+            The ring-fence movement identifier. Present only where the account holds a ring-fence
+            record; omitted otherwise.
+          format: int64
+          type: integer
+          readOnly: true
+          example: 12345
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier the ring-fence belongs to.
+          maxLength: 11
+          minLength: 11
+          type: string
+          readOnly: true
+          example: HW00013567B
+        amount:
+          description: >-
+            The ring-fenced amount. Zero where the account holds no ring-fence, or where an
+            existing ring-fence has been released in full.
+          maximum: 99999999999.99
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          readOnly: true
+          example: 5000.00
+        currency:
+          description: >-
+            Currency of the ring-fenced amount, taken from the account's base currency. Omitted
+            where the account holds no base currency.
+          maxLength: 3
+          minLength: 3
+          type: string
+          readOnly: true
+          example: GBP
+
+    RingFenceRequest:
+      description: >-
+        Request payload for creating or updating a ring-fence on an investment account. The currency
+        is never supplied by the caller: on creation it is taken from the account's base currency,
+        and an update cannot change it.
+      required:
+        - amount
+      type: object
+      properties:
+        amount:
+          description: >-
+            The amount of cash to ring-fence, absolute rather than a delta, allowed up to 11 digits
+            with 2 decimal places, and never more than the cash available to ring-fence. On `POST`
+            it must be positive: zero is rejected, because a ring-fence is created with an amount to
+            protect. On `PATCH` zero is permitted and releases the ring-fence in full, the same end
+            result as a `DELETE`, while any value below the current amount partially releases it.
+          maximum: 99999999999.99
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          example: 5000.00
+
     IllustrationNPAccountMovement:
       type: object
       additionalProperties: false
@@ -12318,7 +13091,7 @@ components:
           example: GBP
 
   examples:
-    
+
     400-MissingBodyProperty:
       summary: Request body is missing a required property
       value:
@@ -12418,17 +13191,29 @@ components:
           - detail: Account holder with ID HWI00052961 does not exist
             pointer: "/holders/1/id"
 
-    400-SubAccountFeeRules:                                                                                                                                                                                                                
-      summary: MIS sub-account fee rule violation                                                                                                                                                                                          
-      value:                                                                                                                                                                                                                               
-        title: Invalid Request                                                                                                                                                                                                             
-        detail: The request body is invalid and not meeting business rules.                                                                                                                                                                
-        errors:                                                                                                                                                                                                                            
-          - detail: For MIS accounts, fees can only be set on sub-accounts.                                                                                                                                                                
-            pointer: "/fees"                                                                                                                                                                                                               
-          - detail: Invalid fee type PLATFORM_ANNUAL for a sub-account.                                                                                                                                                                    
+    400-MISAllocationRules:
+      summary: MIS allocation rule violation
+      value:
+        title: Bad Request
+        status: 400
+        detail: HWA-EXCEPTION-001 - Validation Error(s) occurred.
+        errors:
+          - detail: Allocation percentages must sum to 100
+            pointer: "/transfers/0/allocations"
+          - detail: Sub-account HW04003261B appears more than once in allocations
+            pointer: "/transfers/0/allocations/1/accountId"
+
+    400-SubAccountFeeRules:
+      summary: MIS sub-account fee rule violation
+      value:
+        title: Invalid Request
+        detail: The request body is invalid and not meeting business rules.
+        errors:
+          - detail: For MIS accounts, fees can only be set on sub-accounts.
+            pointer: "/fees"
+          - detail: Invalid fee type PLATFORM_ANNUAL for a sub-account.
             pointer: "/fees/0/type"
-            
+
     500-serverError:
       summary: Server error
       value:
@@ -12471,9 +13256,11 @@ components:
               $ref: '#/components/examples/400-BusinessRules'
             400-AlreadyExists:
               $ref: '#/components/examples/400-AlreadyExists'
-            400-SubAccountFeeRules:                                                                                                                                                                                                        
+            400-SubAccountFeeRules:
               $ref: '#/components/examples/400-SubAccountFeeRules'
-    
+            400-MISAllocationRules:
+              $ref: '#/components/examples/400-MISAllocationRules'
+
     400-BadRequest-NoBody:
       description: |
         The request had one of the following issues:
