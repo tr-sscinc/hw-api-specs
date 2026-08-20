@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.19 API spec
+
+- Remove reference field from money movement
+
 Changelog for v0.8.18 API spec
 
 - Added create raise cash instruction endpoint
