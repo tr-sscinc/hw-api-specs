@@ -5401,6 +5401,264 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
+  /accounts/{accountId}/intra-account-transfers:
+
+    post:
+      tags:
+        - Accounts
+      summary: Create intra-account transfer(s)
+      description: >-
+        Creates one or more internal transfers of cash or stock between sub-accounts, or between a sub-account and the primary account, within the same MIS account group.
+
+        The `{accountId}` path parameter is the funding account - the account that funds every transfer in the batch. This is the opposite of the adjacent `POST /accounts/{accountId}/inter-account-transfers` endpoint, where `{accountId}` is the destination account. Each element of the request names its own `receivingAccountId`.
+
+        There is no transfer type field. The kind of each transfer is inferred from the value fields supplied. For a cash transfer, supply `amount` only and omit `instrumentDetails`, `quantity` and `percentage`. For a stock transfer, supply `instrumentDetails` together with `quantity`, `percentage`, or both, and omit `amount`.
+
+        The funding and receiving accounts must be different, must both be activated, and must belong to the same MIS account group. The `currency` must match the base currency of both the funding and the receiving account.
+
+        Cash transfers are validated against the cleared cash held by the funding account, summed across every element in the batch, and are only permitted where the funding account is on a discretionary model. Stock transfers require the funding account to hold the requested instrument, with the units also assessed across the whole batch.
+
+        Validation is all-or-nothing. If any element fails, the entire request is rejected, every failure is reported in the error response, and nothing is written. A transfer that the back office subsequently declines is still created and is reported as `REJECTED` in its own `status`.
+      operationId: createIntraAccountTransfers
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier for the funding account - the account that cash or stock is transferred from
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW00013451A
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IntraAccountTransferRequest"
+            examples:
+              Ex1:
+                summary: Cash transfer to another account in the same MIS
+                value:
+                  {
+                    "intraAccountTransfers": [
+                      {
+                        "receivingAccountId": "HW00014052B",
+                        "amount": 1000.00,
+                        "currency": "GBP"
+                      }
+                    ]
+                  }
+              Ex2:
+                summary: Stock transfer by quantity
+                value:
+                  {
+                    "intraAccountTransfers": [
+                      {
+                        "receivingAccountId": "HW00014052B",
+                        "quantity": 150,
+                        "currency": "GBP",
+                        "instrumentDetails":
+                          {
+                            "isin": "GB0002405495",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          }
+                      }
+                    ]
+                  }
+              Ex3:
+                summary: Stock transfer by percentage of the holding
+                value:
+                  {
+                    "intraAccountTransfers": [
+                      {
+                        "receivingAccountId": "HW00014052B",
+                        "percentage": 20,
+                        "currency": "GBP",
+                        "instrumentDetails":
+                          {
+                            "isin": "GB0002405495",
+                            "exchange": "XLON",
+                            "marketSettlementCurrency": "GBP"
+                          }
+                      }
+                    ]
+                  }
+      responses:
+        "200":
+          description: Intra-account transfer(s) created successfully. One entry is returned per request element, in request order, each with its own status.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntraAccountTransfersResponse"
+              examples:
+                Ex1:
+                  summary: Cash transfer created
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": "CI00000001A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "amount": 1000.00,
+                          "currency": "GBP",
+                          "status": "OPEN",
+                          "effectiveDate": "2026-08-18"
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: Stock transfer created
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": "CI00000002A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "quantity": 150,
+                          "currency": "GBP",
+                          "instrumentDetails":
+                            {
+                              "isin": "GB0002405495",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                          "status": "OPEN",
+                          "effectiveDate": "2026-08-18"
+                        }
+                      ]
+                    }
+                Ex3:
+                  summary: Transfer created but declined by the back office
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": "CI00000003A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "amount": 1000.00,
+                          "currency": "GBP",
+                          "status": "REJECTED"
+                        }
+                      ]
+                    }
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
+
+    get:
+      tags:
+        - Accounts
+      summary: Retrieve intra-account transfers
+      description: >-
+        Retrieves the internal cash and stock transfer instructions recorded for an investment account.
+
+        For a primary MIS account, the instructions across every sub-account in the same MIS account group are returned. For a sub-account, only the instructions on that account are returned.
+
+        Where an instruction has a status of `FAILED` or `REJECTED`, the `reason` array carries the rejection details.
+      operationId: retrieveIntraAccountTransfers
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW04003258A
+      responses:
+        "200":
+          description: Intra-account transfers retrieved successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntraAccountTransfersResponse"
+              examples:
+                Ex1:
+                  summary: Cash and stock instructions on a MIS account group
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": "CI00000001A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "amount": 1000.00,
+                          "currency": "GBP",
+                          "status": "COMPLETE",
+                          "effectiveDate": "2026-08-18"
+                        },
+                        {
+                          "id": "CI00000002A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "quantity": 150,
+                          "currency": "GBP",
+                          "instrumentDetails":
+                            {
+                              "isin": "GB0002405495",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                          "status": "OPEN",
+                          "effectiveDate": "2026-08-18"
+                        }
+                      ]
+                    }
+                Ex2:
+                  summary: An instruction rejected by the back office
+                  value:
+                    {
+                      "intraAccountTransfers": [
+                        {
+                          "id": "CI00000003A",
+                          "fundingAccountId": "HW00013451A",
+                          "receivingAccountId": "HW00014052B",
+                          "amount": 1000.00,
+                          "currency": "GBP",
+                          "status": "REJECTED",
+                          "effectiveDate": "2026-08-18",
+                          "reason": [
+                            "HW00013451A - Insufficient cleared funds"
+                          ]
+                        }
+                      ]
+                    }
+        "204":
+          description: No intra-account transfer instructions exist for the account.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+        "400":
+          $ref: "#/components/responses/400-BadRequest-NoBody"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
   /accounts/{accountId}/fees:
     
     post:
@@ -8889,7 +9147,11 @@ paths:
                   {
                     "investors": [
                       {
-                          "name": "Anne Winfield",
+                          "title": "Miss",
+                          "firstName": "Anne",
+                          "surname": "Winfield",
+                          "trustName": "",
+                          "corpName": "",
                           "dateOfBirth": "1990-05-15"
                       }
                     ],
@@ -8959,7 +9221,11 @@ paths:
                     
                     "investors": [
                       {
-                          "name": "Anne Winfield",
+                          "title": "Miss",
+                          "firstName": "Anne",
+                          "surname": "Winfield",
+                          "trustName": "",
+                          "corpName": "",
                           "dateOfBirth": "1990-05-15"
                       }
                     ],
@@ -12355,7 +12621,124 @@ components:
           items:
             $ref: "#/components/schemas/Declaration"
 
+    IntraAccountTransferRequest:
+      additionalProperties: false
+      description: A batch of internal cash or stock transfers to create out of a single funding account. Validation is all-or-nothing across the batch.
+      required:
+        - intraAccountTransfers
+      type: object
+      properties:
+        intraAccountTransfers:
+          description: The transfers to create. At least one is required.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/IntraAccountTransfer"
 
+    IntraAccountTransfer:
+      additionalProperties: false
+      description: >-
+        A single internal transfer of cash or stock between two accounts in the same MIS account group.
+
+        The kind of transfer is inferred from the value fields supplied rather than from an explicit type. A cash transfer carries `amount` only. A stock transfer carries `instrumentDetails` with `quantity`, `percentage`, or both. Fields that do not apply to the kind of transfer are omitted from responses.
+      required:
+        - receivingAccountId
+        - currency
+      type: object
+      properties:
+        id:
+          description: SS&C Wealth Platform complex instruction identifier allocated to the transfer
+          type: string
+          minLength: 11
+          maxLength: 11
+          readOnly: true
+          example: CI00000001A
+        fundingAccountId:
+          description: Unique SS&C Wealth Platform Account identifier for the funding account - the account the transfer was taken from
+          type: string
+          minLength: 11
+          maxLength: 11
+          readOnly: true
+          example: HW00013451A
+        receivingAccountId:
+          description: Unique SS&C Wealth Platform Account identifier for the receiving account. Must differ from the funding account and belong to the same MIS account group.
+          type: string
+          minLength: 11
+          maxLength: 11
+          example: HW00014052B
+        amount:
+          description: Cash amount to move. Cash transfers only, and must be absent for a stock transfer. Must be greater than zero with no more than 2 decimal places.
+          type: number
+          format: double
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 9999999999999.99
+          example: 1000.00
+        percentage:
+          description: Percentage of the holding to move. Stock transfers only, and may be supplied together with `quantity`. Must be greater than zero and no greater than 100.
+          type: number
+          format: double
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 100
+          example: 20
+        quantity:
+          description: Units of the instrument to move. Stock transfers only, and may be supplied together with `percentage`. Must be greater than zero with no more than 5 decimal places.
+          type: number
+          format: double
+          minimum: 0
+          exclusiveMinimum: true
+          maximum: 9999999999.99999
+          example: 150
+        currency:
+          description: ISO 4217 currency code. Must be a valid movement currency and must match the base currency of both the funding and the receiving account.
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: GBP
+        instrumentDetails:
+          $ref: "#/components/schemas/InstrumentDetails"
+        status:
+          description: >-
+            Status of the transfer instruction.
+            `OPEN` — in flight.
+            `COMPLETE` — completed.
+            `REJECTED` — declined by the back office.
+            `FAILED` — failed.
+            `EXPIRED` — expired.
+          type: string
+          enum:
+            - OPEN
+            - COMPLETE
+            - REJECTED
+            - FAILED
+            - EXPIRED
+          readOnly: true
+          example: OPEN
+        effectiveDate:
+          description: Effective date set by the back office. Not returned until the back office has processed the instruction.
+          type: string
+          format: date
+          readOnly: true
+          example: "2026-08-18"
+        reason:
+          description: Rejection reason(s), each formatted as `<accountId> - <message>`. Returned on retrieval when the status is `FAILED` or `REJECTED`.
+          type: array
+          readOnly: true
+          items:
+            type: string
+            example: HW00013451A - Insufficient cleared funds
+
+    IntraAccountTransfersResponse:
+      additionalProperties: false
+      description: One entry per transfer. On creation the entries are returned in request order.
+      type: object
+      properties:
+        intraAccountTransfers:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/IntraAccountTransfer"
 
     AccountTransfersHeader:
       additionalProperties: false
@@ -13002,22 +13385,39 @@ components:
            description: Unique SS&C Wealth Platform Account identifier
 
         investors:
-              type: array
-              description: |
-                The investor(s) associated with the illustration.
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    example: "Anne Winfield"
-                    description: The investor’s name.
-                  dateOfBirth:
-                    type: string
-                    format: date
-                    example: "2000-10-10"
-                    description: The investor’s date of birth. 
-        
+          type: array
+          description: |
+            The investor(s) associated with the illustration.
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                example: "Miss"
+                description: The investor's title.
+              firstName:
+                type: string
+                example: "Anne"
+                description: The investor's first name.
+              surname:
+                type: string
+                example: "Winfield"
+                description: The investor's surname.
+              trustName:
+                type: string
+                example: "ABC Family Trust"
+                description: The name of the trust, if applicable.
+              corpName:
+                type: string
+                example: "ABC Holding LTD"
+                description: The name of the corporation, if applicable.
+              dateOfBirth:
+                type: string
+                format: date
+                example: "1990-05-15"
+                description: The investor's date of birth.
+            
+      
           
         illustrationDetails:
           type: object
