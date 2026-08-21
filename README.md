@@ -3,6 +3,7 @@
 Changelog for v0.8.20 API spec
 
 - Added intra-account transfers endpoints
+- Added get Investment Instruction
 
 Changelog for v0.8.19 API spec
 
