@@ -14,13 +14,27 @@ servers:
 
 tags:
   - name: Investors
-    description: Create, retrieve, and update investors, including the ability to manage vulnerability information for investors.
+    description: Create, retrieve, and update the investor record, including removal of an investor's taxations, nationalities, and addresses.
+  - name: Investor Servicing
+    description: Manage an investor's vulnerable characteristics and their correspondence preferences.
   - name: Accounts
-    description: Create and service accounts, including the ability to retrieve account details and manage account-related operations.
-  - name: Fee Groups
-    description: Manage fee groups, allowing for the definition and retrieval of fee structures applicable to investors and accounts.
+    description: Open an investment account, activate it, and retrieve or amend the account record.
+  - name: Account Parties & Bank Details
+    description: Manage an account's third parties - beneficiaries, powers of attorney, and employers - and its linked bank accounts.
+  - name: Contributions & Withdrawals
+    description: One-off and recurring money in and out of an account, including contributions, withdrawals, and pension decumulation.
+  - name: Transfers In
+    description: Transfer cash or assets into an account from an approved counterparty provider, in full or in part, as cash or in specie.
+  - name: Internal Transfers
+    description: Move cash or stock between an investor's own accounts, or between sub-accounts within the same MIS account group.
+  - name: Dealing & Investment Instructions
+    description: Instruct buys, sells, and switches, raise cash, rebalance or switch a model portfolio, and book externally executed trades.
+  - name: Cash Management
+    description: Set how investment income is treated, and ring-fence or release protected cash on an account.
+  - name: Fees & Charges
+    description: Define the charges applying to an account, and manage the fee groups that qualify accounts for a shared fee type and code.
   - name: Illustrations
-    description: Generate illustrations for investors and accounts, providing visual representations of financial scenarios and projections.
+    description: Generate illustrations and projections for existing or hypothetical investment accounts.
 
 security:
   - bearer-token: []
@@ -1248,7 +1262,7 @@ paths:
     
     post:
       tags:
-        - Investors
+        - Investor Servicing
       summary: Create an investor's vulnerabilities
       description: >
         Creates one or more characteristics of vulnerability records for an existing investor.
@@ -1356,7 +1370,7 @@ paths:
 
     get:
       tags:
-        - Investors
+        - Investor Servicing
       summary: Retrieves an investor's vulnerable Characteristics
       description: 
         Retrieves the characteristics of vulnerabilities for a specific investor record.
@@ -1436,7 +1450,7 @@ paths:
     
     put:
       tags:
-        - Investors
+        - Investor Servicing
       summary: Modify the vulnerable characteristics of an investor
       description: >
         Allows partial updates of one or more characteristics of vulnerability records for an existing investor.
@@ -1543,7 +1557,7 @@ paths:
     
     post:
       tags:
-        - Investors
+        - Investor Servicing
       summary: Create an investor's correspondences
       description: >
         Creates one or more correspondence preference records for an existing investor.
@@ -1648,7 +1662,7 @@ paths:
 
     get:
       tags:
-        - Investors
+        - Investor Servicing
       summary: Retrieves the correspondence preferences of an investor
       description: 
         Retrieves the special correspondence needs for a specific investor record.
@@ -1726,7 +1740,7 @@ paths:
     
     put:
       tags:
-        - Investors
+        - Investor Servicing
       summary: Modify an investor's correspondences
       description: >
         Allows partial updates of one or more correspondence preference records for an existing investor.
@@ -2831,7 +2845,7 @@ paths:
     
     post:
       tags:
-        - Accounts
+        - Account Parties & Bank Details
       summary: Create a bank account
       description: |
         Creates a new bank account and associates it with an existing investment account.
@@ -3089,7 +3103,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Account Parties & Bank Details
       summary: Retrieves the bank accounts against an investment account.
       description:
         Retrieves the bank details against a specific investment account record.
@@ -3219,7 +3233,7 @@ paths:
     
     post:
       tags:
-        - Accounts
+        - Contributions & Withdrawals
       summary: Create Money Movement(s)
       description: |
         Creates one or more money movement transaction records for an existing investment account.
@@ -3859,7 +3873,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Contributions & Withdrawals
       summary: Retrieves the money movements on an account
       description: |-
         Retrieves the money movements against a specific investment account record.
@@ -4036,7 +4050,7 @@ paths:
     
     patch:
       tags:
-        - Accounts
+        - Contributions & Withdrawals
       summary: Update regular active money movements
       description: |-
 
@@ -4265,7 +4279,7 @@ paths:
 
     delete:
       tags:
-        - Accounts
+        - Contributions & Withdrawals
       summary: Delete money movements
       description: |-
 
@@ -4305,12 +4319,11 @@ paths:
         "500":
           $ref: "#/components/responses/500-ServerError"
 
-
   /accounts/{accountId}/transfers:
     
     post:
       tags:
-        - Accounts
+        - Transfers In
       summary: Create transfer(s)
       description: >-
        Creates transfer records to initiate the transfer of cash or assets from an approved counterparty provider into an existing investment account.
@@ -4853,7 +4866,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Transfers In
       summary: Retrieves the transfers against an account
       description: 
         Retrieves the transfers against a specific investment account record.
@@ -5108,7 +5121,7 @@ paths:
 
     post:
       tags:
-        - Accounts
+        - Internal Transfers
       summary: Create inter-account transfer(s)
       description: >-
         Creates one or more internal transfer records between two investment accounts belonging to the same investor.
@@ -5206,7 +5219,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Internal Transfers
       summary: Retrieve inter-account transfers
       description: >-
         Retrieves all active inter-account transfer records for a specific investment account.
@@ -5275,7 +5288,7 @@ paths:
 
     patch:
       tags:
-        - Accounts
+        - Internal Transfers
       summary: Update an inter-account transfer
       description: >-
         Partially updates an existing inter-account transfer record.
@@ -5356,7 +5369,7 @@ paths:
 
     delete:
       tags:
-        - Accounts
+        - Internal Transfers
       summary: Archive an inter-account transfer
       description: >-
         Archives (soft-deletes) an existing inter-account transfer record.
@@ -5405,7 +5418,7 @@ paths:
 
     post:
       tags:
-        - Accounts
+        - Internal Transfers
       summary: Create intra-account transfer(s)
       description: >-
         Creates one or more internal transfers of cash or stock between sub-accounts, or between a sub-account and the primary account, within the same MIS account group.
@@ -5563,7 +5576,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Internal Transfers
       summary: Retrieve intra-account transfers
       description: >-
         Retrieves the internal cash and stock transfer instructions recorded for an investment account.
@@ -5659,11 +5672,12 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
+  
   /accounts/{accountId}/fees:
     
     post:
       tags:
-        - Accounts
+        - Fees & Charges
       summary: Create account fee(s)
       description: >-
         Creates one or more fee records for a single investment account.
@@ -5920,7 +5934,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Fees & Charges
       summary: Retrieves account fees
       description: 
         Retrieves the account level fees against a specific investment account record.
@@ -6054,7 +6068,7 @@ paths:
     
     patch:
       tags:
-        - Accounts
+        - Fees & Charges
       summary: archive an accounts fee
       description: >-
         
@@ -6164,7 +6178,7 @@ paths:
 
     put:
       tags:
-        - Accounts
+        - Cash Management
       summary: Add or update an income option on an investment account
       description: >-
         An adviser should be able to manage how investment income for an investment account is handled by SS&C Wealth Platform. 
@@ -6459,7 +6473,7 @@ paths:
 
     post:
       tags:
-        - Accounts
+        - Account Parties & Bank Details
       summary: Create Third Parties on an account
       description: >-
         Allows you to add third parties linked to a SS&C Wealth Platform Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
@@ -6731,7 +6745,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Account Parties & Bank Details
       summary: Retrieves Third Parties on an account
       description: >-
         Returns third parties linked to an Investment Account. A third party refers to a company, trust, or individual connected to the account who is not an investor.
@@ -6873,7 +6887,7 @@ paths:
 
     patch:
       tags:
-        - Accounts
+        - Account Parties & Bank Details
       summary: Modify third parties on an account
       description: >-
         Allows partial updates to existing third parties associated with a specified investment account.
@@ -7014,7 +7028,7 @@ paths:
 
     put:
       tags:
-        - Accounts
+        - Account Parties & Bank Details
       summary: Update Beneficiaries on an account
       description: >-
         Supports full replacement of all third party beneficiaries associated with a specified pension account.
@@ -7177,7 +7191,7 @@ paths:
     
     post:
       tags:
-        - Accounts
+        - Dealing & Investment Instructions
       summary: Create portfolio adjustments
       description: >-
         This endpoint is used to adjust portfolio holdings.
@@ -7291,7 +7305,7 @@ paths:
     
     post:
       tags:
-        - Accounts
+        - Dealing & Investment Instructions
       summary: Create investment instructions on an account
       description: |
         Allows investors, or advisers on their behalf, to create bespoke investment instructions for their accounts, outside of the standard Hubwise model based structure. 
@@ -7769,7 +7783,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Dealing & Investment Instructions
       summary: Retrieves investment instructions on an account
       description: |
         Retrieves the details of investment instructions for a given account, using the unique SS&C Hubwise Account ID generated when an account is created and any specified query parameters.
@@ -8082,7 +8096,7 @@ paths:
 
     post:
       tags:
-        - Accounts
+        - Dealing & Investment Instructions
       summary: Create a raise cash instruction on an account
       description: >-
         Creates a raise cash investment instruction against an investment account.
@@ -8154,7 +8168,7 @@ paths:
 
     post:
       tags:
-        - Accounts
+        - Dealing & Investment Instructions
       summary: Create executed trades on an account
       description: |
         There are certain trades (non-standard trading orders) that customers will execute themselves and that Hubwise would not be aware of. The customer provides details of the executed trade(s) via this endpoint. SS&C Hubwise will validate the trade data and populate the back-office tables for downstream, operational processing, settlement of the trades and updating books & records.
@@ -8390,7 +8404,7 @@ paths:
 
     get:
       tags:
-        - Accounts
+        - Cash Management
       summary: Retrieve the ring-fenced cash on an investment account
       description: >-
         Retrieves the ring-fenced (protected) cash currently held against an investment account.
@@ -8462,7 +8476,7 @@ paths:
 
     post:
       tags:
-        - Accounts
+        - Cash Management
       summary: Create a ring-fence on an investment account
       description: >-
         Creates a ring-fence on an investment account that does not already hold one.
@@ -8536,7 +8550,7 @@ paths:
 
     patch:
       tags:
-        - Accounts
+        - Cash Management
       summary: Update the ring-fenced cash on an investment account
       description: >-
         Updates the amount on an investment account's existing ring-fence.
@@ -8622,7 +8636,7 @@ paths:
 
     delete:
       tags:
-        - Accounts
+        - Cash Management
       summary: Release the ring-fenced cash on an investment account
       description: >-
         Releases ring-fenced (protected) cash back to the account's available balance. This is a book entry only — no cash leaves the account.
@@ -8682,7 +8696,7 @@ paths:
 
     post:
       tags:
-        - Fee Groups
+        - Fees & Charges
       summary: Create a Fee Group
       description: >
         Creates a new Fee Group, linking one or more eligible investment accounts under a shared fee qualification (fee type and fee code).
@@ -8803,7 +8817,7 @@ paths:
 
     get:
       tags:
-        - Fee Groups
+        - Fees & Charges
       summary: Retrieve a Fee Group by ID
       description: >
         Retrieves a Fee Group and its current member accounts using a case-sensitive exact match on `groupId`.
@@ -8878,7 +8892,7 @@ paths:
 
     patch:
       tags:
-        - Fee Groups
+        - Fees & Charges
       summary: Update a Fee Group
       description: >
         Adds or removes member accounts on an existing Fee Group. The request payload contains an `operations` array of `add` and/or `delete` actions.
@@ -9046,7 +9060,7 @@ paths:
 
     delete:
       tags:
-        - Fee Groups
+        - Fees & Charges
       summary: Delete a Fee Group
       description: >
         Soft-deletes a Fee Group by setting its status to `INACTIVE`. Member account links are retained but the group is no longer active.
@@ -10368,8 +10382,8 @@ components:
             - SEPARATED
             - CIVIL
             - COMMONLAW
-            - OTHERDEP
-            - UNDISC
+            - OTHER_DEPENDANT
+            - UNDISCLOSED
         incomeAndInvestment:
           $ref: "#/components/schemas/IncomeAndInvestment"
         allowance:
@@ -10454,8 +10468,8 @@ components:
             - SEPARATED
             - CIVIL
             - COMMONLAW
-            - OTHERDEP
-            - UNDISC
+            - OTHER_DEPENDANT
+            - UNDISCLOSED
         incomeAndInvestment:
           $ref: "#/components/schemas/IncomeAndInvestment"
         allowance:
