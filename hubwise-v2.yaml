@@ -7523,7 +7523,10 @@ paths:
         Only investment instructions related to investors and accounts that the requester is authorised to access will be returned. The endpoint must be called for each account record.
 
 
-        If invalid query parameters are provided or the requester lacks permission to view investment instructions for this investor and/or account, an appropriate error response is returned. If no investment instructions exist for this account, then an empty response will be returned.
+        If invalid query parameters are provided or the requester lacks permission to view investment instructions for this investor and/or account, an appropriate error response is returned. 
+        
+        
+        If no investment instructions exist for this account, then an empty array will be returned.
       operationId: retrieveInvestmentInstructions
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -7806,11 +7809,6 @@ paths:
                         ]
                       }
                     ]
-        "204":
-          description: No investment instructions found for the supplied account.
-          headers:
-            Request-Id:
-              $ref: '#/components/headers/Request-Id'
         "400":
           $ref: "#/components/responses/400-BadRequest"
         "401":
