@@ -12374,7 +12374,13 @@ components:
         instrumentDetails:
           $ref: "#/components/schemas/InstrumentDetails"
         status:
-          description: Status of the transfer instruction
+          description: >-
+            Status of the transfer instruction.
+            `OPEN` — in flight.
+            `COMPLETE` — completed.
+            `REJECTED` — declined by the back office.
+            `FAILED` — failed.
+            `EXPIRED` — expired.
           type: string
           enum:
             - OPEN
@@ -12382,12 +12388,6 @@ components:
             - REJECTED
             - FAILED
             - EXPIRED
-          x-enum-descriptions:
-            - In flight
-            - Completed
-            - Declined by the back office
-            - Failed
-            - Expired
           readOnly: true
           example: OPEN
         effectiveDate:
