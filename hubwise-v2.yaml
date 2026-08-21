@@ -7554,7 +7554,7 @@ paths:
           example: 1
         - name: requestStatus
           in: query
-          description: Any specific status types the requester wants to be returned. Can be supplied as an array. If not supplied, all statuses will be returned.
+          description: Any specific status types the requester wants to be returned. Can be supplied as an array. If not supplied, all statuses will be returned. Parameters should be entered in comma delimited form.
           required: false
           schema:
             type: array
@@ -7567,10 +7567,10 @@ paths:
                 - PRO
           style: form
           explode: false
-          example: NEW
+          example: [NEW,PRO]
         - name: action
           in: query
-          description: The type of Investment Instruction from the list of supported values. If not supplied, all instruction types for the account will be returned.
+          description: The type of Investment Instruction from the list of supported values. If not supplied, all instruction types for the account will be returned. Parameters should be entered in comma delimited form.
           required: false
           schema:
             type: array
@@ -7584,10 +7584,10 @@ paths:
                 - SWITCH
           style: form
           explode: false
-          example: BUY
+          example: [BUY,INVEST]
         - name: tradeStatus
           in: query
-          description: The trade status of the investment instruction. If not supplied, all trade statuses will be returned.
+          description: The trade status of the investment instruction. If not supplied, all trade statuses will be returned. Parameters should be entered in comma delimited form.
           required: false
           schema:
             type: array
@@ -7600,7 +7600,7 @@ paths:
                 - PRO
           style: form
           explode: false
-          example: NEW
+          example: [NEW,PRO]
       responses:
         "200":
           description: Investment instructions retrieved successfully
@@ -7610,168 +7610,200 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InvestmentInstructions"
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvestmentInstructions"
               examples:
                 Ex1:
-                  summary: Investment instructions retrieved for the account
+                  summary: Investment instructions retrieved for the account, grouped by instructionsUrn
                   value:
                     [
                       {
                         "instructionsUrn": 00000000987,
-                        "customerId": "HUBWISE",
-                        "id": 1,
+                        "accountId": "HW00013451A",
+                        "tenantId": "HUBWISE",
+                        "adviserId": "E273053",
                         "requestStatus": "PRO",
-                        "action": "BUY",
-                        "requestedBy": "XO",
-                        "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                        },
-                        "tradeStatus": "PRO",
-                        "orderDetails": {
-                          "quantity": 123.456
-                        }
-                      },
-                      {
-                        "instructionsUrn": 00000000987,
-                        "customerId": "HUBWISE",
-                        "id": 2,
-                        "requestStatus": "PRO",
-                        "action": "SELL",
-                        "requestedBy": "XO",
-                        "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                        },
-                        "tradeStatus": "PRO",
-                        "orderDetails": {
-                          "percentage": 25
-                        }
+                        "instructions": [
+                          {
+                            "id": 1,
+                            "action": "BUY",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                            "tradeStatus": "PRO",
+                            "orderDetails": {
+                              "quantity": 123.456
+                            }
+                          },
+                          {
+                            "id": 2,
+                            "action": "SELL",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                            "tradeStatus": "PRO",
+                            "orderDetails": {
+                              "percentage": 25
+                            }
+                          }
+                        ]
                       },
                       {
                         "instructionsUrn": 00000000988,
-                        "customerId": "HUBWISE",
-                        "id": 1,
+                        "accountId": "HW00013451A",
+                        "tenantId": "HUBWISE",
+                        "adviserId": "E273053",
                         "requestStatus": "REJ",
-                        "action": "SELL",
-                        "requestedBy": "CLIENT",
-                        "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                        },
-                        "tradeStatus": "REJ",
-                        "errorReason": "Account does not hold sufficient stock",
-                        "orderDetails": {
-                          "quantity": 1250.123456
-                        }
+                        "instructions": [
+                          {
+                            "id": 1,
+                            "action": "SELL",
+                            "requestedBy": "CLIENT",
+                            "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                            "tradeStatus": "REJ",
+                            "errorReason": "Account does not hold sufficient stock",
+                            "orderDetails": {
+                              "quantity": 1250.123456
+                            }
+                          }
+                        ]
                       }
                     ]
-                    
+
                 Ex2:
                   summary: Investment instructions filtered by instructionsUrn
                   value:
                     [
                       {
                         "instructionsUrn": 00000000987,
-                        "customerId": "HUBWISE",
-                        "id": 1,
+                        "accountId": "HW00013451A",
+                        "tenantId": "HUBWISE",
+                        "adviserId": "E273053",
                         "requestStatus": "PRO",
-                        "action": "BUY",
-                        "requestedBy": "XO",
-                        "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                        },
-                        "tradeStatus": "PRO",
-                        "orderDetails": {
-                          "quantity": 123.456
-                        }
-                      },
-                      {
-                        "instructionsUrn": 00000000987,
-                        "customerId": "HUBWISE",
-                        "id": 2,
-                        "requestStatus": "PRO",
-                        "action": "SELL",
-                        "requestedBy": "XO",
-                        "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                        },
-                        "tradeStatus": "PRO",
-                        "orderDetails": {
-                          "percentage": 25
-                        }
+                        "instructions": [
+                          {
+                            "id": 1,
+                            "action": "BUY",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                            "tradeStatus": "PRO",
+                            "orderDetails": {
+                              "quantity": 123.456
+                            }
+                          },
+                          {
+                            "id": 2,
+                            "action": "SELL",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                            "tradeStatus": "PRO",
+                            "orderDetails": {
+                              "percentage": 25
+                            }
+                          }
+                        ]
                       }
                     ]
 
                 Ex3:
-                  summary: Investment instructions filtered by requestStatus
+                  summary: Investment instructions filtered by requestStatus=REJ
                   value:
                     [
                       {
-                        "instructionsUrn": 00000000987,
-                        "customerId": "HUBWISE",
-                        "id": 3,
+                        "instructionsUrn": 00000000988,
+                        "accountId": "HW00013451A",
+                        "tenantId": "HUBWISE",
+                        "adviserId": "E273053",
                         "requestStatus": "REJ",
-                        "action": "SELL",
-                        "requestedBy": "CLIENT",
-                        "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                        },
-                        "tradeStatus": "REJ",
-                        "errorReason": "Account does not hold sufficient stock",
-                        "orderDetails": {
-                          "quantity": 1250.123456
-                        }
+                        "instructions": [
+                          {
+                            "id": 1,
+                            "action": "SELL",
+                            "requestedBy": "CLIENT",
+                            "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                            "tradeStatus": "REJ",
+                            "errorReason": "Account does not hold sufficient stock",
+                            "orderDetails": {
+                              "quantity": 1250.123456
+                            }
+                          }
+                        ]
                       }
                     ]
 
                 Ex4:
-                  summary: Investment instructions filtered by action
+                  summary: Investment instructions filtered by action=SELL
                   value:
                     [
                       {
                         "instructionsUrn": 00000000987,
-                        "customerId": "HUBWISE",
-                        "id": 2,
+                        "accountId": "HW00013451A",
+                        "tenantId": "HUBWISE",
+                        "adviserId": "E273053",
                         "requestStatus": "PRO",
-                        "action": "SELL",
-                        "requestedBy": "XO",
-                        "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                        },
-                        "tradeStatus": "PRO",
-                        "orderDetails": {
-                          "percentage": 25
-                        }
+                        "instructions": [
+                          {
+                            "id": 2,
+                            "action": "SELL",
+                            "requestedBy": "XO",
+                            "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                            "tradeStatus": "PRO",
+                            "orderDetails": {
+                              "percentage": 25
+                            }
+                          }
+                        ]
                       },
                       {
                         "instructionsUrn": 00000000988,
-                        "customerId": "HUBWISE",
-                        "id": 1,
+                        "accountId": "HW00013451A",
+                        "tenantId": "HUBWISE",
+                        "adviserId": "E273053",
                         "requestStatus": "REJ",
-                        "action": "SELL",
-                        "requestedBy": "CLIENT",
-                        "instrumentDetails": {
-                          "isin": "GB00B4L5Y983",
-                          "exchange": "XLON",
-                          "marketSettlementCurrency": "GBP"
-                        },
-                        "tradeStatus": "REJ",
-                        "errorReason": "Account does not hold sufficient stock",
-                        "orderDetails": {
-                          "quantity": 1250.123456
-                        }
+                        "instructions": [
+                          {
+                            "id": 1,
+                            "action": "SELL",
+                            "requestedBy": "CLIENT",
+                            "instrumentDetails": {
+                              "isin": "GB00B4L5Y983",
+                              "exchange": "XLON",
+                              "marketSettlementCurrency": "GBP"
+                            },
+                            "tradeStatus": "REJ",
+                            "errorReason": "Account does not hold sufficient stock",
+                            "orderDetails": {
+                              "quantity": 1250.123456
+                            }
+                          }
+                        ]
                       }
                     ]
         "204":
@@ -10283,7 +10315,9 @@ components:
           description: The status of the overall request
           enum:
             - NEW
-            - FAILED
+            - PEN
+            - REJ
+            - PRO
           type: string
           readOnly: true
           example: NEW
@@ -10313,10 +10347,17 @@ components:
           description: The status of the individual investment instruction
           enum:
             - NEW
-            - FAILED
+            - PEN
+            - REJ
+            - PRO
           type: string
           readOnly: true
-          example: NEW  
+          example: NEW
+        errorReason:
+          description: The reason the instruction was rejected, populated when tradeStatus is REJ.
+          type: string
+          readOnly: true
+          example: Account has trading restrictions
         action:
           description: >-
             The type of investment instruction to action against the account;
