@@ -4,11 +4,13 @@ Changelog for v0.8.20 API spec
 
 - Added intra-account transfers endpoints
 - Added get Investment Instruction
+- Restructured tags to clarity
+- Fixed marital statuses OTHER_DEPENDANT and UNDISCLOSED
 
 Changelog for v0.8.19 API spec
 
 - Remove reference field from money movement
-- Updated illustration investor properties
+- Added illustration investor properties
 
 Changelog for v0.8.18 API spec
 
@@ -17,17 +19,16 @@ Changelog for v0.8.18 API spec
 
 Changelog for v0.8.17 API spec
 
-- Added ring-fence cash endpoints for accounts: GET, POST, PATCH and DELETE on /accounts/{accountId}/ring-fence-cash
+- Added ring-fence cash endpoints for accounts
 
 Changelog for v0.8.16 API spec
 
-- Added MIS transfers support to `POST /accounts/{accountId}/transfers`
-- Added `allocations` field to `AccountTransfer` schema referencing `MovementAllocation`
-- Added `id` (read-only) field to `MovementAllocation` schema
-- Added MIS cash transfer example (3 sub-accounts) and MIS in-specie transfer example (single sub-account)
-- Added INSPECIE single sub-account constraint to `allocations` field description
-- Added `400-MISAllocationRules` error example for allocation validation failures
-- Updated `POST /accounts/{accountId}/transfers` response code from 200 to 201
+- Added MIS transfers support for creating transfers
+- Added read-only id field to MovementAllocation schema
+- Added MIS cash transfer examples 
+- Added description for INSPECIE single sub-account constraint
+- Added error example for allocation validation failures
+- Changed POST /accounts/{accountId}/transfers response status from 200 to 201
 
 Changelog for v0.8.15 API spec
 
@@ -71,11 +72,9 @@ Changelog for v0.8.9 API spec
 Changelog for v0.8.8 API spec
 
  - Added account status updates to PATCH /accounts/{accountId} 
- - status now accepts ACTIVE, DECEASED, TRADING_SUSPENDED, INTENTION_TO_CLOSE, NON_UK_RESIDENT
- - Documented 400/401/403/404/500 responses on PATCH /accounts/{accountId}, including the HWA-ACCOUNT-038 status error
+ - Added non-success responses on PATCH /accounts/{accountId}
  - Added investor status updates to PATCH /investors/{investorId} 
- - InvestorPatch.status now accepts INCEPTED, DECEASED, NON_UK_RESIDENT
- - Documented 400 validation (HWA-EXCEPTION-001) and business-logic (HWA-INVESTOR-023) responses on PATCH /investors/{investorId}
+ - Added non-success responses on PATCH /investors/{investorId}
 
 Changelog for v0.8.7 API spec
 
