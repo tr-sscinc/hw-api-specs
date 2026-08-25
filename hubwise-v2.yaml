@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.20
+  version: 0.8.21
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -5672,7 +5672,7 @@ paths:
           $ref: "#/components/responses/404-NotFound"
         "500":
           $ref: "#/components/responses/500-ServerError"
-  
+
   /accounts/{accountId}/fees:
     
     post:
@@ -8093,6 +8093,99 @@ paths:
           $ref: "#/components/responses/500-ServerError"
 
   /accounts/{accountId}/raise-cash-instructions:
+
+    get:
+      tags:
+        - Dealing & Investment Instructions
+      summary: Retrieve the raise cash instructions on an account
+      description: >-
+        Retrieves the raise cash investment instructions held against an investment account.
+
+
+        The instructions are returned as an array. Each instruction reports the amount to be raised, its currency and its processing status.
+
+
+        Where the account is a primary MIS account, the instructions raised against its sub-accounts are returned alongside its own. The `accountId` on each instruction identifies the account the instruction was raised against.
+
+
+        Instructions that were rejected or that failed validation additionally carry the `reason` for that outcome.
+
+
+        The account must exist and must not be in PENDING status.
+      operationId: retrieveRaiseCashInstructions
+      parameters:
+        - $ref: '#/components/parameters/Request-Id'
+        - name: accountId
+          in: path
+          description: Unique SS&C Wealth Platform Account identifier
+          required: true
+          schema:
+            type: string
+            minLength: 11
+            maxLength: 11
+          example: HW000000143
+        - name: status
+          in: query
+          description: The processing status to filter the returned instructions by.
+          required: false
+          schema:
+            type: string
+            enum:
+              - OPEN
+              - COMPLETE
+              - FAILED
+              - REJECTED
+              - EXPIRED
+            default: OPEN
+          example: COMPLETE
+      responses:
+        "200":
+          description: Raise cash instructions queried successfully.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RaiseCashInstructionListItem"
+              examples:
+                Ex1:
+                  summary: Retrieving COMPLETE instructions
+                  value:
+                    [
+                      {
+                        "id": "CI000014930",
+                        "accountId": "HW000000170",
+                        "amount": 25.00,
+                        "currency": "GBP",
+                        "status": "COMPLETE"
+                      }
+                    ]
+                Ex2:
+                  summary: Retrieving FAILED instructions, including the rejection reason
+                  value:
+                    [
+                      {
+                        "id": "CI900017401",
+                        "accountId": "HW000000170",
+                        "amount": 25.00,
+                        "currency": "GBP",
+                        "status": "FAILED",
+                        "reason": "Invalid Action, there are open orders switch or rebalance taking place"
+                      }
+                    ]
+        "400":
+          $ref: "#/components/responses/400-BadRequest"
+        "401":
+          $ref: "#/components/responses/401-Unauthorized"
+        "403":
+          $ref: "#/components/responses/403-Forbidden"
+        "404":
+          $ref: "#/components/responses/404-NotFound"
+        "500":
+          $ref: "#/components/responses/500-ServerError"
 
     post:
       tags:
@@ -11107,6 +11200,54 @@ components:
           readOnly: true
           example: OPEN
 
+    RaiseCashInstructionListItem:
+      description: A raise cash instruction returned when retrieving the instructions held against an investment account
+      additionalProperties: false
+      readOnly: true
+      type: object
+      properties:
+        id:
+          description: The unique SS&C Wealth Platform identifier for the instruction
+          type: string
+          maxLength: 11
+          readOnly: true
+          example: CI000014930
+        accountId:
+          description: Unique SS&C Wealth Platform Account identifier the cash amount is raised against. For a primary MIS account this identifies the sub-account the instruction was raised against.
+          type: string
+          minLength: 11
+          maxLength: 11
+          readOnly: true
+          example: HW000000170
+        amount:
+          description: The cash amount to raise in the instruction
+          type: number
+          format: double
+          readOnly: true
+          example: 25.00
+        currency:
+          description: The currency of the amount
+          type: string
+          maxLength: 3
+          readOnly: true
+          example: GBP
+        status:
+          description: The processing status of the instruction
+          enum:
+            - OPEN
+            - COMPLETE
+            - FAILED
+            - REJECTED
+            - EXPIRED
+          type: string
+          readOnly: true
+          example: COMPLETE
+        reason:
+          description: The instruction validation rejection message. Only returned when the status is FAILED or REJECTED.
+          type: string
+          readOnly: true
+          example: Invalid Action, there are open orders switch or rebalance taking place
+
     Taxation:
       type: object
       description: The investors tax residency. 
@@ -13430,8 +13571,8 @@ components:
                 format: date
                 example: "1990-05-15"
                 description: The investor's date of birth.
-            
-      
+
+
           
         illustrationDetails:
           type: object
