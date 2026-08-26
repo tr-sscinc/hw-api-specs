@@ -3,7 +3,7 @@
 Changelog for v0.8.21 API spec
 
 - Added retrieve raise cash instructions endpoint, returning the instructions as an array
-- Added `RaiseCashInstructionListItem` schema, including a `reason` field returned for failed and rejected instructions
+- Consolidated the raise cash instruction schemas into a single `RaiseCashInstruction`, and added a `reason` field returned for failed and rejected instructions
 
 Changelog for v0.8.20 API spec
 
