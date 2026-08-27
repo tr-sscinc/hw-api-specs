@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.22 API spec
+
+- Added pension illustrations
+
 Changelog for v0.8.21 API spec
 
 - Added retrieve raise cash instructions endpoint, returning the instructions as an array
