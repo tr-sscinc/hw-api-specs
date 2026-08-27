@@ -13927,39 +13927,39 @@ components:
           $ref: "#/components/schemas/IllustrationPensionValue"
 
         yearToDatePayments:
-          description: Total income paid during the current pension year.
+          description: Total income paid during the current pension year. Only applicable for CAPPED transfers.
           type: number
           nullable: true
           example: 10000
 
         withdrawalReviewDate:
           description: |
-            The next date when the capped income limit will be reviewed. Must not be in the past.
+            The next date when the capped income limit will be reviewed. Must not be in the past. Only applicable for CAPPED transfers.
           type: string
           format: date
           nullable: true
           example: "2000-10-10"
             
         gadMaximum:
-          description: The maximum income that can be taken this year.
+          description: The maximum income that can be taken this year. Only applicable for CAPPED transfers.
           type: number
           nullable: true
           example: 15000
 
         nextYearGadMaximum:
-          description: The maximum income that can be taken next year.
+          description: The maximum income that can be taken next year. Only applicable for CAPPED transfers.
           type: number
           nullable: true
           example: 15000
 
-        preADayDrawdown:
-          description: Whether a drawdown arrangement started before 2006-04-06.
+        preaDayDrawdown:
+          description: Whether a drawdown arrangement started before 2006-04-06. Only applicable for CAPPED transfers.
           type: boolean
           nullable: true
           example: true
 
         gadReviewPeriod:
-          description: Number of years between reviews of the maximum income allowed. 
+          description: Number of years between reviews of the maximum income allowed. Only applicable for CAPPED transfers.
           type: number
           enum:
             - 1
