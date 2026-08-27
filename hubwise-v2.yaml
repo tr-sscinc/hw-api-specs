@@ -9628,58 +9628,8 @@ paths:
                       ]
                     }
                   }
+          
               Ex2:
-                summary: New pension account with capped transfer and ongoing fee
-                value:
-                  {
-                    "illustrationType": "STANDARD_ILLUSTRATION",
-                    "investors": [
-                      {
-                        "title": "MISS",
-                        "firstName": "ALison",
-                        "surname" : "Roe",
-                        "dateOfBirth": "1965-04-20"
-                      }
-                    ],
-                    "illustrationDetails": {
-                      "retirementAge": 65,
-                      "account": {
-                        "productId": "HWS",
-                      "model": {
-                        "id": "DF000000001",
-                        "providerId": "DFM0001"
-                        }
-                      },
-                      "transfers": [
-                        {
-                          "type": "CAPPED",
-                          "investmentInstruction": "INVEST_IN_MODEL",
-                          "value": {
-                            "amount": 25000.00
-                          },
-                          "yearToDatePayments": 4500.00,
-                          "withdrawalReviewDate": "2027-05-01",
-                          "gadMaximum": 8500.00,
-                          "nextYearGadMaximum": 8700.00,
-                          "preADayDrawdown": false,
-                          "gadReviewPeriod": 3,
-                          "fee": {
-                            "percentage": 1.50
-                          }
-                        }
-                      ],
-                      "fees": [
-                        {
-                          "type": "ADVISER_ANNUAL",
-                          "percentage": 0.50,
-                          "vatIncluded": true,
-                          "startDate": "2026-08-01"
-                        },
-                      ]
-                    }
-                  }
-
-              Ex3:
                 summary: Existing pension account with lump sum contribution and individual allocations
                 value:
                   {
