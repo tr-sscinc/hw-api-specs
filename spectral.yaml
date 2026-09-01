@@ -3,10 +3,14 @@ extends: spectral:oas
 rules:
   info-contact: off
   operation-description: off
+  oas3-api-servers: error       
+  info-description: error       
+  operation-operationId: error  
+  operation-tags: error         
 
   ssc-paths-kebab-case: 
     severity: error
-    message: "[{{property}}] Path segments must be lower-kebab-case. https://developer.ssctech.com/api-standards/paths-kebab-case" 
+    message: "[{{property}}] Path segments must be lower-kebab-case." 
     given: $.paths.*~
     then: 
       function: pattern
@@ -15,7 +19,7 @@ rules:
   
   ssc-no-version-in-paths: 
     severity: error
-    message: "[{{property}}] Paths must not contain version numbers. https://developer.ssctech.com/api-standards/no-version-in-paths"
+    message: "[{{property}}] Paths must not contain version numbers."
     given: $.paths.*~
     then: 
       function: pattern
@@ -24,7 +28,7 @@ rules:
  
   ssc-camel-case-for-properties: 
     severity: error
-    message: "[{{property}}] Request and response JSON must be camelCase. https://developer.ssctech.com/api-standards/camel-case-for-properties"
+    message: "[{{property}}] Request and response JSON must be camelCase."
     given: $..properties[*]~
     then: 
       function: pattern
@@ -33,7 +37,7 @@ rules:
       
   ssc-isodate-format-properties: 
     severity: warn
-    message: "Dates and times should be ISO 8601. https://developer.ssctech.com/api-standards/datetime-iso-format"
+    message: "Dates and times should be ISO 8601."
     given: "$..properties.[?(@property.match(/(^date([A-Z0-9]|$)|[^T]oDate([A-Z0-9]|$)|[^o]Date([A-Z0-9]|$))/))]"
     then:     
       function: schema
@@ -61,7 +65,7 @@ rules:
               type: string
   ssc-isodate-format-parameters: 
     severity: warn
-    message: "Dates and times should be ISO 8601. https://developer.ssctech.com/api-standards/datetime-iso-format"
+    message: "Dates and times should be ISO 8601."
     given: "$..parameters.[?(@property === 'name' && @.match(/(^date([A-Z0-9]|$)|[^T]oDate([A-Z0-9]|$)|[^o]Date([A-Z0-9]|$))/))]^"
     then: 
       field: schema
@@ -91,7 +95,7 @@ rules:
  
   ssc-custom-request-headers:
     severity: warn
-    message: "[{{value}}] Custom request headers should not be defined. https://developer.ssctech.com/api-standards/custom-headers"
+    message: "[{{value}}] Custom request headers should not be defined."
     given: $..parameters[?(@.in==='header')].name
     then: 
       function: pattern
@@ -99,7 +103,7 @@ rules:
         match: "/^(ACCEPT|ACCEPT-CHARSET|ACCEPT-DATETIME|ACCEPT-ENCODING|ACCEPT-LANGUAGE|ACCESS-CONTROL-REQUEST-METHOD|ACCESS-CONTROL-REQUEST-HEADERS|AUTHORIZATION|CACHE-CONTROL|CONNECTION|CONTENT-ENCODING|CONTENT-LENGTH|CONTENT-TYPE|COOKIE|DATE|EXPECT|FORWARDED|FROM|HOST|IF-MATCH|IF-MODIFIED-SINCE|IF-NONE-MATCH|IF-RANGE|IF-UNMODIFIED-SINCE|MAX-FORWARDS|ORIGIN|PRAGMA|PREFER|PROXY-AUTHORIZATION|RANGE|REFERER|TE|TRAILER|TRANSFER-ENCODING|USER-AGENT|UPGRADE|VIA|REQUEST-ID)$/i"
   ssc-custom-response-headers:
     severity: warn
-    message: "[{{property}}] Custom response headers should not be defined. https://developer.ssctech.com/api-standards/custom-headers"
+    message: "[{{property}}] Custom response headers should not be defined."
     given: $..responses[*].headers.*~
     resolved: false
     then: 
@@ -110,14 +114,14 @@ rules:
   # 400 responses
   ssc-standard-error-response-400: 
     severity: error
-    message: "Errors must return a SSC error. https://developer.ssctech.com/api-standards/standard-error-response"
+    message: "Errors must return a SSC error."
     given: $..responses[?(@property == 400)]
     then: 
       field: content.application/problem+json
       function: truthy
   ssc-standard-responses-status-400:
     severity: warn
-    message: "A 400 response status should be defined. https://developer.ssctech.com/api-standards/standard-responses-status"
+    message: "A 400 response status should be defined."
     given: $.paths[*][*].responses
     then:
       field: '400'
@@ -126,14 +130,14 @@ rules:
   # 401 responses
   ssc-standard-error-response-401: 
     severity: error
-    message: "Errors must return a SSC error. https://developer.ssctech.com/api-standards/standard-error-response"
+    message: "Errors must return a SSC error."
     given: $..responses[?(@property == 401)]
     then: 
       field: content.application/problem+json
       function: truthy
   ssc-standard-responses-status-401:
     severity: warn
-    message: "A 401 response status should be defined. https://developer.ssctech.com/api-standards/standard-responses-status"
+    message: "A 401 response status should be defined."
     given: $.paths[*][*].responses
     then:
       field: '401'
@@ -142,14 +146,14 @@ rules:
   # 403 responses
   ssc-standard-error-response-403-json: 
     severity: error
-    message: "Errors must return a SSC error. https://developer.ssctech.com/api-standards/standard-error-response"
+    message: "Errors must return a SSC error."
     given: $..responses[?(@property == 403)]
     then: 
       field: content.application/problem+json
       function: truthy
   ssc-standard-responses-status-403:
     severity: warn
-    message: "A 403 response status should be defined. https://developer.ssctech.com/api-standards/standard-responses-status"
+    message: "A 403 response status should be defined."
     given: $.paths[*][*].responses
     then:
       field: '403'
@@ -158,7 +162,7 @@ rules:
   # 404 responses
   ssc-standard-error-response-404-json: 
     severity: error
-    message: "Errors must return a SSC error. https://developer.ssctech.com/api-standards/standard-error-response"
+    message: "Errors must return a SSC error."
     given: $..responses[?(@property == 404)]
     then: 
       field: content.application/problem+json
@@ -167,7 +171,7 @@ rules:
   # 500 responses
   ssc-standard-error-response-500: 
     severity: error
-    message: "Errors must return a SSC error. https://developer.ssctech.com/api-standards/standard-error-response"
+    message: "Errors must return a SSC error."
     given: $..responses[?(@property == 500)]
     then: 
       field: content.application/problem+json
@@ -176,7 +180,7 @@ rules:
   # Error Schema
   ssc-standard-error-response-schema: 
     severity: error
-    message: "SSC errors implements RFC9457. https://developer.ssctech.com/api-standards/standard-error-response"
+    message: "SSC errors implements RFC9457."
     given: $..responses[?(@property >= 400)].content.application/problem+json.schema.properties
     then: 
       - field: detail
@@ -184,7 +188,7 @@ rules:
  
   ssc-request-id-response-header: 
     severity: error
-    message: "Request-ID response header must be added. https://developer.ssctech.com/api-standards/request-id-header"
+    message: "Request-ID response header must be added."
     given: $..responses[*]
     then:
       field: headers
@@ -210,14 +214,14 @@ rules:
 
   ssc-request-id-response-header-required: 
     severity: warn
-    message: "The Request-ID response header should be required. https://developer.ssctech.com/api-standards/request-id-header"
+    message: "The Request-ID response header should be required."
     given: $..responses..[?(@property.match(/REQUEST-ID/i))]
     then:
       - field: required
         function: truthy
  
   ssc-open-api-version:
-    message: "Specifications must use a supported version of OpenAPI. https://developer.ssctech.com/api-standards/open-api-version"
+    message: "Specifications must use a supported version of OpenAPI."
     severity: error
     given: "$.openapi"
     then:
@@ -227,61 +231,16 @@ rules:
  
   ssc-string-max-length: 
     severity: warn
-    message: "Strings should be restricted to an appropriate maximum length. https://developer.ssctech.com/api-standards/string-max-length"
+    message: "Strings should be restricted to an appropriate maximum length."
     given: $..[?(@object() && @.type=="string" && !@.enum && !@.pattern && !@.format)]
     then: 
       field: maxLength
       function: truthy
 
-  # ssc-info-contact: 
-  #   severity: error
-  #   message: "APIs must have contact details. https://developer.ssctech.com/api-standards/info-contact"
-  #   given: $
-  #   then: 
-  #     - field: info.contact.name
-  #       function: truthy 
-  #     - field: info.contact.email
-  #       function: truthy 
-  # ssc-info-contact-details: 
-  #   severity: warn
-  #   message: "Non-ssc-standard contact details."
-  #   given: $.info.contact
-  #   then: 
-  #     - field: email
-  #       function: pattern
-  #       functionOptions:
-  #         match: "^developer-support@sscinc.com$"
-  #     - field: name
-  #       function: pattern
-  #       functionOptions:
-  #         match: "SS&C Developer Hub$"
-          
-  # ssc-info-licence: 
-  #   severity: error
-  #   message: "APIs must have a license. https://developer.ssctech.com/api-standards/info-licence"
-  #   given: $.info
-  #   then: 
-  #     - field: license.name
-  #       function: truthy
-  #     - field: license.url
-  #       function: truthy
-  # ssc-info-license-standard: 
-  #   severity: warn
-  #   message: "A SSC API standard license should be used. https://developer.ssctech.com/api-standards/info-licence"
-  #   given: $.info.license
-  #   then: 
-  #     - field: name
-  #       function: pattern
-  #       functionOptions: 
-  #         match: "^(API Restricted License|Community API Redistribution License)$"
-  #     - field: url
-  #       function: pattern
-  #       functionOptions: 
-  #         match: "^(https://www.ssctech.com/legal/api-restricted-license|https://www.ssctech.com/legal/api-redistributable-license)$"
   
   ssc-server-url:
     severity: error
-    message: "APIs must have SSC server URLs. https://developer.ssctech.com/api-standards/servers"
+    message: "APIs must have SSC server URLs."
     given: $.servers[*].url
     then: 
       - function: pattern
@@ -295,38 +254,37 @@ rules:
           match: ".*\/[v][1-9][0-9]?$" # e.g. /v3
   ssc-server-description: 
     severity: warn
-    message: "Server URLs should have a description. https://developer.ssctech.com/api-standards/servers"
+    message: "Server URLs should have a description."
     given: $.servers[*]
     then: 
       field: description
       function: truthy
-  # ssc-server-url-case: # TODO
-  #   severity: warn
-  #   message: "URLs should be lower case. https://developer.ssctech.com/api-standards/servers"
-  #   given: $.servers[*]
-  #   then: 
-  #     field: url
-  #     function: pattern
-  #     functionOptions: 
-  #       match: "^[-.:/?a-z0-9]$"
+  ssc-server-url-case:
+    severity: warn
+    message: "[{{value}}] URLs should be lower case."
+    given: $.servers[*].url
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "[A-Z](?![^{]*\\})"
  
   ssc-security: 
     severity: error
-    message: "Must define security. https://developer.ssctech.com/api-standards/security"
+    message: "Must define security."
     given: $
     then: 
       field: security
       function: truthy
   ssc-security-scheme: 
     severity: error
-    message: "Must define a security schemes. https://developer.ssctech.com/api-standards/security"
+    message: "Must define a security schemes."
     given: $.components
     then: 
       field: securitySchemes
       function: truthy
   ssc-security-scheme-type: 
     severity: error
-    message: "Only use HTTP bearer token. https://developer.ssctech.com/api-standards/security"
+    message: "Only use HTTP bearer token."
     given: $.components.securitySchemes.*
     then: 
       function: schema
@@ -360,7 +318,7 @@ rules:
  
   ssc-semver: 
     severity: warn
-    message: "[{{value}}] SSC API versions should follow SEMVER. https://developer.ssctech.com/api-standards/semver"
+    message: "[{{value}}] SSC API versions should follow SEMVER."
     given: $.info.version
     then: 
       function: pattern
@@ -369,7 +327,7 @@ rules:
         
   ssc-operation-id-format:
     severity: warn
-    message: "[{{value}}] The operationId should be camelCase and <= 100 chars in length. https://developer.ssctech.com/api-standards/operation-id"
+    message: "[{{value}}] The operationId should be camelCase and <= 100 chars in length."
     given: $.paths[*][*].operationId
     then: 
       - function: length
@@ -381,7 +339,7 @@ rules:
 
   ssc-endpoint-description:
     severity: error
-    message: "An endpoint must have a description. https://developer.ssctech.com/api-standards/endpoint-description"
+    message: "An endpoint must have a description."
     given: $.paths[*][get,put,post,delete,patch,head,options,trace]
     then:
       - field: description
@@ -389,14 +347,14 @@ rules:
 
   ssc-tags-root-level:
     severity: warn
-    message: "Tags should be defined at root level. https://developer.ssctech.com/api-standards/tags"
+    message: "Tags should be defined at root level."
     given: $
     then: 
       - field: tags
         function: truthy  
   ssc-tags-description:
     severity: warn
-    message: "Tags should have a description. https://developer.ssctech.com/api-standards/tags"
+    message: "Tags should have a description."
     given: $.tags[*]
     then: 
       - field: description
@@ -404,20 +362,20 @@ rules:
 
   ssc-no-polymorphism-oneof:
     severity: error
-    message: "oneOf must not be used. https://developer.ssctech.com/api-standards/no-polymorphism"
+    message: "oneOf must not be used."
     given: $..oneOf
     then:
       - function: falsy
   ssc-no-polymorphism-anyof:
     severity: info
-    message: "Properties should not be polymorphic. https://developer.ssctech.com/api-standards/no-polymorphism"
+    message: "Properties should not be polymorphic."
     given: $..anyOf
     then:
       - function: falsy
 
   ssc-input-parameter-example: 
     severity: error
-    message: "Parameters must have examples. https://developer.ssctech.com/api-standards/input-parameter-example"
+    message: "Parameters must have examples."
     given: $.paths[*][*].parameters[*]
     then: 
       function: schema
@@ -429,7 +387,7 @@ rules:
  
   ssc-request-body-example: 
     severity: error
-    message: "A request body must have an example. https://developer.ssctech.com/api-standards/payload-examples"
+    message: "A request body must have an example."
     given: $.paths[*][*].requestBody.content[*]
     then: 
       function: schema
@@ -440,7 +398,7 @@ rules:
             - required: [examples]
   ssc-request-body-example-summary: 
     severity: warn
-    message: "An example should have a summary. https://developer.ssctech.com/api-standards/payload-examples"
+    message: "An example should have a summary."
     given: $.paths[*][*].requestBody.content[*].examples[*]
     then: 
       field: summary
@@ -448,7 +406,7 @@ rules:
   
   ssc-success-response-body-example: 
     severity: error
-    message: "A 2xx response must have an example. https://developer.ssctech.com/api-standards/response-body-example"
+    message: "A 2xx response must have an example."
     given: $..responses[?(@property <= 205)].content[*]
     then: 
       function: schema
@@ -459,7 +417,7 @@ rules:
             - required: [examples]
   ssc-error-response-body-example: 
     severity: warn
-    message: "A 4xx/5xx response should have an example. https://developer.ssctech.com/api-standards/response-body-example"
+    message: "A 4xx/5xx response should have an example."
     given: $..responses[?(@property >= 400)].content[*]
     then: 
       function: schema
@@ -470,7 +428,7 @@ rules:
             - required: [examples]
   ssc-success-response-body-example-summary:
     severity: warn
-    message: "An example should have a summary. https://developer.ssctech.com/api-standards/response-body-example"
+    message: "An example should have a summary."
     given: $.paths[*][*].responses[?(@property <= 205)].content[*].examples[*]
     then: 
       field: summary
