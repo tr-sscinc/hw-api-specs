@@ -8278,14 +8278,6 @@ paths:
             type: string
             maxLength: 14
           example: HW00013567A
-        - name: testMode
-          in: query
-          description: Simulates executed trade creation but rolls back changes after validation.
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: false
       requestBody:
         content:
           application/json:
