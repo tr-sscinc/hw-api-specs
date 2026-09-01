@@ -1991,13 +1991,13 @@ paths:
         The account name is used in documentation and displayed in the Adviser Portal.
        
        
-        1.	Corporate or Trust accounts - Organisation name
+        1.  Corporate or Trust accounts - Organisation name
         
         
-        2.	Individual accounts  - title + firstName + middleName + surname
+        2.  Individual accounts  - title + firstName + middleName + surname
         
         
-        3.	Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
+        3.  Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
        
        
         If the name exceeds 50 characters, the middle name and title should be removed or shortened as required.
@@ -2718,13 +2718,13 @@ paths:
         If an investors name is being updated, the account name should be updated in line with this where applicable. The account name is used in documentation and displayed in the Adviser Portal.
 
 
-        1.	Corporate or Trust accounts - Organisation name
+        1.  Corporate or Trust accounts - Organisation name
 
 
-        2.	Individual accounts  - title + firstName + middleName + surname
+        2.  Individual accounts  - title + firstName + middleName + surname
 
 
-        3.	Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
+        3.  Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
 
 
         If the name exceeds 50 characters, the middle name and title should be removed or shortened as required.
@@ -4341,16 +4341,16 @@ paths:
        Additional rules include:
       
       
-       1.	The plan reference must match the ceding provider's format.
+       1.  The plan reference must match the ceding provider's format.
        
        
-       2.	The plan type field is mandatory for ISA, JISA, and pension transfers.
+       2.  The plan type field is mandatory for ISA, JISA, and pension transfers.
       
       
-       3.	For ISA and JISA transfers, current year subscription can be populated if assets were subscribed in the current tax year.
+       3.  For ISA and JISA transfers, current year subscription can be populated if assets were subscribed in the current tax year.
       
       
-       4.	For pension transfers, the crystallised value can be provided when assets have already been crystallised. This value cannot exceed the transfer amount. The uncrystallised value will be calculated automatically.
+       4.  For pension transfers, the crystallised value can be provided when assets have already been crystallised. This value cannot exceed the transfer amount. The uncrystallised value will be calculated automatically.
       
       
        For cash transfers, the investment instruction determines whether the transfer value is invested immediately into the model or held as cash.
@@ -5689,16 +5689,16 @@ paths:
         The following fee types are automatically configured by the system and cannot be created or modified via the API:
         
         
-        1.	Product Annual
+        1.  Product Annual
         
         
-        2.	Platform Annual
+        2.  Platform Annual
        
        
-        3.	Platform Initial
+        3.  Platform Initial
         
         
-        4.	Discretionary Model Management
+        4.  Discretionary Model Management
 
         For a Multiple Investment Strategy (MIS) account, fees cannot be set on the
         primary account. Supplying the primary account ID returns a 400 with the message
@@ -13534,7 +13534,7 @@ components:
         endDate:
           format: date
           description: >-
-            	The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
+              The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
           type: string
         
         investmentInstruction:
@@ -13861,7 +13861,7 @@ components:
         endDate:
           format: date
           description: >-
-            	The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
+              The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
           type: string
           nullable: true
           example: "2026-01-09"
