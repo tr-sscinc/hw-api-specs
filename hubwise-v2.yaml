@@ -3090,6 +3090,29 @@ paths:
                       ],
                       "status": "UNCHECKED"
                     }
+        "202":
+          description: Bank account already associated with account.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+              examples:
+                Ex1:
+                  summary: The bank account is already associated with the investment account
+                  value:
+                    {
+                      "accountId": "HW04003258A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
+                      "name": "Jane Doe",
+                      "number": "87654321",
+                      "sortCode": "309894",
+                      "holders": [{ "id": "HWI04003219" }],
+                      "status": "ACTIVE"
+                    }
         "400":
           $ref: "#/components/responses/400-BadRequest"
         "401":
