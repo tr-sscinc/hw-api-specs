@@ -1,5 +1,9 @@
 # hw-api-specs
 
+Changelog for v0.8.23 API spec
+
+- Remove 204 responses in get fees, money movements, third parties and transfers endpoints 
+
 Changelog for v0.8.22 API spec
 
 - Added pension illustrations
