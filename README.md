@@ -1,5 +1,12 @@
 # hw-api-specs
 
+Changelog for v0.8.23 API spec
+
+- Removed testMode query param throughout
+- Added 202 response for create bank account
+- Removed nullable fields throughout
+- Changed account status XX3 to TRADING_SUSPENDED_DATA
+
 Changelog for v0.8.22 API spec
 
 - Added pension illustrations

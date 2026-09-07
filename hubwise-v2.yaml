@@ -1991,13 +1991,13 @@ paths:
         The account name is used in documentation and displayed in the Adviser Portal.
        
        
-        1.	Corporate or Trust accounts - Organisation name
+        1.  Corporate or Trust accounts - Organisation name
         
         
-        2.	Individual accounts  - title + firstName + middleName + surname
+        2.  Individual accounts  - title + firstName + middleName + surname
         
         
-        3.	Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
+        3.  Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
        
        
         If the name exceeds 50 characters, the middle name and title should be removed or shortened as required.
@@ -2208,8 +2208,7 @@ paths:
                       "allocations": [
                         {
                           "modelId": "HW000001984",
-                          "percentage": 60,
-                          "date": "2024-07-01"
+                          "percentage": 60
                         },
                         {
                           "modelId": "HW000001985",
@@ -2718,13 +2717,13 @@ paths:
         If an investors name is being updated, the account name should be updated in line with this where applicable. The account name is used in documentation and displayed in the Adviser Portal.
 
 
-        1.	Corporate or Trust accounts - Organisation name
+        1.  Corporate or Trust accounts - Organisation name
 
 
-        2.	Individual accounts  - title + firstName + middleName + surname
+        2.  Individual accounts  - title + firstName + middleName + surname
 
 
-        3.	Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
+        3.  Joint accounts -  Concatenation of related investor names separated by an ampersand (&)
 
 
         If the name exceeds 50 characters, the middle name and title should be removed or shortened as required.
@@ -3089,6 +3088,29 @@ paths:
                         }
                       ],
                       "status": "UNCHECKED"
+                    }
+        "202":
+          description: Bank account already associated with account.
+          headers:
+            Request-Id:
+              $ref: '#/components/headers/Request-Id'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+              examples:
+                Ex1:
+                  summary: The bank account is already associated with the investment account
+                  value:
+                    {
+                      "accountId": "HW04003258A",
+                      "adviserId": "E008469",
+                      "tenantId": "HUBWISE",
+                      "name": "Jane Doe",
+                      "number": "87654321",
+                      "sortCode": "309894",
+                      "holders": [{ "id": "HWI04003219" }],
+                      "status": "ACTIVE"
                     }
         "400":
           $ref: "#/components/responses/400-BadRequest"
@@ -4341,16 +4363,16 @@ paths:
        Additional rules include:
       
       
-       1.	The plan reference must match the ceding provider's format.
+       1.  The plan reference must match the ceding provider's format.
        
        
-       2.	The plan type field is mandatory for ISA, JISA, and pension transfers.
+       2.  The plan type field is mandatory for ISA, JISA, and pension transfers.
       
       
-       3.	For ISA and JISA transfers, current year subscription can be populated if assets were subscribed in the current tax year.
+       3.  For ISA and JISA transfers, current year subscription can be populated if assets were subscribed in the current tax year.
       
       
-       4.	For pension transfers, the crystallised value can be provided when assets have already been crystallised. This value cannot exceed the transfer amount. The uncrystallised value will be calculated automatically.
+       4.  For pension transfers, the crystallised value can be provided when assets have already been crystallised. This value cannot exceed the transfer amount. The uncrystallised value will be calculated automatically.
       
       
        For cash transfers, the investment instruction determines whether the transfer value is invested immediately into the model or held as cash.
@@ -5689,16 +5711,16 @@ paths:
         The following fee types are automatically configured by the system and cannot be created or modified via the API:
         
         
-        1.	Product Annual
+        1.  Product Annual
         
         
-        2.	Platform Annual
+        2.  Platform Annual
        
        
-        3.	Platform Initial
+        3.  Platform Initial
         
         
-        4.	Discretionary Model Management
+        4.  Discretionary Model Management
 
         For a Multiple Investment Strategy (MIS) account, fees cannot be set on the
         primary account. Supplying the primary account ID returns a 400 with the message
@@ -8278,14 +8300,6 @@ paths:
             type: string
             maxLength: 14
           example: HW00013567A
-        - name: testMode
-          in: query
-          description: Simulates executed trade creation but rolls back changes after validation.
-          required: false
-          schema:
-            type: boolean
-            default: false
-          example: false
       requestBody:
         content:
           application/json:
@@ -9600,9 +9614,9 @@ paths:
                       "retirementAge": 67,
                       "account": {
                         "productId": "HWS",
-                      "model": {
-                        "id": "DF000000001",
-                        "providerId": "DFM0001"
+                          "model": {
+                          "id": "DF000000001",
+                          "providerId": "DFM0001"
                         }
                       },
                       "moneyMovements": [
@@ -9733,6 +9747,7 @@ components:
   schemas:
 
     ProblemDetails:
+      additionalProperties: false
       readOnly: true
       type: object
       description: | 
@@ -9775,6 +9790,7 @@ components:
             $ref: '#/components/schemas/ErrorDetail'
 
     ErrorDetail:
+      additionalProperties: false
       readOnly: true
       type: object
       description: An object to provide explicit details on a problem towards an API consumer.
@@ -9843,7 +9859,7 @@ components:
             - NON_UK_RESIDENT
             - AML
             - CLOSED_SUB_ACCOUNT
-            - XX3
+            - TRADING_SUSPENDED_DATA
           type: string
           readOnly: true
         activationDate:
@@ -9926,6 +9942,7 @@ components:
 
     AccountPatch:
       description: Account Patch Model
+      additionalProperties: false
       properties:
         name:
           format: string
@@ -10215,7 +10232,16 @@ components:
               description: The ISO 4217 currency code of the bank account. Defaults to GBP.
             status:
               type: string
-              description: Status of the bank account
+              description: |
+                Status of the bank account.
+
+
+                * ACTIVE - The bank account is active and can be used for transactions.
+                * REFERRED - The bank account has been referred for manual checking and cannot be used for transactions until the referral is resolved.
+                * REJECTED - The bank account has been rejected and cannot be used for transactions.
+                * DELETED - The bank account has been deleted and cannot be used for transactions.
+                * UNCHECKED - The bank account is waiting to be checked and cannot be used for transactions.
+                * WAITING_FOR_CUSTOMER - The bank account is waiting for the customer to provide additional information and cannot be used for transactions.
               readOnly: true
               enum:
                 - ACTIVE
@@ -11073,8 +11099,7 @@ components:
         tradeDate:
           type: string
           description: The date the trade was executed in yyyy-MM-dd format
-          maxLength: 10
-          minLength: 10
+          format: date
           example: "2026-06-28"
         tradeTime:
           type: string
@@ -11101,8 +11126,7 @@ components:
         settlementDate:
           type: string
           description: The settlement date in yyyy-MM-dd format
-          maxLength: 10
-          minLength: 10
+          format: date
           example: "2026-02-05"
         orderType:
           type: string
@@ -12522,6 +12546,7 @@ components:
     TransferFee:
       description: Represents a fee charged to an account for a movement or transfer
       type: object
+      additionalProperties: false
       properties:
         id:
           format: int64
@@ -13484,6 +13509,7 @@ components:
       required:
         - amount
       type: object
+      additionalProperties: false
       properties:
         amount:
           description: >-
@@ -13542,7 +13568,7 @@ components:
         endDate:
           format: date
           description: >-
-            	The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
+              The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
           type: string
         
         investmentInstruction:
@@ -13584,7 +13610,6 @@ components:
           type: string
           description: Unique identifier for a pre-configured set of tiered rates.
           maxLength: 6
-          
           example: AFGVCD
         amount:
           type: number
@@ -13622,7 +13647,6 @@ components:
       type: object
       additionalProperties: false
       properties:
-        
         investmentInstruction:
           type: string
           description: Whether a transfer should be invested immediately or held as cash.
@@ -13634,7 +13658,6 @@ components:
           $ref: "#/components/schemas/IllustrationValue"
         fee:
           $ref: "#/components/schemas/IllustrationTransferFee"    
-              
 
     IllustrationNPRequest:
       type: object
@@ -13642,10 +13665,8 @@ components:
       properties:
         accountId:
            type: string
-           nullable: true
            example: "ACC123456"
            description: Unique SS&C Wealth Platform Account identifier
-
         investors:
           type: array
           description: |
@@ -13678,24 +13699,20 @@ components:
                 format: date
                 example: "1990-05-15"
                 description: The investor's date of birth.
-
-
           
         illustrationDetails:
           type: object
           description: Required when creating a new illustration without an account ID, or when illustrating proposed changes to an existing account.
+          additionalProperties: false
           properties:
-
             forecastPeriod:
               type: integer
               example: 15
               description: Number of years that the illustration will cover. If not provided, the default 10 year period will be used.
-
             account:
               type: object
-              description: |
-                    Account details for the illustration.
-                    
+              additionalProperties: false
+              description: Account details for the illustration.
               properties:
                 productId:
                   description: Unique SS&C Wealth Platform Product identifier.
@@ -13705,31 +13722,23 @@ components:
                   description: The currency associated with the account.
                   type: string
                   example: GBP
-
             model:
               $ref: '#/components/schemas/IllustrationModel'
- 
             moneyMovements:
+              description: Contributions and Withdrawals.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationNPAccountMovement"
-                description: Contributions and Withdrawals.
-            
+                $ref: "#/components/schemas/IllustrationNPAccountMovement"
             fees:
+              description: Account level fees not associated with a specific money movement or transfer.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationNPAccountFee"
-                description: Account level fees not associated with a specific money movement or transfer.
-
+                $ref: "#/components/schemas/IllustrationNPAccountFee"
             transfers:
+              description: Transfers into the account from an external provider
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationNPAccountTransfer"
-                description: Transfers into the account from an external provider
-
+                $ref: "#/components/schemas/IllustrationNPAccountTransfer"
 
     IllustrationNPResponse:
       type: object
@@ -13745,7 +13754,6 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/IllustrationResult'
-
             document:
               $ref: '#/components/schemas/IllustrationDocument'  
 
@@ -13770,17 +13778,14 @@ components:
           example: ADVISER_ANNUAL
         code:
           type: string
-          nullable: true
           description: Unique identifier for a pre-configured set of tiered rates.          
           example: AFGVCD
         amount:
           type: number
-          nullable: true
           description: Amount-based fee value.
           example: 1000
         percentage:
           type: number
-          nullable: true
           description: The rate for a percentage-based fee.
           example: 0.12
         vatIncluded:
@@ -13789,18 +13794,15 @@ components:
           example: true
         startDate:
           type: string
-          nullable: true
           description: The intended start date of the fee.
           format: date
           example: "2026-01-07"
         endDate:
           type: string
-          nullable: true
           description: The date when the fee is scheduled to stop.
           format: date
           example: "2026-01-09"
         bandAdjustmentAmount:
-          nullable: true
           description: If the account is in a fee group for this fee type, the total value of the other accounts in the group.
           type: number
           example: 1000
@@ -13810,14 +13812,11 @@ components:
       additionalProperties: false
       description: Contributions and withdrawals associated with the illustration.
       properties:
-
         id:
           format: int64
           description: Unique SS&C Wealth Platform Money Movement identifier.
           type: integer
-          nullable: true
           example: 2
-
         type:
           description: >-
             The type of money movement being illustrated, the API can support payments into and out of pension accounts.
@@ -13832,7 +13831,6 @@ components:
             - CAPPED_PCLS
           type: string
           example: CONTRIBUTIONS
-
         payer:
           description: >-
             Indicates who the payer is; typically SELF or EMPLOYER. Defaults to SELF if not
@@ -13869,18 +13867,15 @@ components:
         endDate:
           format: date
           description: >-
-            	The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
+              The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
           type: string
-          nullable: true
           example: "2026-01-09"
 
         isMaximum:
           type: boolean
           description: >-
               Set to true to illustrate the maximum available Flexi Access Income, PCLS. Will always be false for UFPLS.
-          nullable: true
-          example: true
-
+          
         investmentInstruction:
           description: >-
             Whether a contribution should be invested immediately or held as cash.
@@ -13929,7 +13924,6 @@ components:
         yearToDatePayments:
           description: Total income paid during the current pension year. Only applicable for CAPPED transfers.
           type: number
-          nullable: true
           example: 10000
 
         withdrawalReviewDate:
@@ -13937,25 +13931,21 @@ components:
             The next date when the capped income limit will be reviewed. Must not be in the past. Only applicable for CAPPED transfers.
           type: string
           format: date
-          nullable: true
           example: "2000-10-10"
             
         gadMaximum:
           description: The maximum income that can be taken this year. Only applicable for CAPPED transfers.
           type: number
-          nullable: true
           example: 15000
 
         nextYearGadMaximum:
           description: The maximum income that can be taken next year. Only applicable for CAPPED transfers.
           type: number
-          nullable: true
           example: 15000
 
         preaDayDrawdown:
           description: Whether a drawdown arrangement started before 2006-04-06. Only applicable for CAPPED transfers.
           type: boolean
-          nullable: true
           example: true
 
         gadReviewPeriod:
@@ -13964,7 +13954,6 @@ components:
           enum:
             - 1
             - 3
-          nullable: true
           example: 1
 
         fee:
@@ -13986,7 +13975,6 @@ components:
 
         accountId:
           type: string
-          nullable: true
           description: Unique SS&C Wealth Platform Account identifier
           minLength: 11
           maxLength: 11
@@ -14017,13 +14005,11 @@ components:
                 type: string
                 maxLength: 25
                 example: "Anne"
-                nullable: true
                 description: The investor’s first name. TODO nullable
               surname:
                 type: string
                 maxLength: 25
                 example: "Winfield"
-                nullable: true
                 description: The investor’s surname. TODO nullable
               dateOfBirth:
                 type: string
@@ -14038,6 +14024,7 @@ components:
           type: object
           description: |
             Required when creating an illustration for a new account or when illustrating proposed changes (model, allocations, money movements, transfers or fees) to an existing account.
+          additionalProperties: false
           properties:
             retirementAge:
               type: integer
@@ -14050,6 +14037,7 @@ components:
             account:
               type: object
               description: Account details for the illustration
+              additionalProperties: false
               properties:                
                 productId:
                   type: string
@@ -14063,25 +14051,22 @@ components:
               $ref: '#/components/schemas/IllustrationModel'
 
             moneyMovements:
+              description: Contributions and Withdrawals.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationPensionAccountMovement"
-                description: Contributions and Withdrawals.
-
+                $ref: "#/components/schemas/IllustrationPensionAccountMovement"
+                
             transfers:
+              description: Pension transfers into the account from an external provider.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationPensionAccountTransfer"
-                description: Pension transfers into the account from an external provider.
-            
+                $ref: "#/components/schemas/IllustrationPensionAccountTransfer"
+                
             fees:
+              description: Account level fees not associated with a specific money movement or transfer.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationPensionAccountFee"
-                description: Account level fees not associated with a specific money movement or transfer.
+                $ref: "#/components/schemas/IllustrationPensionAccountFee"
     
     IllustrationPensionResponse:
       type: object
@@ -14101,12 +14086,10 @@ components:
             document:
               $ref: '#/components/schemas/IllustrationDocument'
     
-    
     IllustrationPensionValue:
       required:
         - amount
       type: object
-      nullable: true
       additionalProperties: false
       properties:
         amount:
@@ -14114,7 +14097,6 @@ components:
           description: Monetary value of the movement or transfer.
           type: number
           example: 15000
-
 
     IllustrationResult:
       type: object
@@ -14336,6 +14318,7 @@ components:
       type: object
       description: >
         Investment Strategy for the account.
+      additionalProperties: false
       properties:
         id:
           description: Unique SS&C Wealth Platform Model identifier.
@@ -14361,6 +14344,7 @@ components:
 
     IllustrationAllocation:
       type: object
+      additionalProperties: false
       description: Asset allocation within the model.
       properties:
         isin:
@@ -14399,6 +14383,7 @@ components:
     IllustrationTransferFee:
       description: A fee associated with this money movement or transfer.
       type: object
+      additionalProperties: false
       properties:
         amount:
           description: Amount-based fee value.
