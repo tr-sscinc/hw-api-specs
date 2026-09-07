@@ -229,11 +229,11 @@ rules:
       functionOptions: 
         match: "^(3.0.0|3.0.1|3.0.2|3.0.3|3.0.4)$"
  
+  # additionalProperties must be declared on a schema ...
   ssc-schema-additional-properties:
     severity: error
-    message: "Schemas must set 'additionalProperties: false', unless composed with allOf or anyOf."
+    message: "Schemas must declare additionalProperties, unless composed with allOf, anyOf or oneOf."
     given: $.components.schemas[*]
-    resolved: false
     then:
       function: schema
       functionOptions:
@@ -241,8 +241,8 @@ rules:
           type: object
           anyOf:
             # Composed schemas are exempt: 'additionalProperties: false' at the
-            # same level as allOf/anyOf rejects the sub-schema properties, which
-            # breaks schema example validation.
+            # same level as allOf/anyOf/oneOf rejects the sub-schema properties,
+            # which breaks schema example validation.
             - required:
                 - allOf
             - required:
@@ -262,10 +262,18 @@ rules:
                     - array
             - required:
                 - additionalProperties
-              properties:
-                additionalProperties:
-                  enum:
-                    - false
+
+  # ... and, wherever it is declared, it must be false.
+  ssc-schema-additional-properties-false:
+    severity: error
+    message: "additionalProperties must be set to false."
+    given: $.components.schemas[*].additionalProperties
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          enum:
+            - false
 
   ssc-string-max-length:
     severity: warn
@@ -275,7 +283,6 @@ rules:
       field: maxLength
       function: truthy
 
-  
   ssc-server-url:
     severity: error
     message: "APIs must have SSC server URLs."
