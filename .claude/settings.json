@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git diff *)",
+      "Bash(grep -vE \"^[+-]        - [A-Za-z& ]+$\")",
+      "Bash(grep -vE \"^[+-]  - name: |^[+-]    description: |^[+-]tags:$\")",
+      "Bash(python -c ' *)",
+      "Bash(python -)",
+      "Bash(npm -v)",
+      "Bash(npx newman *)",
+      "Bash(python tools/build_postman_collection.py)",
+      "Bash(python -c \"import yaml, jsonschema; print\\(yaml.__version__, jsonschema.__version__\\)\")",
+      "Bash(pip install *)",
+      "Bash(python tools/validate_postman_collection.py)"
+    ]
+  }
+}

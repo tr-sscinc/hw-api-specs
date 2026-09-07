@@ -1,0 +1,1559 @@
+{
+  "info": {
+    "_postman_id": "c5a3fbf5-3ada-43b4-84f3-02934b6a73e8",
+    "name": "OpenAPI-examples-testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52265505"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Generate Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the JSON response\r",
+                  "let responseData = pm.response.json();\r",
+                  "\r",
+                  "// Basic validation\r",
+                  "pm.test(\"Auth response contains access_token\", function () {\r",
+                  "    pm.expect(responseData).to.have.property(\"access_token\");\r",
+                  "});\r",
+                  "\r",
+                  "// Store tokens and related info in environment variables\r",
+                  "pm.collectionVariables.set(\"access_token\", responseData.access_token);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "type": "text",
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                },
+                {
+                  "type": "text",
+                  "key": "client_id",
+                  "value": "{{client_id}}"
+                },
+                {
+                  "type": "text",
+                  "key": "client_secret",
+                  "value": "{{client_credential}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/connect/token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "connect",
+                "token"
+              ]
+            },
+            "description": "Generated from cURL: curl --location 'https://eu-west-2reif3wz7y.auth.eu-west-2.amazoncognito.com/oauth2/token' \\\r\n--header 'Content-Type: application/x-www-form-urlencoded' \\\r\n--data-urlencode 'grant_type=client_credentials' \\\r\n--data-urlencode 'client_id=1364j1h50c2hrg140v2fim0djm' \\\r\n--data-urlencode 'client_secret=1pslkbul510j97iod3i1jceflm1re7gqm0tnob2iu7b61mavf4h6'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Retail Investor",
+      "item": [
+        {
+          "name": "Create Retail Investor",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "function getRandomDate(start, end) {\r",
+                  "    let date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));\r",
+                  "    let yyyy = date.getFullYear().toString();\r",
+                  "    let mm = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so we add 1\r",
+                  "    let dd = date.getDate().toString().padStart(2, '0');\r",
+                  "    return `${yyyy}-${mm}-${dd}`;\r",
+                  "}\r",
+                  "\r",
+                  "function setRandom(collectionVariableName, list) {\r",
+                  "    let index = Math.floor(Math.random() * list.length);\r",
+                  "    pm.collectionVariables.set(collectionVariableName, list[index]);\r",
+                  "}\r",
+                  "\r",
+                  "// Investor full name\r",
+                  "let investorFirstName = pm.variables.replaceIn(\"{{$randomFirstName}}\");\r",
+                  "pm.collectionVariables.set(\"investorFirstName\", investorFirstName);\r",
+                  "let investorMiddleName = pm.variables.replaceIn(\"{{$randomFirstName}}\");\r",
+                  "pm.collectionVariables.set(\"investorMiddleName\", investorMiddleName);\r",
+                  "let investorLastName = pm.variables.replaceIn(\"{{$randomLastName}}\");\r",
+                  "pm.collectionVariables.set(\"investorLastName\", investorLastName);\r",
+                  "\r",
+                  "// Random date of birth between 18 and 65\r",
+                  "let today = new Date();\r",
+                  "let start = new Date(today.getFullYear() - 65, today.getMonth(), today.getDate());\r",
+                  "let end = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());\r",
+                  "pm.collectionVariables.set(\"DOB\", getRandomDate(start, end));\r",
+                  "\r",
+                  "// Random house number\r",
+                  "pm.collectionVariables.set(\"houseNumber\", Math.floor(Math.random() * 133) + 1);\r",
+                  "\r",
+                  "// Random values generation\r",
+                  "setRandom(\"title\", [\"MR\",\t\"MASTER\",\t\"SIR\",\t\"MRS\",\t\"MISS\",\t\"MS\",\t\"PROF\",\t\"DR\",\t\"REV\",\t\"LORD\",\t\"LADY\"])\r",
+                  "setRandom(\"gender\", [\"MALE\",\"FEMALE\",\"OTHER\"]);\r",
+                  "setRandom(\"maritalStatus\", [\"CIVIL_PARTNERSHIP\",\"DIVORCED\",\"COMMONLAW\",\"MARRIED\",\"OTHER_DEPENDANT\",\"SEPARATED\",\"SINGLE\",\"UNDISCLOSED\",\"WIDOWED\"]);\r",
+                  "setRandom(\"occupation\", [\"BUSINESS_OWNER\",\t\"C_SUITE_EXECUTIVE\",\t\"CORPORATE_PROFESSIONAL\",\t\"EDUCATION_PROFESSIONAL\",\t\"GOVERNMENT_EMPLOYEE\",\t\"HEAD_OF_STATE\",\t\"INFLUENCER\",\t\"MEDICAL_PROFESSIONAL\",\t\"MID_RANK_MILITARY\",\t\"MIDDLE_MANAGER\",\t\"OTHER_MILITARY_PERSONNEL\",\t\"PILOT\",\t\"PROFESSIONAL_SUPPORT\",\t\"RETAIL_HOSPITALITY\",\t\"RETIREE\",\t\"SALES_PROFESSIONAL\",\t\"SELF_EMPLOYED\",\t\"SENIOR_MILITARY_OFFICIAL\",\t\"SENIOR_SPORTS_PROFESSIONAL\",\t\"SKILLED_WORKER\",\t\"STUDENT\",\t\"UNEMPLOYED\",\t\"UNSKILLED_WORKER\",\t\"OTHER\"]);\r",
+                  "setRandom(\"industry\", [\"AEROSPACE_DEFENCE\",\t\"AGRICULTURE_FORESTRY_FISHING\",\t\"ARMED_FORCES\",\t\"ARMS_DEALERS_MANUFACTURERS\",\t\"ART_ANTIQUES_DEALERS\",\t\"ASSET_WEALTH_MANAGEMENT\",\t\"AUTOMOTIVE\",\t\"BANKING_CAPITAL_MARKETS\",\t\"BUREAU_DE_CHANGE\",\t\"CAPITAL_PROJECTS_INFRASTRUCTURE\",\t\"CASH_CONVERTERS\",\t\"CHARITIES\",\t\"CHEMICALS\",\t\"CONSULTING_SERVICES\",\t\"CREATIVE_ARTS_DESIGN\",\t\"CRYPTO\",\t\"DEPOSIT_BOX_SERVICES\",\t\"DISTRIBUTION\",\t\"EDUCATION\",\t\"ENGINEERING_CONSTRUCTION_TRADES\",\t\"FINANCIAL_SERVICES\",\t\"FOOD_DRINK_TOBACCO\",\t\"FOREST_PAPER_PACKAGING\",\t\"FREELANCERS_DIGITAL_NOMADS\",\t\"GAMBLING_CASINOS\",\t\"GOVERNMENT_PUBLIC_SERVICES\",\t\"HEALTHCARE\",\t\"HOSPITALITY_EVENTS_LEISURE\",\t\"IMPORT_EXPORT_BUSINESSES\",\t\"INSURANCE\",\t\"LEGAL_ACCOUNTING\",\t\"MANUFACTURING\",\t\"MEDIA_ENTERTAINMENT\",\t\"MINING_MINERALS\",\t\"MONEY_LENDERS_PAWNBROKERS\",\t\"MONEY_SERVICE_BUREAUS\",\t\"OIL_GAS\",\t\"PHARMA_LIFE_SCIENCES\",\t\"POWER_UTILITIES\",\t\"PRECIOUS_METALS_JEWELLERS\",\t\"PRIVATE_EQUITY\",\t\"REAL_ESTATE\",\t\"RETAIL_CASH_INTENSIVE\",\t\"RETAIL_CONSUMER\",\t\"SOCIAL_MEDIA_INFLUENCERS_CREATORS\",\t\"SOCIAL_SERVICES\",\t\"SOVEREIGN_INVESTMENT_FUNDS\",\t\"SPORTS_INDUSTRY\",\t\"TECHNOLOGY_IT_TELECOMS\",\t\"TRANSPORT_LOGISTICS\",\t\"TRUSTEE\",\t\"OTHER\"]);\r",
+                  "setRandom(\"income\", [\"BELOW_25K\",\t\"FROM_25K_TO_50K\",\t\"FROM_50K_TO_75K\",\t\"FROM_75K_TO_100K\",\t\"FROM_100K_TO_125K\",\t\"FROM_125K_TO_150K\",\t\"FROM_150K_TO_200K\",\t\"ABOVE_200K\"]);\r",
+                  "setRandom(\"investmentReason\", [\"BETTER_THAN_SAVINGS\",\t\"GROW_WEALTH\",\t\"MARKET_GROWTH\",\t\"REGULAR_INCOME\",\t\"RETIREMENT_PLANNING\",\t\"TAX_ADVANTAGES\"]);\r",
+                  "setRandom(\"tin\", [\"XL386381D\",\t\"NW078070D\",\t\"KA858924A\",\t\"BR428790D\",\t\"CL848331A\",\t\"CY381609C\",\t\"ON708649B\",\t\"HX496810B\",\t\"ZM831415C\",\t\"YH380161C\",\t\"YG110106D\",\t\"AE907128B\",\t\"KB479313C\",\t\"SL927968B\",\t\"ZJ302384C\",\t\"WY193769A\",\t\"RE215032A\",\t\"TW716520D\",\t\"GR386909D\",\t\"TK914274D\",\t\"XG115476A\",\t\"JE159034D\",\t\"JK089648D\",\t\"ZB741540D\",\t\"YS683882D\",\t\"XB958094C\",\t\"HC176517B\",\t\"JP015638A\",\t\"TJ718297D\",\t\"OK531908C\",\t\"CM229933D\",\t\"YP061557C\",\t\"LS563190A\",\t\"MA264794B\",\t\"XT363560C\",\t\"LZ151453D\",\t\"ES153579D\",\t\"TK821814B\",\t\"HT560957B\",\t\"YC346244B\",\t\"XA645989B\",\t\"LY972631D\",\t\"CK510775A\",\t\"KT792603D\",\t\"ZE749208C\",\t\"ZS324318B\",\t\"YH477617B\",\t\"EP819922D\",\t\"SG948763A\",\t\"KP904334C\",\t\"WZ777922D\",\t\"LP210985A\",\t\"OS031071A\",\t\"GT673489D\",\t\"EW370675B\",\t\"JR461165C\",\t\"LJ949061A\",\t\"YP078091D\",\t\"AW112389C\",\t\"TX412804C\"]);\r",
+                  "setRandom(\"postCode\", [\"B76 2PR\",\t\"RG26 3RG\",\t\"PO16 8TF\",\t\"ST4 6NX\",\t\"BD13 2EN\",\t\"GU10 5NF\",\t\"CF11 6LU\",\t\"CV33 9SW\",\t\"GL13 9LL\",\t\"YO15 3PW\",\t\"BD12 0HF\",\t\"KA15 1JA\",\t\"ME16 8DY\",\t\"NN4 8PU\",\t\"ME2 4BT\",\t\"BB4 6LZ\",\t\"ME17 3BP\",\t\"NR8 6JQ\",\t\"PO30 1NZ\",\t\"ML1 1XH\",\t\"SY16 1JQ\",\t\"OX25 2LY\",\t\"HX3 9RJ\",\t\"BA6 9JG\",\t\"WV3 9ER\",\t\"CM12 9QL\",\t\"PO20 8FT\",\t\"N3 1RT\",\t\"WF4 1LS\",\t\"DG12 5AS\",\t\"TW11 9HY\",\t\"LU6 1AH\",\t\"KY13 0UL\",\t\"G32 0AG\",\t\"SR5 1HQ\",\t\"SE1P 5HX\",\t\"BH9 2ND\",\t\"WV1 9QD\",\t\"TW2 6ER\",\t\"BS35 1SE\",\t\"DY11 6UG\",\t\"TR5 0SL\",\t\"OX28 5JW\",\t\"NR34 0HA\",\t\"SO18 9QL\",\t\"HU7 4RT\",\t\"CA1 9AQ\",\t\"E7 8PS\",\t\"LA5 8AF\",\t\"PL25 4DR\",\t\"PR5 6GD\",\t\"AL10 0RA\",\t\"DD10 9JD\",\t\"BS29 6JG\",\t\"LN11 1DE\",\t\"PR2 2LP\",\t\"BT17 0UF\",\t\"NR35 1BZ\",\t\"BA3 5DR\",\t\"OX2 7NQ\",\t\"DE13 0BA\",\t\"FK14 7JX\",\t\"BL8 2TF\",\t\"DL13 1BW\",\t\"DL8 1SZ\",\t\"CM7 4BU\",\t\"B43 7AW\",\t\"TN25 4BG\",\t\"OX26 4YB\",\t\"HU12 0QR\",\t\"WF12 7PP\",\t\"DE22 4NE\",\t\"AB51 7NT\",\t\"B11 3EW\",\t\"TS20 2NT\",\t\"PO15 5RR\",\t\"GL52 9TT\",\t\"GU4 7EP\",\t\"ST4 4PP\",\t\"PE29 7DX\",\t\"M7 2FR\",\t\"TN30 6EE\",\t\"KT19 8LD\",\t\"SO22 4NA\",\t\"LU5 5EX\",\t\"DE11 9JF\",\t\"DL15 0TE\",\t\"IV17 0PN\",\t\"SW18 1DT\",\t\"EH32 0HB\",\t\"SP2 7LZ\",\t\"KW15 1WB\",\t\"SA38 9PH\",\t\"B15 3HP\",\t\"BA3 4FR\",\t\"NN5 7PN\",\t\"SG4 7TR\",\t\"CV36 4GY\",\t\"IP13 9HY\",\t\"B5 4EG\",\t\"CF48 3TE\",\t\"BA13 4TH\",\t\"WA15 9LR\",\t\"GL54 1HH\",\t\"SP10 4LS\",\t\"NN14 1PE\",\t\"HA8 5EJ\",\t\"DH1 1XG\",\t\"SW17 0GA\",\t\"BT43 6PW\",\t\"M40 5PX\",\t\"BT34 2GH\",\t\"BL1 5DF\",\t\"SM1 4PJ\",\t\"M40 1HL\",\t\"CO4 0PQ\",\t\"DL2 3SP\",\t\"PH2 9HE\",\t\"NW2 5JT\",\t\"S60 3LJ\",\t\"BA21 4SF\",\t\"BH22 8GG\",\t\"EX2 5BL\",\t\"CH41 1BD\",\t\"N1P 2YX\",\t\"NW6 1XJ\",\t\"BH17 9LS\",\t\"SA14 8TJ\",\t\"TR15 2FF\",\t\"BS16 6BU\",\t\"TA10 9HY\",\t\"NE29 7BA\",\t\"WV8 1XH\",\t\"BD23 1NZ\",\t\"EH4 5BS\",\t\"CA15 8PR\",\t\"CA13 9RL\",\t\"CM21 0FL\",\t\"NE8 4RT\",\t\"NW1 2BJ\",\t\"SG1 1EL\",\t\"SR5 5QW\",\t\"HU14 3NW\",\t\"FK2 7FS\",\t\"BD3 7JD\",\t\"GU6 8TX\",\t\"BT35 6FL\",\t\"LA1 2LN\",\t\"LS15 0DU\",\t\"PR4 1UZ\"]);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201)\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "pm.test(\"Retail Investor created\", function() {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"retailInvestorId\", response.id);\r",
+                  "console.log(\"retail Investor ID stored:\", response.id);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"adviserId\": \"E001428\",\r\n    \"type\": \"INDIVIDUAL\",\r\n    \"externalReferences\": [\r\n        {\r\n            \"reference\": \"{{$randomUUID}}\",\r\n            \"provider\": \"CRM Name\"\r\n        }\r\n    ],\r\n    \"individual\": {\r\n        \"title\": \"{{title}}\",\r\n        \"firstName\": \"{{investorFirstName}}\",\r\n        \"middleName\": \"{{investorFirstName}}\",\r\n        \"surname\": \"{{investorLastName}}\",\r\n        \"dateOfBirth\": \"{{DOB}}\",\r\n        \"gender\": \"{{gender}}\",\r\n        \"maritalStatus\": \"{{maritalStatus}}\",\r\n        \"incomeAndInvestment\": {\r\n            \"occupation\": \"{{occupation}}\",\r\n            \"occupationOtherValue\": \"{{$randomJobTitle}}\",\r\n            \"industry\": \"{{industry}}\",\r\n            \"industryOtherValue\": \"{{$randomJobArea}}\",\r\n            \"annualIncome\": \"{{income}}\",\r\n            \"investmentReason\": \"{{investmentReason}}\",\r\n            \"investmentAgreedInPerson\": {{$randomBoolean}}\r\n        },\r\n        \"territorialProfile\": {\r\n            \"nationalities\": [\r\n                {\r\n                    \"countryCode\": \"GB\",\r\n                    \"primary\": true\r\n                }\r\n            ],\r\n            \"taxResidencies\": [\r\n                {\r\n                    \"countryCode\": \"GB\",\r\n                    \"tin\": \"{{tin}}\",\r\n                    \"primary\": true\r\n                }\r\n            ]\r\n        },\r\n        \"contactDetails\": {\r\n            \"contactPhone\": \"{{$randomPhoneNumber}}\",\r\n            \"mobilePhone\": \"{{$randomPhoneNumber}}\",\r\n            \"email\": \"{{$randomEmail}}\"\r\n        },\r\n        \"notificationPreferences\": {\r\n            \"disableEmails\": {{$randomBoolean}},\r\n            \"disableSms\": {{$randomBoolean}}\r\n        }\r\n    },\r\n    \"addresses\": [\r\n        {\r\n            \"premisesIdentifier\": \"{{houseNumber}}\",\r\n            \"line1\": \"{{$randomStreetAddress}}\",\r\n            \"town\": \"{{$randomCity}}\",\r\n            \"countryCode\": \"GB\",\r\n            \"postCode\": \"{{postCode}}\",\r\n            \"primary\": true\r\n        }\r\n    ],\r\n    \"declarations\": [\r\n        {\r\n            \"adviserId\": \"E273053\",\r\n            \"templateId\": \"IFA_FCA_AUTH\",\r\n            \"acknowledgement\": true\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/investors",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Retail Investor Correspondences",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "function getRandomDate(start, end) {\r",
+                  "    let date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));\r",
+                  "    let yyyy = date.getFullYear().toString();\r",
+                  "    let mm = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so we add 1\r",
+                  "    let dd = date.getDate().toString().padStart(2, '0');\r",
+                  "    return `${yyyy}-${mm}-${dd}`;\r",
+                  "}\r",
+                  "\r",
+                  "let today = new Date();\r",
+                  "let start = new Date(today.getFullYear() - 2, today.getMonth(), today.getDate());\r",
+                  "let end = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());\r",
+                  "pm.collectionVariables.set(\"startDate\", getRandomDate(start, end));\r",
+                  "start = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());\r",
+                  "end = new Date(today.getFullYear(), today.getMonth(), today.getDate());\r",
+                  "pm.collectionVariables.set(\"expiryDate\", getRandomDate(start, end));\r",
+                  "\r",
+                  "function setRandom(collectionVariableName, list) {\r",
+                  "    let index = Math.floor(Math.random() * list.length);\r",
+                  "    pm.collectionVariables.set(collectionVariableName, list[index]);\r",
+                  "}\r",
+                  "\r",
+                  "setRandom(\"corrType\", [\"AUDIO\",\t\"BRAILLE\",\t\"LARGE_PRINT\"]);\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  " \r",
+                  " "
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"correspondences\": [\r\n    {\r\n      \"type\": \"{{corrType}}\",\r\n      \"startDate\": \"{{startDate}}\",\r\n      \"expiryDate\": \"{{expiryDate}}\"\r\n    }\r\n  ],\r\n  \"declarations\": [\r\n    {\r\n      \"adviserId\": \"E001428\",\r\n      \"templateId\": \"CONFIRM_CORRESPONDENCES_CONSENT\",\r\n      \"acknowledgement\": true\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/investors/{{retailInvestorId}}/correspondences",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors",
+                "{{retailInvestorId}}",
+                "correspondences"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Retail Investor Vulnerabilities",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "function getRandomDate(start, end) {\r",
+                  "    let date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));\r",
+                  "    let yyyy = date.getFullYear().toString();\r",
+                  "    let mm = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so we add 1\r",
+                  "    let dd = date.getDate().toString().padStart(2, '0');\r",
+                  "    return `${yyyy}-${mm}-${dd}`;\r",
+                  "}\r",
+                  "\r",
+                  "let today = new Date();\r",
+                  "let start = new Date(today.getFullYear() - 2, today.getMonth(), today.getDate());\r",
+                  "let end = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());\r",
+                  "pm.collectionVariables.set(\"startDate\", getRandomDate(start, end));\r",
+                  "start = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());\r",
+                  "end = new Date(today.getFullYear(), today.getMonth(), today.getDate());\r",
+                  "pm.collectionVariables.set(\"expiryDate\", getRandomDate(start, end));\r",
+                  "\r",
+                  "function setRandom(collectionVariableName, list) {\r",
+                  "    let index = Math.floor(Math.random() * list.length);\r",
+                  "    pm.collectionVariables.set(collectionVariableName, list[index]);\r",
+                  "}\r",
+                  "\r",
+                  "setRandom(\"vulnType\", [\"HEALTH\",\t\"LIFE_EVENTS\",\t\"RESILIENCE\",\t\"CAPABILITY \"]);\r",
+                  "setRandom(\"vulnServiceLevel\", [\"ARRANGE_WRITTEN_CONFIRMATION_OF_ANY_DISCUSSIONS\",\t\"CLIENT_UNABLE_TO_USE_INTERNET\",\t\"EMPATHY_NEEDED_FOR_CUSTOMER\",\t\"ENGLISH_LANGUAGE_SUPPORT_REQUIRED\",\t\"LITERACY_OR_NUMERACY_SUPPORT_NEEDED\",\t\"ONLINE_SUPPORT_NEEDED\",\t\"DO_NOT_OUTBOUND_CALL\",\t\"USE_SIMPLIFIED_LANGUAGE\",\t\"SPEAK_LOUDLY_AND_CLEARLY\",\t\"SPEAK_SLOWLY_FOR_CLIENT\",\t\"NONE_REQUIRED\",\t\"VARIED_CORRESPONDENCE_FORMAT\"]);\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"vulnerabilities\": [\r\n    {\r\n      \"type\": \"{{vulnType}}\",\r\n      \"serviceLevel\": \"{{vulnServiceLevel}}\",\r\n      \"startDate\": \"{{startDate}}\",\r\n      \"expiryDate\": \"{{expiryDate}}\"\r\n    }\r\n  ],\r\n  \"declarations\": [\r\n    {\r\n      \"adviserId\": \"E001428\",\r\n      \"templateId\": \"CONFIRM_VULNERABILITY_CONSENT\",\r\n      \"acknowledgement\": true\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/investors/{{retailInvestorId}}/vulnerabilities",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors",
+                "{{retailInvestorId}}",
+                "vulnerabilities"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Retail Investor GIA E2E",
+      "item": [
+        {
+          "name": "Create GIA for retail investor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check the status code\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "// Parse the response body\r",
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "// Validate expected fields\r",
+                  "pm.test(\"Response contains correct status, type, subType, and entityType\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"status\", \"PENDING\");\r",
+                  "});\r",
+                  "\r",
+                  "// Store accountId in a collection (folder) variable\r",
+                  "pm.collectionVariables.set(\"accountId_IndividualGIA\", response.id);\r",
+                  "console.log(\"Stored accountId_IndividualGIA:\", response.id);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "function setRandom(collectionVariableName, list) {\r",
+                  "    let index = Math.floor(Math.random() * list.length);\r",
+                  "    pm.collectionVariables.set(collectionVariableName, list[index]);\r",
+                  "}\r",
+                  "\r",
+                  "setRandom(\"accountType\", [\"ADVISED\", \"DISCRETIONARY\", \"EXECUTION_ONLY\"]);\r",
+                  "\r",
+                  "let models = [\r",
+                  "    { id: 'HWM00000490', dt: '2019-01-28' },\r",
+                  "    { id: 'HWM00000490', dt: '2021-08-04' },\r",
+                  "    { id: 'HWM00000490', dt: '2021-08-05' },\r",
+                  "    { id: 'HW000000664', dt: '2021-03-08' },\r",
+                  "    { id: 'HW000001511', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001513', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001526', dt: '2021-03-23' },\r",
+                  "    { id: 'HW000001542', dt: '2021-04-07' },\r",
+                  "    { id: 'HW000001549', dt: '2021-05-07' },\r",
+                  "    { id: 'HW000001729', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001730', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001731', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001732', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001733', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001734', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001735', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001736', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001737', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001738', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001739', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001740', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001741', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001742', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001743', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001744', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001746', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001751', dt: '2021-08-02' },\r",
+                  "    { id: 'HW000001766', dt: '2021-10-27' },\r",
+                  "    { id: 'HW000001781', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001784', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001785', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001786', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001787', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001788', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001789', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001790', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001791', dt: '2024-06-19' },\r",
+                  "    { id: 'HW000001792', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001793', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001794', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001795', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001796', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001797', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001798', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001799', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001800', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001801', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001803', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001804', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001805', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001806', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001807', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001808', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001809', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001810', dt: '2022-05-30' }\r",
+                  "];\r",
+                  "let modelIndex = Math.floor(Math.random() * models.length);\r",
+                  "let model = models[modelIndex];\r",
+                  "pm.collectionVariables.set(\"modelId\", model.id);\r",
+                  "pm.collectionVariables.set(\"modelDate\", model.dt);\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"productId\": \"GIA\",\r\n    \"entityType\": \"INDIVIDUAL\",\r\n    \"type\": \"{{accountType}}\",\r\n    \"baseCurrency\": \"GBP\",\r\n    \"adviserId\": \"E001428\",\r\n    \"marketSettlementCurrency\": \"GBP\",\r\n    \"name\": \"{{investorFirstName}} {{investorLastName}} GIA\",\r\n    \"model\": {\r\n        \"id\": \"{{modelId}}\",\r\n        \"providerId\": \"HUBWISE\",\r\n        \"date\": \"{{modelDate}}\"\r\n    },\r\n    \"externalReferences\": [\r\n        {\r\n            \"reference\": \"{{$randomUUID}}\",\r\n            \"provider\": \"CRMX\"\r\n        }\r\n    ],\r\n    \"investors\": [\r\n        {\r\n            \"id\": \"{{retailInvestorId}}\",\r\n            \"relationship\": \"OWNER\"\r\n        }\r\n    ],\r\n    \"declarations\": [\r\n        {\r\n            \"adviserId\": \"E273053\",\r\n            \"templateId\": \"TARGET_MARKET\",\r\n            \"acknowledgement\": true\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a bank account for the GIA",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check the status code\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "// Parse the response body\r",
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "// Validate expected fields\r",
+                  "pm.test(\"Response contains correct status, type, subType, and entityType\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"status\", \"PENDING\");\r",
+                  "    pm.expect(response).to.have.property(\"inceptionDate\", null);\r",
+                  "    pm.expect(response).to.have.property(\"pensionDetails\", null);\r",
+                  "    pm.expect(response).to.have.property(\"currency\", \"GBP\");\r",
+                  "});\r",
+                  "\r",
+                  "// Store accountId in a collection (folder) variable\r",
+                  "pm.collectionVariables.set(\"accountId_IndividualGIA\", response.id);\r",
+                  "console.log(\"Stored accountId_IndividualGIA:\", response.id);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"gbAccountNumber\", Math.random().toString().slice(2,10));\r",
+                  "pm.collectionVariables.set(\"gbSortCode\", Math.random().toString().slice(2,8));\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{investorFirstName}} {{investorLastName}}\",\r\n    \"number\": \"{{gbAccountNumber}}\",\r\n    \"sortCode\": \"{{gbSortCode}}\",\r\n    \"holders\": [\r\n        {\r\n            \"id\": \"{{retailInvestorId}}\"\r\n        }\r\n    ],\r\n    \"declarations\": [\r\n        {\r\n            \"adviserId\": \"E121191\",\r\n            \"templateId\": \"BANK_ACCT_VALIDATION\",\r\n            \"acknowledgement\": true\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/{{accountId_IndividualGIA}}/bank-accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId_IndividualGIA}}",
+                "bank-accounts"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Retail Investor SIPP E2E",
+      "item": [
+        {
+          "name": "Create SIPP for retail investor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check the status code\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "// Parse the response body\r",
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "// Validate expected fields\r",
+                  "pm.test(\"Response contains correct status, type, subType, and entityType\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"status\", \"PENDING\");\r",
+                  "});\r",
+                  "\r",
+                  "// Store accountId in a collection (folder) variable\r",
+                  "pm.collectionVariables.set(\"accountId_IndividualSIPP\", response.id);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "function getRandomDate(start, end) {\r",
+                  "    let date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));\r",
+                  "    let yyyy = date.getFullYear().toString();\r",
+                  "    let mm = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so we add 1\r",
+                  "    let dd = date.getDate().toString().padStart(2, '0');\r",
+                  "    return `${yyyy}-${mm}-${dd}`;\r",
+                  "}\r",
+                  "function setRandom(collectionVariableName, list) {\r",
+                  "    let index = Math.floor(Math.random() * list.length);\r",
+                  "    pm.collectionVariables.set(collectionVariableName, list[index]);\r",
+                  "}\r",
+                  "\r",
+                  "setRandom(\"accountType\", [\"ADVISED\", \"DISCRETIONARY\", \"EXECUTION_ONLY\"]);\r",
+                  "\r",
+                  "let models = [\r",
+                  "    { id: 'HWM00000490', dt: '2019-01-28' },\r",
+                  "    { id: 'HWM00000490', dt: '2021-08-04' },\r",
+                  "    { id: 'HWM00000490', dt: '2021-08-05' },\r",
+                  "    { id: 'HW000000664', dt: '2021-03-08' },\r",
+                  "    { id: 'HW000001511', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001513', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001526', dt: '2021-03-23' },\r",
+                  "    { id: 'HW000001542', dt: '2021-04-07' },\r",
+                  "    { id: 'HW000001549', dt: '2021-05-07' },\r",
+                  "    { id: 'HW000001729', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001730', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001731', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001732', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001733', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001734', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001735', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001736', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001737', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001738', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001739', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001740', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001741', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001742', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001743', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001744', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001746', dt: '2021-02-17' },\r",
+                  "    { id: 'HW000001751', dt: '2021-08-02' },\r",
+                  "    { id: 'HW000001766', dt: '2021-10-27' },\r",
+                  "    { id: 'HW000001781', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001784', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001785', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001786', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001787', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001788', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001789', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001790', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001791', dt: '2024-06-19' },\r",
+                  "    { id: 'HW000001792', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001793', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001794', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001795', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001796', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001797', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001798', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001799', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001800', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001801', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001803', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001804', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001805', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001806', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001807', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001808', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001809', dt: '2022-05-30' },\r",
+                  "    { id: 'HW000001810', dt: '2022-05-30' }\r",
+                  "];\r",
+                  "let modelIndex = Math.floor(Math.random() * models.length);\r",
+                  "let model = models[modelIndex];\r",
+                  "pm.collectionVariables.set(\"modelId\", model.id);\r",
+                  "pm.collectionVariables.set(\"modelDate\", model.dt);\r",
+                  "\r",
+                  "setRandom(\"employmentStatus\", [\"UNEMPLOYED\",\t\"EMPLOYED\",\t\"SELF_EMPLOYED\",\t\"STUDENT\",\t\"PENSIONER\",\t\"CHILD\",\t\"CARER\",\t\"CHILD_CARER\",\t\"RETIRED\",\t\"OTHER\"]);\r",
+                  "setRandom(\"taxReliefEntitlement\", [\"UK_RELEVANT_EARNINGS\",\t\"UK_RESIDENT\",\t\"OVERSEAS_CROWN_EMPLOYMENT_NO_UK_TAXABLE_EARNINGS\",\t\"SPOUSE_OVERSEAS_CROWN_EMPLOYMENT_UK_TAXABLE_EARNINGS\",\t\"NONE\"]);\r",
+                  "\r",
+                  "// Retirement age\r",
+                  "pm.collectionVariables.set(\"retirementAge\", 55 + Math.floor(Math.random() * 20) + 1);\r",
+                  "\r",
+                  "// MPAA triggered date\r",
+                  "let today = new Date();\r",
+                  "let start = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate());\r",
+                  "let end = new Date(today.getFullYear(), today.getMonth(), today.getDate());\r",
+                  "pm.collectionVariables.set(\"mpaaDate\", getRandomDate(start, end));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"productId\": \"HWS\",\r\n    \"adviserId\": \"E001428\",\r\n    \"type\": \"{{accountType}}\",\r\n    \"baseCurrency\": \"GBP\",\r\n    \"marketSettlementCurrency\": \"GBP\",\r\n    \"name\": \"{{investorFirstName}} {{investorLastName}} SIPP\",\r\n    \"externalReferences\": [\r\n        {\r\n            \"reference\": \"{{$randomUUID}}\",\r\n            \"provider\": \"CRM\"\r\n        }\r\n    ],\r\n    \"investors\": [\r\n        {\r\n            \"id\": \"{{retailInvestorId}}\",\r\n            \"relationship\": \"OWNER\"\r\n        }\r\n    ],\r\n    \"pensionDetails\": {\r\n        \"employmentStatus\": \"{{employmentStatus}}\",\r\n        \"employmentStatusOther\": \"{{$randomJobTitle}}\",\r\n        \"taxReliefEntitlement\": \"{{taxReliefEntitlement}}\",\r\n        \"retirementAge\": {{retirementAge}},\r\n        \"mpaaTriggeredDate\": \"{{mpaaDate}}\"\r\n    },\r\n    \"model\": {\r\n        \"id\": \"{{modelId}}\",\r\n        \"providerId\": \"HUBWISE\",\r\n        \"date\": \"{{modelDate}}\"\r\n    },\r\n    \"declarations\": [\r\n        {\r\n            \"adviserId\": \"E273053\",\r\n            \"templateId\": \"TARGET_MARKET\",\r\n            \"acknowledgement\": true\r\n        },\r\n        {\r\n            \"templateId\": \"SIPP_ACKNOWLEDGEMENT\",\r\n            \"adviserId\": \"E273053\",\r\n            \"acknowledgement\": true\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a bank account for the investor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check the status code\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "// Parse the response body\r",
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "// Validate expected fields\r",
+                  "pm.test(\"Response contains correct status, type, subType, and entityType\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"status\", \"PENDING\");\r",
+                  "    pm.expect(response).to.have.property(\"inceptionDate\", null);\r",
+                  "    pm.expect(response).to.have.property(\"pensionDetails\", null);\r",
+                  "    pm.expect(response).to.have.property(\"currency\", \"GBP\");\r",
+                  "});\r",
+                  "\r",
+                  "// Store accountId in a collection (folder) variable\r",
+                  "pm.collectionVariables.set(\"accountId_IndividualGIA\", response.id);\r",
+                  "console.log(\"Stored accountId_IndividualGIA:\", response.id);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"gbAccountNumber\", Math.random().toString().slice(2,10));\r",
+                  "pm.collectionVariables.set(\"gbSortCode\", Math.random().toString().slice(2,8));\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{investorFirstName}} {{investorLastName}}\",\r\n    \"number\": \"{{gbAccountNumber}}\",\r\n    \"sortCode\": \"{{gbSortCode}}\",\r\n    \"holders\": [\r\n        {\r\n            \"id\": \"{{retailInvestorId}}\"\r\n        }\r\n    ],\r\n    \"declarations\": [\r\n        {\r\n            \"adviserId\": \"E121191\",\r\n            \"templateId\": \"BANK_ACCT_VALIDATION\",\r\n            \"acknowledgement\": true\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/{{accountId_IndividualGIA}}/bank-accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId_IndividualGIA}}",
+                "bank-accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a bank account for the employer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check the status code\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "// Parse the response body\r",
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "// Validate expected fields\r",
+                  "pm.test(\"Response contains correct status, type, subType, and entityType\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"status\", \"PENDING\");\r",
+                  "    pm.expect(response).to.have.property(\"inceptionDate\", null);\r",
+                  "    pm.expect(response).to.have.property(\"pensionDetails\", null);\r",
+                  "    pm.expect(response).to.have.property(\"currency\", \"GBP\");\r",
+                  "});\r",
+                  "\r",
+                  "// Store accountId in a collection (folder) variable\r",
+                  "pm.collectionVariables.set(\"accountId_IndividualGIA\", response.id);\r",
+                  "console.log(\"Stored accountId_IndividualGIA:\", response.id);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"gbAccountNumber\", Math.random().toString().slice(2,10));\r",
+                  "pm.collectionVariables.set(\"gbSortCode\", Math.random().toString().slice(2,8));\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"{{investorFirstName}} {{investorLastName}}\",\r\n    \"number\": \"{{gbAccountNumber}}\",\r\n    \"sortCode\": \"{{gbSortCode}}\",\r\n    \"holders\": [\r\n        {\r\n            \"id\": \"{{retailInvestorId}}\"\r\n        }\r\n    ],\r\n    \"declarations\": [\r\n        {\r\n            \"adviserId\": \"E121191\",\r\n            \"templateId\": \"BANK_ACCT_VALIDATION\",\r\n            \"acknowledgement\": true\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/{{accountId_IndividualGIA}}/bank-accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "accounts",
+                "{{accountId_IndividualGIA}}",
+                "bank-accounts"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Corporate Investor GIA",
+      "item": [
+        {
+          "name": "Create Corporate Investor",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let companyName = pm.variables.replaceIn(\"{{$randomCompanyName}}\");\r",
+                  "pm.collectionVariables.set(\"companyName\", companyName);\r",
+                  "\r",
+                  "function setRandom(collectionVariableName, list) {\r",
+                  "    let index = Math.floor(Math.random() * list.length);\r",
+                  "    pm.collectionVariables.set(collectionVariableName, list[index]);\r",
+                  "}\r",
+                  "\r",
+                  "setRandom(\"lei\", [\"984500DI9BZD41OF4781\",\t\"9845000BD467666E3930\",\t\"9845003D44CCA145CC76\",\t\"335800WBAET9Q971AT75\",\t\"3358004GEBDX73EU6859\",\t\"335800DFHCGEFFZXRA34\",\t\"335800FCLGQFJQJGHP87\",\t\"3358009UB5HS2WQF6Y18\",\t\"743700HGB1CRPBRA1K29\",\t\"7ZW8QJWVPR4P1J1KQY45\",\t\"335800VPK652AEFF1O79\",\t\"335800FMIGZ24EJ2XW80\",\t\"335800VQ73CQOLRRSK16\",\t\"335800SCE2XZHDWXCG42\",\t\"74370096HBTUWJRFIT29\",\t\"549300KG6S007HTRLN18\",\t\"984500639BT036CND679\",\t\"549300Y7W34DK0WBPY51\",\t\"335800P2W6AY6E8BEP06\",\t\"6354003LMZZAKOPXLX69\",\t\"836800FXO82WAQQSJI94\",\t\"635400ILTUMVUHABUM41\",\t\"8945007P51J5A3XRP064\",\t\"8945006UNIT4VSLO5077\",\t\"335800VNJ36KHM1KMT58\",\t\"549300WCLFVEBTBNRF76\",\t\"335800D26VJUW8QY7H25\",\t\"335800J1B81UB7QR2O98\",\t\"335800E7D8TEYEZOH405\",\t\"213800JCN6PSGDRLT915\",\t\"549300RZ6VN2Y8WIYZ07\",\t\"5493001S6ND3ULAKYF67\",\t\"GGCMDC0OOHBLHHFALS29\",\t\"3358009KFDPSGIODYO73\",\t\"549300I3UEC4HXUCH839\",\t\"254900S63W8PLNYRZS69\",\t\"5493005YQ231Q4HD0C65\"]);\r",
+                  "\r",
+                  "setRandom(\"postCode1\", [\"B76 2PR\",\t\"RG26 3RG\",\t\"PO16 8TF\",\t\"ST4 6NX\",\t\"BD13 2EN\",\t\"GU10 5NF\",\t\"CF11 6LU\",\t\"CV33 9SW\",\t\"GL13 9LL\",\t\"YO15 3PW\",\t\"BD12 0HF\",\t\"KA15 1JA\",\t\"ME16 8DY\",\t\"NN4 8PU\",\t\"ME2 4BT\",\t\"BB4 6LZ\",\t\"ME17 3BP\",\t\"NR8 6JQ\",\t\"PO30 1NZ\",\t\"ML1 1XH\",\t\"SY16 1JQ\",\t\"OX25 2LY\",\t\"HX3 9RJ\",\t\"BA6 9JG\",\t\"WV3 9ER\",\t\"CM12 9QL\",\t\"PO20 8FT\",\t\"N3 1RT\",\t\"WF4 1LS\",\t\"DG12 5AS\",\t\"TW11 9HY\",\t\"LU6 1AH\",\t\"KY13 0UL\",\t\"G32 0AG\",\t\"SR5 1HQ\",\t\"SE1P 5HX\",\t\"BH9 2ND\",\t\"WV1 9QD\",\t\"TW2 6ER\",\t\"BS35 1SE\",\t\"DY11 6UG\",\t\"TR5 0SL\",\t\"OX28 5JW\",\t\"NR34 0HA\",\t\"SO18 9QL\",\t\"HU7 4RT\",\t\"CA1 9AQ\",\t\"E7 8PS\",\t\"LA5 8AF\",\t\"PL25 4DR\",\t\"PR5 6GD\",\t\"AL10 0RA\",\t\"DD10 9JD\",\t\"BS29 6JG\",\t\"LN11 1DE\",\t\"PR2 2LP\",\t\"BT17 0UF\",\t\"NR35 1BZ\",\t\"BA3 5DR\",\t\"OX2 7NQ\",\t\"DE13 0BA\",\t\"FK14 7JX\",\t\"BL8 2TF\",\t\"DL13 1BW\",\t\"DL8 1SZ\",\t\"CM7 4BU\",\t\"B43 7AW\",\t\"TN25 4BG\",\t\"OX26 4YB\",\t\"HU12 0QR\",\t\"WF12 7PP\",\t\"DE22 4NE\",\t\"AB51 7NT\",\t\"B11 3EW\",\t\"TS20 2NT\",\t\"PO15 5RR\",\t\"GL52 9TT\",\t\"GU4 7EP\",\t\"ST4 4PP\",\t\"PE29 7DX\",\t\"M7 2FR\",\t\"TN30 6EE\",\t\"KT19 8LD\",\t\"SO22 4NA\",\t\"LU5 5EX\",\t\"DE11 9JF\",\t\"DL15 0TE\",\t\"IV17 0PN\",\t\"SW18 1DT\",\t\"EH32 0HB\",\t\"SP2 7LZ\",\t\"KW15 1WB\",\t\"SA38 9PH\",\t\"B15 3HP\",\t\"BA3 4FR\",\t\"NN5 7PN\",\t\"SG4 7TR\",\t\"CV36 4GY\",\t\"IP13 9HY\",\t\"B5 4EG\",\t\"CF48 3TE\",\t\"BA13 4TH\",\t\"WA15 9LR\",\t\"GL54 1HH\",\t\"SP10 4LS\",\t\"NN14 1PE\",\t\"HA8 5EJ\",\t\"DH1 1XG\",\t\"SW17 0GA\",\t\"BT43 6PW\",\t\"M40 5PX\",\t\"BT34 2GH\",\t\"BL1 5DF\",\t\"SM1 4PJ\",\t\"M40 1HL\",\t\"CO4 0PQ\",\t\"DL2 3SP\",\t\"PH2 9HE\",\t\"NW2 5JT\",\t\"S60 3LJ\",\t\"BA21 4SF\",\t\"BH22 8GG\",\t\"EX2 5BL\",\t\"CH41 1BD\",\t\"N1P 2YX\",\t\"NW6 1XJ\",\t\"BH17 9LS\",\t\"SA14 8TJ\",\t\"TR15 2FF\",\t\"BS16 6BU\",\t\"TA10 9HY\",\t\"NE29 7BA\",\t\"WV8 1XH\",\t\"BD23 1NZ\",\t\"EH4 5BS\",\t\"CA15 8PR\",\t\"CA13 9RL\",\t\"CM21 0FL\",\t\"NE8 4RT\",\t\"NW1 2BJ\",\t\"SG1 1EL\",\t\"SR5 5QW\",\t\"HU14 3NW\",\t\"FK2 7FS\",\t\"BD3 7JD\",\t\"GU6 8TX\",\t\"BT35 6FL\",\t\"LA1 2LN\",\t\"LS15 0DU\",\t\"PR4 1UZ\"]);\r",
+                  "setRandom(\"postCode2\", [\"B76 2PR\",\t\"RG26 3RG\",\t\"PO16 8TF\",\t\"ST4 6NX\",\t\"BD13 2EN\",\t\"GU10 5NF\",\t\"CF11 6LU\",\t\"CV33 9SW\",\t\"GL13 9LL\",\t\"YO15 3PW\",\t\"BD12 0HF\",\t\"KA15 1JA\",\t\"ME16 8DY\",\t\"NN4 8PU\",\t\"ME2 4BT\",\t\"BB4 6LZ\",\t\"ME17 3BP\",\t\"NR8 6JQ\",\t\"PO30 1NZ\",\t\"ML1 1XH\",\t\"SY16 1JQ\",\t\"OX25 2LY\",\t\"HX3 9RJ\",\t\"BA6 9JG\",\t\"WV3 9ER\",\t\"CM12 9QL\",\t\"PO20 8FT\",\t\"N3 1RT\",\t\"WF4 1LS\",\t\"DG12 5AS\",\t\"TW11 9HY\",\t\"LU6 1AH\",\t\"KY13 0UL\",\t\"G32 0AG\",\t\"SR5 1HQ\",\t\"SE1P 5HX\",\t\"BH9 2ND\",\t\"WV1 9QD\",\t\"TW2 6ER\",\t\"BS35 1SE\",\t\"DY11 6UG\",\t\"TR5 0SL\",\t\"OX28 5JW\",\t\"NR34 0HA\",\t\"SO18 9QL\",\t\"HU7 4RT\",\t\"CA1 9AQ\",\t\"E7 8PS\",\t\"LA5 8AF\",\t\"PL25 4DR\",\t\"PR5 6GD\",\t\"AL10 0RA\",\t\"DD10 9JD\",\t\"BS29 6JG\",\t\"LN11 1DE\",\t\"PR2 2LP\",\t\"BT17 0UF\",\t\"NR35 1BZ\",\t\"BA3 5DR\",\t\"OX2 7NQ\",\t\"DE13 0BA\",\t\"FK14 7JX\",\t\"BL8 2TF\",\t\"DL13 1BW\",\t\"DL8 1SZ\",\t\"CM7 4BU\",\t\"B43 7AW\",\t\"TN25 4BG\",\t\"OX26 4YB\",\t\"HU12 0QR\",\t\"WF12 7PP\",\t\"DE22 4NE\",\t\"AB51 7NT\",\t\"B11 3EW\",\t\"TS20 2NT\",\t\"PO15 5RR\",\t\"GL52 9TT\",\t\"GU4 7EP\",\t\"ST4 4PP\",\t\"PE29 7DX\",\t\"M7 2FR\",\t\"TN30 6EE\",\t\"KT19 8LD\",\t\"SO22 4NA\",\t\"LU5 5EX\",\t\"DE11 9JF\",\t\"DL15 0TE\",\t\"IV17 0PN\",\t\"SW18 1DT\",\t\"EH32 0HB\",\t\"SP2 7LZ\",\t\"KW15 1WB\",\t\"SA38 9PH\",\t\"B15 3HP\",\t\"BA3 4FR\",\t\"NN5 7PN\",\t\"SG4 7TR\",\t\"CV36 4GY\",\t\"IP13 9HY\",\t\"B5 4EG\",\t\"CF48 3TE\",\t\"BA13 4TH\",\t\"WA15 9LR\",\t\"GL54 1HH\",\t\"SP10 4LS\",\t\"NN14 1PE\",\t\"HA8 5EJ\",\t\"DH1 1XG\",\t\"SW17 0GA\",\t\"BT43 6PW\",\t\"M40 5PX\",\t\"BT34 2GH\",\t\"BL1 5DF\",\t\"SM1 4PJ\",\t\"M40 1HL\",\t\"CO4 0PQ\",\t\"DL2 3SP\",\t\"PH2 9HE\",\t\"NW2 5JT\",\t\"S60 3LJ\",\t\"BA21 4SF\",\t\"BH22 8GG\",\t\"EX2 5BL\",\t\"CH41 1BD\",\t\"N1P 2YX\",\t\"NW6 1XJ\",\t\"BH17 9LS\",\t\"SA14 8TJ\",\t\"TR15 2FF\",\t\"BS16 6BU\",\t\"TA10 9HY\",\t\"NE29 7BA\",\t\"WV8 1XH\",\t\"BD23 1NZ\",\t\"EH4 5BS\",\t\"CA15 8PR\",\t\"CA13 9RL\",\t\"CM21 0FL\",\t\"NE8 4RT\",\t\"NW1 2BJ\",\t\"SG1 1EL\",\t\"SR5 5QW\",\t\"HU14 3NW\",\t\"FK2 7FS\",\t\"BD3 7JD\",\t\"GU6 8TX\",\t\"BT35 6FL\",\t\"LA1 2LN\",\t\"LS15 0DU\",\t\"PR4 1UZ\"]);\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse response\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "// Check id exists\r",
+                  "pm.test(\"Corporate Investor created\", function() {\r",
+                  "  pm.expect(response).to.have.property(\"id\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"corpInvestorId\", response.id);\r",
+                  "console.log(\"Corp Investor ID stored:\", response.id);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"adviserId\": \"E001428\",\r\n    \"type\": \"CORPORATE\",\r\n    \"externalReferences\": [\r\n        {\r\n            \"reference\": \"{{$randomUUID}}\",\r\n            \"provider\": \"CRM Name\"\r\n        }\r\n    ],\r\n    \"corporate\": {\r\n        \"legalName\": \"{{companyName}}\",\r\n        \"territorialProfile\": {\r\n            \"taxResidencies\": [\r\n                {\r\n                    \"primary\": true,\r\n                    \"countryCode\": \"GB\",\r\n                    \"lei\": \"{{lei}}\"\r\n                }\r\n            ]\r\n        },\r\n        \"contactDetails\": {\r\n            \"contactPhone\": \"{{$randomPhoneNumber}}\",\r\n            \"mobilePhone\": \"{{$randomPhoneNumber}}\",\r\n            \"email\": \"{{$randomEmail}}\"\r\n        },\r\n        \"notificationPreferences\": {\r\n            \"disableEmails\": {{$randomBoolean}},\r\n            \"disableSms\": {{$randomBoolean}}\r\n        }\r\n    },\r\n    \"addresses\": [\r\n        {\r\n            \"premisesIdentifier\": \"{{companyName}}\",\r\n            \"line1\": \"{{$randomStreetAddress}}\",\r\n            \"town\": \"{{$randomCity}}\",\r\n            \"countryCode\": \"GB\",\r\n            \"postCode\": \"{{postCode1}}\",\r\n            \"primary\": true\r\n        },\r\n        {\r\n            \"premisesIdentifier\": \"{{companyName}}\",\r\n            \"line1\": \"{{$randomStreetAddress}}\",\r\n            \"town\": \"{{$randomCity}}\",\r\n            \"countryCode\": \"GB\",\r\n            \"postCode\": \"{{postCode2}}\",\r\n            \"primary\": false\r\n        }\r\n    ],\r\n    \"declarations\": [\r\n        {\r\n            \"adviserId\": \"E273053\",\r\n            \"templateId\": \"IFA_FCA_AUTH\",\r\n            \"acknowledgement\": true\r\n        },\r\n        {\r\n            \"adviserId\": \"E273053\",\r\n            \"templateId\": \"LEI_NOT_REQ\",\r\n            \"acknowledgement\": false\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/investors",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trust Investor GIA",
+      "item": [
+        {
+          "name": "Create Trust Investor",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let trustName = pm.variables.replaceIn(\"{{$randomCompanyName}} Trust\");\r",
+                  "pm.collectionVariables.set(\"trustName\", trustName);\r",
+                  "\r",
+                  "function setRandom(collectionVariableName, list) {\r",
+                  "    let index = Math.floor(Math.random() * list.length);\r",
+                  "    pm.collectionVariables.set(collectionVariableName, list[index]);\r",
+                  "}\r",
+                  "\r",
+                  "setRandom(\"trustType\", [\"BARE_TRUST\",\t\"VULNERABLE_PERSON_TRUST\",\t\"PARENT_TRUST\",\t\"DISCRETIONARY_TRUST\",\t\"INTEREST_IN_POSSESSION_TRUST\",\t\"NON_UK_RESIDENT_TRUST\",\t\"ACCUMULATION_TRUST\",\t\"MIXED_TRUST\",\t\"SETTLOR_INTERESTED_TRUST\",\t\"WILL_TRUST\",\r",
+                  "]);\r",
+                  "\r",
+                  "setRandom(\"lei\", [\"984500DI9BZD41OF4781\",\t\"9845000BD467666E3930\",\t\"9845003D44CCA145CC76\",\t\"335800WBAET9Q971AT75\",\t\"3358004GEBDX73EU6859\",\t\"335800DFHCGEFFZXRA34\",\t\"335800FCLGQFJQJGHP87\",\t\"3358009UB5HS2WQF6Y18\",\t\"743700HGB1CRPBRA1K29\",\t\"7ZW8QJWVPR4P1J1KQY45\",\t\"335800VPK652AEFF1O79\",\t\"335800FMIGZ24EJ2XW80\",\t\"335800VQ73CQOLRRSK16\",\t\"335800SCE2XZHDWXCG42\",\t\"74370096HBTUWJRFIT29\",\t\"549300KG6S007HTRLN18\",\t\"984500639BT036CND679\",\t\"549300Y7W34DK0WBPY51\",\t\"335800P2W6AY6E8BEP06\",\t\"6354003LMZZAKOPXLX69\",\t\"836800FXO82WAQQSJI94\",\t\"635400ILTUMVUHABUM41\",\t\"8945007P51J5A3XRP064\",\t\"8945006UNIT4VSLO5077\",\t\"335800VNJ36KHM1KMT58\",\t\"549300WCLFVEBTBNRF76\",\t\"335800D26VJUW8QY7H25\",\t\"335800J1B81UB7QR2O98\",\t\"335800E7D8TEYEZOH405\",\t\"213800JCN6PSGDRLT915\",\t\"549300RZ6VN2Y8WIYZ07\",\t\"5493001S6ND3ULAKYF67\",\t\"GGCMDC0OOHBLHHFALS29\",\t\"3358009KFDPSGIODYO73\",\t\"549300I3UEC4HXUCH839\",\t\"254900S63W8PLNYRZS69\",\t\"5493005YQ231Q4HD0C65\"]);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse response\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "// Check id exists\r",
+                  "pm.test(\"Trust Investor created\", function() {\r",
+                  "  pm.expect(response).to.have.property(\"id\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"trustInvestorId\", response.id);\r",
+                  "console.log(\"Trust Investor ID stored:\", response.id);\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"adviserId\": \"E001428\",\r\n    \"type\": \"{{trustType}}\",\r\n    \"externalReferences\": [\r\n        {\r\n            \"reference\": \"{{$randomUUID}}\",\r\n            \"provider\": \"CRM Name\"\r\n        }\r\n    ],\r\n    \"trust\": {\r\n        \"legalName\": \"{{trustName}}\",\r\n        \"territorialProfile\": {\r\n            \"taxResidencies\": [\r\n                {\r\n                    \"primary\": true,\r\n                    \"countryCode\": \"GB\",\r\n                    \"lei\": \"{{lei}}\"\r\n                }\r\n            ]\r\n        },\r\n        \"contactDetails\": {\r\n            \"contactPhone\": \"{{$randomPhoneNumber}}\",\r\n            \"mobilePhone\": \"{{$randomPhoneNumber}}\",\r\n            \"email\": \"{{$randomEmail}}\"\r\n        },\r\n        \"notificationPreferences\": {\r\n            \"disableEmails\": {{$randomBoolean}},\r\n            \"disableSms\": {{$randomBoolean}}\r\n        }\r\n    },\r\n    \"addresses\": [\r\n        {\r\n            \"premisesIdentifier\": \"{{trustName}}\",\r\n            \"line1\": \"{{$randomStreetAddress}}\",\r\n            \"town\": \"{{$randomCity}}\",\r\n            \"countryCode\": \"GB\",\r\n            \"postCode\": \"{{postCode1}}\",\r\n            \"primary\": true\r\n        }\r\n    ],\r\n    \"declarations\": [\r\n        {\r\n            \"adviserId\": \"E273053\",\r\n            \"templateId\": \"IFA_FCA_AUTH\",\r\n            \"acknowledgement\": true\r\n        },\r\n        {\r\n            \"adviserId\": \"E273053\",\r\n            \"templateId\": \"LEI_NOT_REQ\",\r\n            \"acknowledgement\": true\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/investors",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "GETs",
+      "item": [
+        {
+          "name": "Get retail investor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/investors/{{retailInvestorId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors",
+                "{{retailInvestorId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get retail investor vulnerabilities",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "pm.test(\"Should be 2 vulnerabilities\", function() {\r",
+                  "    pm.expect(response.vulnerabilities.length).to.equal(2);\r",
+                  "})\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/investors/{{retailInvestorId}}/vulnerabilities",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors",
+                "{{retailInvestorId}}",
+                "vulnerabilities"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get retail investor correspondences",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "pm.test(\"Should be 2 vulnerabilities\", function() {\r",
+                  "    pm.expect(response.vulnerabilities.length).to.equal(2);\r",
+                  "})\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/investors/{{retailInvestorId}}/correspondences",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors",
+                "{{retailInvestorId}}",
+                "correspondences"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get corporate investor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/investors/{{corpInvestorId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors",
+                "{{corpInvestorId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get trust investor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/investors/{{trustInvestorId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "investors",
+                "{{trustInvestorId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "// Common functions\r",
+          "\r",
+          "function getRandomDate(start, end) {\r",
+          "    let date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));\r",
+          "    let yyyy = date.getFullYear().toString();\r",
+          "    let mm = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so we add 1\r",
+          "    let dd = date.getDate().toString().padStart(2, '0');\r",
+          "    return `${yyyy}-${mm}-${dd}`;\r",
+          "}\r",
+          "\r",
+          "function setRandom(collectionVariableName, list) {\r",
+          "    let index = Math.floor(Math.random() * list.length);\r",
+          "    pm.collectionVariables.set(collectionVariableName, list[index]);\r",
+          "}\r",
+          "\r",
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "retailInvestorId",
+      "value": ""
+    },
+    {
+      "key": "corpInvestorId",
+      "value": ""
+    },
+    {
+      "key": "DOB",
+      "value": ""
+    },
+    {
+      "key": "gender",
+      "value": ""
+    },
+    {
+      "key": "maritalStatus",
+      "value": ""
+    },
+    {
+      "key": "occupation",
+      "value": ""
+    },
+    {
+      "key": "industry",
+      "value": ""
+    },
+    {
+      "key": "title",
+      "value": ""
+    },
+    {
+      "key": "income",
+      "value": ""
+    },
+    {
+      "key": "investmentReason",
+      "value": ""
+    },
+    {
+      "key": "tin",
+      "value": ""
+    },
+    {
+      "key": "postCode",
+      "value": ""
+    },
+    {
+      "key": "houseNumber",
+      "value": ""
+    },
+    {
+      "key": "lei",
+      "value": ""
+    },
+    {
+      "key": "companyName",
+      "value": ""
+    },
+    {
+      "key": "postCode1",
+      "value": ""
+    },
+    {
+      "key": "postCode2",
+      "value": ""
+    },
+    {
+      "key": "trustName",
+      "value": ""
+    },
+    {
+      "key": "trustType",
+      "value": ""
+    },
+    {
+      "key": "trustInvestorId",
+      "value": ""
+    },
+    {
+      "key": "startDate",
+      "value": ""
+    },
+    {
+      "key": "expiryDate",
+      "value": ""
+    },
+    {
+      "key": "vulnType",
+      "value": ""
+    },
+    {
+      "key": "vulnServiceLevel",
+      "value": ""
+    },
+    {
+      "key": "corrType",
+      "value": ""
+    },
+    {
+      "key": "accountType",
+      "value": ""
+    },
+    {
+      "key": "accountId_IndividualGIA",
+      "value": ""
+    },
+    {
+      "key": "investorFirstName",
+      "value": ""
+    },
+    {
+      "key": "investorMiddleName",
+      "value": ""
+    },
+    {
+      "key": "investorLastName",
+      "value": ""
+    },
+    {
+      "key": "modelId",
+      "value": ""
+    },
+    {
+      "key": "modelDate",
+      "value": ""
+    },
+    {
+      "key": "gbAccountNumber",
+      "value": ""
+    },
+    {
+      "key": "gbSortCode",
+      "value": ""
+    },
+    {
+      "key": "employmentStatus",
+      "value": ""
+    },
+    {
+      "key": "taxReliefEntitlement",
+      "value": ""
+    },
+    {
+      "key": "retirementAge",
+      "value": ""
+    },
+    {
+      "key": "mpaaDate",
+      "value": ""
+    },
+    {
+      "key": "accountId_IndividualSIPP",
+      "value": ""
+    }
+  ]
+}

@@ -9614,9 +9614,9 @@ paths:
                       "retirementAge": 67,
                       "account": {
                         "productId": "HWS",
-                      "model": {
-                        "id": "DF000000001",
-                        "providerId": "DFM0001"
+                          "model": {
+                          "id": "DF000000001",
+                          "providerId": "DFM0001"
                         }
                       },
                       "moneyMovements": [
@@ -10229,7 +10229,16 @@ components:
               description: The ISO 4217 currency code of the bank account. Defaults to GBP.
             status:
               type: string
-              description: Status of the bank account
+              description: |
+                Status of the bank account.
+
+
+                * ACTIVE - The bank account is active and can be used for transactions.
+                * REFERRED - The bank account has been referred for manual checking and cannot be used for transactions until the referral is resolved.
+                * REJECTED - The bank account has been rejected and cannot be used for transactions.
+                * DELETED - The bank account has been deleted and cannot be used for transactions.
+                * UNCHECKED - The bank account is waiting to be checked and cannot be used for transactions.
+                * WAITING_FOR_CUSTOMER - The bank account is waiting for the customer to provide additional information and cannot be used for transactions.
               readOnly: true
               enum:
                 - ACTIVE
@@ -13596,7 +13605,6 @@ components:
           type: string
           description: Unique identifier for a pre-configured set of tiered rates.
           maxLength: 6
-          
           example: AFGVCD
         amount:
           type: number
@@ -13634,7 +13642,6 @@ components:
       type: object
       additionalProperties: false
       properties:
-        
         investmentInstruction:
           type: string
           description: Whether a transfer should be invested immediately or held as cash.
@@ -13646,7 +13653,6 @@ components:
           $ref: "#/components/schemas/IllustrationValue"
         fee:
           $ref: "#/components/schemas/IllustrationTransferFee"    
-              
 
     IllustrationNPRequest:
       type: object
@@ -13688,24 +13694,20 @@ components:
                 format: date
                 example: "1990-05-15"
                 description: The investor's date of birth.
-
-
           
         illustrationDetails:
           type: object
           description: Required when creating a new illustration without an account ID, or when illustrating proposed changes to an existing account.
+          additionalProperties: false
           properties:
-
             forecastPeriod:
               type: integer
               example: 15
               description: Number of years that the illustration will cover. If not provided, the default 10 year period will be used.
-
             account:
               type: object
-              description: |
-                    Account details for the illustration.
-                    
+              additionalProperties: false
+              description: Account details for the illustration.
               properties:
                 productId:
                   description: Unique SS&C Wealth Platform Product identifier.
@@ -13715,31 +13717,23 @@ components:
                   description: The currency associated with the account.
                   type: string
                   example: GBP
-
             model:
               $ref: '#/components/schemas/IllustrationModel'
- 
             moneyMovements:
+              description: Contributions and Withdrawals.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationNPAccountMovement"
-                description: Contributions and Withdrawals.
-            
+                $ref: "#/components/schemas/IllustrationNPAccountMovement"
             fees:
+              description: Account level fees not associated with a specific money movement or transfer.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationNPAccountFee"
-                description: Account level fees not associated with a specific money movement or transfer.
-
+                $ref: "#/components/schemas/IllustrationNPAccountFee"
             transfers:
+              description: Transfers into the account from an external provider
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationNPAccountTransfer"
-                description: Transfers into the account from an external provider
-
+                $ref: "#/components/schemas/IllustrationNPAccountTransfer"
 
     IllustrationNPResponse:
       type: object
@@ -13755,7 +13749,6 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/IllustrationResult'
-
             document:
               $ref: '#/components/schemas/IllustrationDocument'  
 
@@ -14026,6 +14019,7 @@ components:
           type: object
           description: |
             Required when creating an illustration for a new account or when illustrating proposed changes (model, allocations, money movements, transfers or fees) to an existing account.
+          additionalProperties: false
           properties:
             retirementAge:
               type: integer
@@ -14038,6 +14032,7 @@ components:
             account:
               type: object
               description: Account details for the illustration
+              additionalProperties: false
               properties:                
                 productId:
                   type: string
@@ -14051,25 +14046,22 @@ components:
               $ref: '#/components/schemas/IllustrationModel'
 
             moneyMovements:
+              description: Contributions and Withdrawals.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationPensionAccountMovement"
-                description: Contributions and Withdrawals.
-
+                $ref: "#/components/schemas/IllustrationPensionAccountMovement"
+                
             transfers:
+              description: Pension transfers into the account from an external provider.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationPensionAccountTransfer"
-                description: Pension transfers into the account from an external provider.
-            
+                $ref: "#/components/schemas/IllustrationPensionAccountTransfer"
+                
             fees:
+              description: Account level fees not associated with a specific money movement or transfer.
               type: array
               items:
-                allOf:
-                  - $ref: "#/components/schemas/IllustrationPensionAccountFee"
-                description: Account level fees not associated with a specific money movement or transfer.
+                $ref: "#/components/schemas/IllustrationPensionAccountFee"
     
     IllustrationPensionResponse:
       type: object
@@ -14089,7 +14081,6 @@ components:
             document:
               $ref: '#/components/schemas/IllustrationDocument'
     
-    
     IllustrationPensionValue:
       required:
         - amount
@@ -14101,7 +14092,6 @@ components:
           description: Monetary value of the movement or transfer.
           type: number
           example: 15000
-
 
     IllustrationResult:
       type: object
@@ -14323,6 +14313,7 @@ components:
       type: object
       description: >
         Investment Strategy for the account.
+      additionalProperties: false
       properties:
         id:
           description: Unique SS&C Wealth Platform Model identifier.
@@ -14348,6 +14339,7 @@ components:
 
     IllustrationAllocation:
       type: object
+      additionalProperties: false
       description: Asset allocation within the model.
       properties:
         isin:
@@ -14386,6 +14378,7 @@ components:
     IllustrationTransferFee:
       description: A fee associated with this money movement or transfer.
       type: object
+      additionalProperties: false
       properties:
         amount:
           description: Amount-based fee value.
