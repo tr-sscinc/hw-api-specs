@@ -9857,7 +9857,7 @@ components:
             - NON_UK_RESIDENT
             - AML
             - CLOSED_SUB_ACCOUNT
-            - XX3
+            - TRADING_SUSPENDED_DATA
           type: string
           readOnly: true
         activationDate:
