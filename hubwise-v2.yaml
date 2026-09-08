@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.22
+  version: 0.8.23
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -3886,6 +3886,9 @@ paths:
 
 
         The endpoint must be called once for each investment accounts money movements to be retrieved.
+
+
+        If no money movements match, HTTP 200 is returned with an empty `moneyMovements` array.
       operationId: retrieveAccountMovements
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -4879,7 +4882,10 @@ paths:
 
 
         The endpoint must be called once for each investment accounts transfers to be retrieved.
- 
+
+
+        If no transfers match, HTTP 200 is returned with an empty `transfers` array.
+
       operationId: retrieveAccountTransfers
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -5951,6 +5957,9 @@ paths:
 
         For a Multiple Investment Strategy (MIS) account, the `accountId` may be either the primary account or a sub-account. When a sub-account ID is supplied, only the fees applicable to that sub-account are returned; when the primary account ID is supplied, only the fees applicable to the primary account are returned. Fees are not aggregated across the MIS group.
 
+
+        If no fees match, HTTP 200 is returned with an empty `fees` array.
+
       operationId: retrieveAccountFees
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -6758,6 +6767,9 @@ paths:
          - Power of Attorney
          
          - Employers
+
+
+        If no third parties match, HTTP 200 is returned with an empty `thirdParties` array.
       operationId: retrieveThirdParties
       parameters:
         - $ref: '#/components/parameters/Request-Id'
@@ -6873,6 +6885,12 @@ paths:
                           }
                         }
                       ]
+                    }
+                Ex2:
+                  summary: No third parties against the account
+                  value:
+                    {
+                      "thirdParties": []
                     }
         "400":
           $ref: "#/components/responses/400-BadRequest-NoBody"
