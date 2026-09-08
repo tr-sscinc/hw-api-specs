@@ -11838,9 +11838,7 @@ components:
         percentage:
           description: The percectage expressed as a decimal for a fixed percentage based fee
           maximum: 1
-          exclusiveMaximum: false
           minimum: 0
-          exclusiveMinimum: false
           type: number
           example: 0
         currency:
@@ -11964,9 +11962,7 @@ components:
         percentage:
           description: Percentage for percentage based fee
           maximum: 100
-          exclusiveMaximum: false
           minimum: 0
-          exclusiveMinimum: false
           type: number
           example: 0.75
         lower:
@@ -12536,15 +12532,7 @@ components:
           example: 15000
 
     MovementFee:
-      allOf:
-        - $ref: '#/components/schemas/TransferFee'
-        - type: object
-          properties:
-            instalmentPlan:
-              $ref: "#/components/schemas/FeeInstalmentPlan"
-
-    TransferFee:
-      description: Represents a fee charged to an account for a movement or transfer
+      description: Represents a fee charged to an account for a movement
       type: object
       additionalProperties: false
       properties:
@@ -12570,9 +12558,40 @@ components:
         percentage:
           description: Percentage for percentage based fee
           maximum: 100
-          exclusiveMaximum: false
           minimum: 0
-          exclusiveMinimum: false
+          type: number
+          example: 5
+        instalmentPlan:
+          $ref: "#/components/schemas/FeeInstalmentPlan"
+
+    TransferFee:
+      description: Represents a fee charged to an account for a transfer
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          format: int64
+          description: Unique identifier for the fee record.
+          maximum: 99999
+          minimum: 0
+          type: integer
+          readOnly: true
+          example: 1
+        type:
+          description: fee type
+          enum:
+            - ADVISER_INITIAL
+          type: string
+          readOnly: true
+          example: ADVISER_INITIAL
+        amount:
+          description: Fee amount for amount based fee
+          type: number
+          example: 5
+        percentage:
+          description: Percentage for percentage based fee
+          maximum: 100
+          minimum: 0
           type: number
           example: 5
 
@@ -13699,7 +13718,6 @@ components:
                 format: date
                 example: "1990-05-15"
                 description: The investor's date of birth.
-          
         illustrationDetails:
           type: object
           description: Required when creating a new illustration without an account ID, or when illustrating proposed changes to an existing account.
@@ -14392,9 +14410,7 @@ components:
         percentage:
           description: The rate for a percentage-based fee.
           maximum: 100
-          exclusiveMaximum: false
           minimum: 0
-          exclusiveMinimum: false
           type: number
           example: 5
 
