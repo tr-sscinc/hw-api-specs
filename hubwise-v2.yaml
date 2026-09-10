@@ -14965,7 +14965,113 @@ components:
             specifies either a sub-account model or a direct instrument list, along with its percentage of the total portfolio. 
           type: array
           items:
-            $ref: "#/components/schemas/MisModelAllocation"
+            $ref: "#/components/schemas/IllustrationMisModelAllocation"
+
+    IllustrationMisModelAllocation:
+      description: >-
+        Defines a single sub-account allocation within a Multiple Investment Strategy (MIS).
+        Each allocation creates a sub-account for either a specified model or a set of
+        directly held instruments. Exactly one of `modelId` or `instruments` must be provided.
+      type: object
+      additionalProperties: false
+      properties:
+        accountId:
+          format: string
+          description: >-
+            The SS&C Wealth Platform Account identifier for the sub-account created for this
+            allocation. Populated in the response only; read-only.
+          maxLength: 11
+          minLength: 11
+          type: string
+          readOnly: true
+          example: HW04003261B
+        modelId:
+          format: string
+          description: >-
+            Unique SS&C Wealth Platform Model identifier for this sub-account allocation.
+            Required when `instruments` is not provided.
+          maxLength: 11
+          minLength: 11
+          type: string
+          example: HW000001984
+        providerId:
+          format: string
+          description: >-
+            Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId
+            against the token will be used. Applies to model-based allocations only.
+          maxLength: 7
+          minLength: 7
+          type: string
+          example: DFM0001
+        percentage:
+          type: number
+          format: double
+          description: >-
+            The percentage of the total portfolio to allocate to this sub-account.
+            Must be a positive number. All allocation percentages must sum to 100.
+            Required when `modelId` is provided.
+          minimum: 0.01
+          maximum: 99.99
+          example: 60
+        date:
+          format: date
+          description: >-
+            The model date for this allocation. If not provided the latest model date will be used.
+            Applies to model-based allocations only.
+          type: string
+          example: "2024-07-01"
+        instruments:
+          description: >-
+            Array of directly held instruments for this sub-account allocation.
+            Required when `modelId` is not provided. The percentage of each instrument
+            represents its share of the total portfolio; all instrument percentages within
+            this allocation must sum to the allocation's contribution to the portfolio total.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/IllustrationMisInstrument"
+
+    IllustrationMisInstrument:
+      description: >-
+        Defines a directly held instrument within a MIS instrument-based allocation.
+      required:
+        - isin
+        - exchange
+        - currency
+        - percentage
+      type: object
+      additionalProperties: false
+      properties:
+        isin:
+          format: string
+          description: International Securities Identification Number for the instrument.
+          maxLength: 12
+          minLength: 12
+          type: string
+          example: LU0252633754
+        exchange:
+          format: string
+          description: Market Identifier Code (MIC) of the exchange on which the instrument is traded.
+          maxLength: 4
+          minLength: 4
+          type: string
+          example: XLON
+        currency:
+          format: string
+          description: currency code for the instrument.
+          maxLength: 3
+          minLength: 3
+          type: string
+          example: GBP
+        percentage:
+          type: number
+          format: double
+          description: >-
+            The percentage of the total portfolio to allocate to this instrument.
+            Must be a positive number.
+          minimum: 0.01
+          maximum: 99.99
+          example: 10
 
     IllustrationMovementFee:
       allOf:
