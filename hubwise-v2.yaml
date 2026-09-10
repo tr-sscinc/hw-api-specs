@@ -9287,12 +9287,12 @@ paths:
                   {
                     "investors": [
                       {
-                          "title": "Miss",
-                          "firstName": "Anne",
-                          "surname": "Winfield",
-                          "trustName": "",
-                          "corpName": "",
-                          "dateOfBirth": "1990-05-15"
+                        "title": "Miss",
+                        "firstName": "Anne",
+                        "surname": "Winfield",
+                        "trustName": "",
+                        "corpName": "",
+                        "dateOfBirth": "1990-05-15"
                       }
                     ],
                     "illustrationDetails": {
@@ -9302,9 +9302,9 @@ paths:
                         "currency": "GBP"
                       },
                       "model": {
-                          "id": "HW000000090",
-                          "providerId": "HUBWISE",
-                          "date": "2020-04-28"
+                        "id": "HW000000090",
+                        "providerId": "HUBWISE",
+                        "date": "2020-04-28"
                       },
                       "moneyMovements": [
                         {
@@ -9357,16 +9357,15 @@ paths:
               Ex2:
                 summary: Generate an anonymous Illustration for non pension product with instruments
                 value:
-                 {
-                    
+                  {
                     "investors": [
                       {
-                          "title": "Miss",
-                          "firstName": "Anne",
-                          "surname": "Winfield",
-                          "trustName": "",
-                          "corpName": "",
-                          "dateOfBirth": "1990-05-15"
+                        "title": "Miss",
+                        "firstName": "Anne",
+                        "surname": "Winfield",
+                        "trustName": "",
+                        "corpName": "",
+                        "dateOfBirth": "1990-05-15"
                       }
                     ],
                     "illustrationDetails": {
@@ -9376,25 +9375,25 @@ paths:
                         "currency": "GBP"
                       },
                       "model": {
-                          "allocations": [
+                        "allocations": [
+                          {
+                            "instruments": [
                               {
-                                "instruments": [
-                                {                                
                                 "isin": "GB0005405408",
                                 "exchange": "LONX",
                                 "currency": "GBP",
                                 "percentage": 50
-                                },
-                                {                                
+                              },
+                              {
                                 "isin": "GB0005406498",
                                 "exchange": "LONX",
                                 "currency": "GBP",
                                 "percentage": 50
-                                }
-                                ]
                               }
                             ]
-                        },
+                          }
+                        ]
+                      },
                       "moneyMovements": [
                         {
                           "type": "CONTRIBUTIONS",
@@ -9453,12 +9452,12 @@ paths:
                 summary: Generate a new Illustration for an existing non pension product with add/amend/remove changes
                 value:
                   {
-                    "accountId":"HW000000108",
+                    "accountId": "HW000000108",
                     "illustrationDetails": {
                       "forecastPeriod": 10,
                       "moneyMovements": [
                         {
-                          "id":5,
+                          "id": 5,
                           "type": "CONTRIBUTIONS",
                           "frequency": "ONE_OFF",
                           "nextDate": "2026-01-22",
@@ -9477,7 +9476,7 @@ paths:
                           }
                         },
                         {
-                          "id":1,
+                          "id": 1,
                           "type": "CONTRIBUTIONS",
                           "frequency": "ONE_OFF",
                           "nextDate": "2025-01-22",
@@ -9516,7 +9515,7 @@ paths:
                       ],
                       "fees": [
                         {
-                          "id":1,
+                          "id": 1,
                           "type": "ADVISER_ANNUAL",
                           "amount": 1000,
                           "percentage": 0,
@@ -9540,19 +9539,19 @@ paths:
                         }
                       ]
                     }
-                  }          
+                  }
               Ex5:
                 summary: Generate an anonymous MIS Illustration for non pension product with multiple models and individual instruments
                 value:
                   {
                     "investors": [
                       {
-                          "title": "Mr",
-                          "firstName": "John",
-                          "surname": "Taylor",
-                          "trustName": "",
-                          "corpName": "",
-                          "dateOfBirth": "1979-09-15"
+                        "title": "Mr",
+                        "firstName": "John",
+                        "surname": "Taylor",
+                        "trustName": "",
+                        "corpName": "",
+                        "dateOfBirth": "1979-09-15"
                       }
                     ],
                     "illustrationDetails": {
@@ -9650,12 +9649,12 @@ paths:
                   {
                     "investors": [
                       {
-                          "title": "Mrs",
-                          "firstName": "Anne",
-                          "surname": "Whitfield",
-                          "trustName": "",
-                          "corpName": "",
-                          "dateOfBirth": "1981-04-11"
+                        "title": "Mrs",
+                        "firstName": "Anne",
+                        "surname": "Whitfield",
+                        "trustName": "",
+                        "corpName": "",
+                        "dateOfBirth": "1981-04-11"
                       }
                     ],
                     "illustrationDetails": {
@@ -9712,7 +9711,7 @@ paths:
                           },
                           "fee": {
                             "amount": 0,
-                            "percentage": 0.5,
+                            "percentage": 0.5
                           }
                         }
                       ],
@@ -9747,12 +9746,12 @@ paths:
                         }
                       ]
                     }
-                  }           
+                  }
               Ex7:
                 summary: Generate an Illustration for an existing non pension product with add/amend/remove changes, including explicit allocations for movement and transfer, overriding primary allocation.
                 value:
                   {
-                    "accountId":"HW00013451A",
+                    "accountId": "HW00013451A",
                     "illustrationDetails": {
                       "forecastPeriod": 10,
                       "moneyMovements": [
@@ -9795,7 +9794,7 @@ paths:
                       ],
                       "fees": [
                         {
-                          "id":1,
+                          "id": 1,
                           "type": "ADVISER_ANNUAL",
                           "amount": 1000,
                           "percentage": 0,
@@ -9828,19 +9827,20 @@ paths:
                                 "percentage": 20
                               }
                             ],
-                          "fee": {
-                            "amount": 425.50,
-                            "percentage": 0
+                            "fee": {
+                              "amount": 425.50,
+                              "percentage": 0
+                            }
                           }
                         }
-                     }]
+                      ]
                     }
                   }
               Ex8:
                 summary: Generate an Illustration for an existing non pension product with add/amend/remove changes, including a money movement, using the primary account allocation and transfer with specific allocations, which would override the allocations stored at the primary account level.
                 value:
                   {
-                    "accountId":"HW00013451A",
+                    "accountId": "HW00013451A",
                     "illustrationDetails": {
                       "forecastPeriod": 10,
                       "moneyMovements": [
@@ -9866,7 +9866,7 @@ paths:
                       ],
                       "fees": [
                         {
-                          "id":1,
+                          "id": 1,
                           "type": "ADVISER_ANNUAL",
                           "amount": 1000,
                           "percentage": 0,
@@ -10003,7 +10003,7 @@ paths:
                       {
                         "title": "MR",
                         "firstName": "John",
-                        "surname" : "Undy",
+                        "surname": "Undy",
                         "dateOfBirth": "1981-04-11"
                       }
                     ],
@@ -10039,7 +10039,6 @@ paths:
                       ]
                     }
                   }
-          
               Ex2:
                 summary: Existing pension account with lump sum contribution and individual allocations
                 value:
@@ -10080,7 +10079,6 @@ paths:
                       ]
                     }
                   }
-
               Ex3:
                 summary: New MIS pension account with regular contribution and flexi access transfer (no fees). MIS Allocations set at primary account level.
                 value:
@@ -10090,7 +10088,7 @@ paths:
                       {
                         "title": "MR",
                         "firstName": "John",
-                        "surname" : "Undy",
+                        "surname": "Undy",
                         "dateOfBirth": "1981-04-11"
                       }
                     ],
@@ -10157,7 +10155,6 @@ paths:
                       ]
                     }
                   }
-
               Ex4:
                 summary: New MIS pension account with regular contribution and flexi access transfer (no fees). MIS Allocations set at primary account level, but override allocations provided for the transfer.
                 value:
@@ -10167,7 +10164,7 @@ paths:
                       {
                         "title": "MR",
                         "firstName": "John",
-                        "surname" : "Undy",
+                        "surname": "Undy",
                         "dateOfBirth": "1981-04-11"
                       }
                     ],
@@ -10254,8 +10251,7 @@ paths:
                         }
                       ]
                     }
-                  }        
-          
+                  }
       responses:
         "201":
           description: Illustration generated successfully.
