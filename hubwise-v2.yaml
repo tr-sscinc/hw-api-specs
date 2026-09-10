@@ -9236,7 +9236,7 @@ paths:
     post:
       tags:
         - Illustrations
-      summary: Create an Illustration for non pension products, including multi-investment strategy (MIS) accounts
+      summary: Create an Illustration for non pension products, including multi-investment strategy (MIS) accounts, including multi-investment strategy (MIS) accounts
       description: |
         Creates an illustration based on the supplied scenario.
 
