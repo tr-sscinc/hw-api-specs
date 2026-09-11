@@ -9236,7 +9236,7 @@ paths:
     post:
       tags:
         - Illustrations
-      summary: Create an Illustration for non pension products
+      summary: Create an Illustration for non pension products, including multi-investment strategy (MIS) accounts, including multi-investment strategy (MIS) accounts
       description: |
         Creates an illustration based on the supplied scenario.
 
@@ -9247,8 +9247,10 @@ paths:
 
         You can retrieve the ID of an existing regular money movement or fee using the relevant GET endpoint and include that ID along with any proposed amendments. This can include specifying an end date that falls before the illustration period, allowing you to generate an illustration that excludes the movement or fee entirely.
 
-        When illustrating a hypothetical investment account, you need to populate the Product ID plus at least one money movement or transfer. You also need to provide an investment strategy by either specifying the Model ID to use an existing model portfolio or defining individual asset allocations.
+        When illustrating a hypothetical investment account, you need to populate the Product ID plus at least one money movement or transfer. You also need to provide an investment strategy. For single (non-MIS) accounts you can either specify the Model ID to use an existing model portfolio or define individual asset allocations.
 
+        If you want to illustrate for a multi-investment strategy (MIS) account, you can specify any mix of adviser or DFM models or individual asset allocations at an account level, using the “model.allocations” data. If you wish, you can also specify individual allocations for contributions, withdrawals or transfers using either the moneyMovements.allocations or the transfers.allocations data. 
+        
         You can provide details of any one-off or ongoing fees. If the hypothetical account will belong to a Fee Group for a particular fee type, use the Band Adjustment Amount field to specify the value of the other accounts in the group. This ensures the fee is correctly illustrated.
 
       operationId: createNonPensionIllustration
@@ -9280,17 +9282,17 @@ paths:
               $ref: "#/components/schemas/IllustrationNPRequest"
             examples:
               Ex1:
-                summary: Generate a anonymous Illustration for non pension product with model
+                summary: Generate an anonymous Illustration for non pension product with model
                 value:
                   {
                     "investors": [
                       {
-                          "title": "Miss",
-                          "firstName": "Anne",
-                          "surname": "Winfield",
-                          "trustName": "",
-                          "corpName": "",
-                          "dateOfBirth": "1990-05-15"
+                        "title": "Miss",
+                        "firstName": "Anne",
+                        "surname": "Winfield",
+                        "trustName": "",
+                        "corpName": "",
+                        "dateOfBirth": "1990-05-15"
                       }
                     ],
                     "illustrationDetails": {
@@ -9300,9 +9302,9 @@ paths:
                         "currency": "GBP"
                       },
                       "model": {
-                          "id": "HW000000090",
-                          "providerId": "HUBWISE",
-                          "date": "2020-04-28"
+                        "id": "HW000000090",
+                        "providerId": "HUBWISE",
+                        "date": "2020-04-28"
                       },
                       "moneyMovements": [
                         {
@@ -9353,18 +9355,17 @@ paths:
                     }
                   }
               Ex2:
-                summary: Generate a anonymous Illustration for non pension product with instruments
+                summary: Generate an anonymous Illustration for non pension product with instruments
                 value:
-                 {
-                    
+                  {
                     "investors": [
                       {
-                          "title": "Miss",
-                          "firstName": "Anne",
-                          "surname": "Winfield",
-                          "trustName": "",
-                          "corpName": "",
-                          "dateOfBirth": "1990-05-15"
+                        "title": "Miss",
+                        "firstName": "Anne",
+                        "surname": "Winfield",
+                        "trustName": "",
+                        "corpName": "",
+                        "dateOfBirth": "1990-05-15"
                       }
                     ],
                     "illustrationDetails": {
@@ -9374,15 +9375,25 @@ paths:
                         "currency": "GBP"
                       },
                       "model": {
-                          "allocations": [
+                        "allocations": [
+                          {
+                            "instruments": [
                               {
-                                "isin": "GB0005405286",
+                                "isin": "GB0005405408",
                                 "exchange": "LONX",
                                 "currency": "GBP",
-                                "percentage": 100
+                                "percentage": 50
+                              },
+                              {
+                                "isin": "GB0005406498",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 50
                               }
                             ]
-                        },
+                          }
+                        ]
+                      },
                       "moneyMovements": [
                         {
                           "type": "CONTRIBUTIONS",
@@ -9432,21 +9443,21 @@ paths:
                     }
                   }
               Ex3:
-                summary: Generate a non anonymous Illustration for non pension with no changes
+                summary: Generate a new Illustration for an existing non pension product with no changes
                 value:
                   {
                     "accountId":"HW000000108"
                   }
               Ex4:
-                summary: Generate a non anonymous Illustration for non pension product with add/amend/remove changes
+                summary: Generate a new Illustration for an existing non pension product with add/amend/remove changes
                 value:
                   {
-                    "accountId":"HW000000108",
+                    "accountId": "HW000000108",
                     "illustrationDetails": {
                       "forecastPeriod": 10,
                       "moneyMovements": [
                         {
-                          "id":5,
+                          "id": 5,
                           "type": "CONTRIBUTIONS",
                           "frequency": "ONE_OFF",
                           "nextDate": "2026-01-22",
@@ -9465,7 +9476,7 @@ paths:
                           }
                         },
                         {
-                          "id":1,
+                          "id": 1,
                           "type": "CONTRIBUTIONS",
                           "frequency": "ONE_OFF",
                           "nextDate": "2025-01-22",
@@ -9504,7 +9515,7 @@ paths:
                       ],
                       "fees": [
                         {
-                          "id":1,
+                          "id": 1,
                           "type": "ADVISER_ANNUAL",
                           "amount": 1000,
                           "percentage": 0,
@@ -9528,7 +9539,376 @@ paths:
                         }
                       ]
                     }
-                  }             
+                  }
+              Ex5:
+                summary: Generate an anonymous MIS Illustration for non pension product with multiple models and individual instruments
+                value:
+                  {
+                    "investors": [
+                      {
+                        "title": "Mr",
+                        "firstName": "John",
+                        "surname": "Taylor",
+                        "trustName": "",
+                        "corpName": "",
+                        "dateOfBirth": "1979-09-15"
+                      }
+                    ],
+                    "illustrationDetails": {
+                      "forecastPeriod": 15,
+                      "account": {
+                        "productId": "HIS",
+                        "currency": "GBP"
+                      },
+                      "model": {
+                        "name": "MIS Strategy 001",
+                        "date": "2026-09-01",
+                        "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                        "allocations": [
+                          {
+                            "modelId": "HW000000045",
+                            "providerId": "HUBWISE",
+                            "percentage": 60,
+                            "date": "2026-01-01"
+                          },
+                          {
+                            "modelId": "HW000000078",
+                            "providerId": "HUBWISE",
+                            "percentage": 20,
+                            "date": "2026-01-01"
+                          },
+                          {
+                            "instruments": [
+                              {
+                                "isin": "GB00B7Y1ZS06",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 10
+                              },
+                              {
+                                "isin": "GB00B7Y1AB79",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 10
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "moneyMovements": [
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 0,
+                            "percentage": 0.5,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "type": "ADVISER_ANNUAL",
+                          "code": "",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28",
+                          "bandAdjustmentAmount": 250000
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 115000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 5,
+                            "percentage": 0
+                          }
+                        }
+                      ]
+                    }
+                  }
+              Ex6:
+                summary: Generate an anonymous MIS Illustration for non pension product with multiple models and individual instruments. Additional override allocation provided for transfer.
+                value:
+                  {
+                    "investors": [
+                      {
+                        "title": "Mrs",
+                        "firstName": "Anne",
+                        "surname": "Whitfield",
+                        "trustName": "",
+                        "corpName": "",
+                        "dateOfBirth": "1981-04-11"
+                      }
+                    ],
+                    "illustrationDetails": {
+                      "forecastPeriod": 15,
+                      "account": {
+                        "productId": "HIS",
+                        "currency": "GBP"
+                      },
+                      "model": {
+                        "name": "Anne Winfield Illustration",
+                        "date": "2026-09-01",
+                        "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                        "allocations": [
+                          {
+                            "modelId": "HW000000045",
+                            "providerId": "HUBWISE",
+                            "percentage": 60,
+                            "date": "2026-01-01"
+                          },
+                          {
+                            "modelId": "HW000000078",
+                            "providerId": "HUBWISE",
+                            "percentage": 20,
+                            "date": "2026-01-01"
+                          },
+                          {
+                            "instruments": [
+                              {
+                                "isin": "GB00B7Y1ZS06",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 10
+                              },
+                              {
+                                "isin": "GB00B7Y1AB79",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 10
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "moneyMovements": [
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "ONE_OFF",
+                          "nextDate": "2025-01-22",
+                          "endDate": "2025-01-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 15000,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 0,
+                            "percentage": 0.5
+                          }
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 115000,
+                            "currency": "GBP"
+                          },
+                          "model": {
+                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                            "allocations": [
+                              {
+                                "modelId": "HW000000045",
+                                "providerId": "HUBWISE",
+                                "percentage": 50,
+                                "date": "2026-01-01"
+                              },
+                              {
+                                "modelId": "HW000000078",
+                                "providerId": "HUBWISE",
+                                "percentage": 50,
+                                "date": "2026-01-01"
+                              }
+                            ]
+                          },
+                          "fee": {
+                            "amount": 550.95,
+                            "percentage": 0
+                          }
+                        }
+                      ]
+                    }
+                  }
+              Ex7:
+                summary: Generate an Illustration for an existing non pension product with add/amend/remove changes, including explicit allocations for movement and transfer, overriding primary allocation.
+                value:
+                  {
+                    "accountId": "HW00013451A",
+                    "illustrationDetails": {
+                      "forecastPeriod": 10,
+                      "moneyMovements": [
+                        {
+                          "id": 1,
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "MONTHLY",
+                          "nextDate": "2026-09-22",
+                          "endDate": "2026-09-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 1200,
+                            "currency": "GBP"
+                          },
+                          "model": {
+                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                            "allocations": [
+                              {
+                                "modelId": "HW000000045",
+                                "providerId": "HUBWISE",
+                                "percentage": 50,
+                                "date": "2026-01-01"
+                              },
+                              {
+                                "modelId": "HW000000078",
+                                "providerId": "HUBWISE",
+                                "percentage": 50,
+                                "date": "2026-01-01"
+                              }
+                            ]
+                          },
+                          "fee": {
+                            "amount": 0.15,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "id": 1,
+                          "type": "ADVISER_ANNUAL",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28"
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP"
+                          },
+                          "model": {
+                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                            "allocations": [
+                              {
+                                "accountId": "HW00013451B",
+                                "percentage": 50
+                              },
+                              {
+                                "accountId": "HW00013451C",
+                                "percentage": 30
+                              },
+                              {
+                                "accountId": "HW00013451D",
+                                "percentage": 20
+                              }
+                            ],
+                            "fee": {
+                              "amount": 425.50,
+                              "percentage": 0
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+              Ex8:
+                summary: Generate an Illustration for an existing non pension product with add/amend/remove changes, including a money movement, using the primary account allocation and transfer with specific allocations, which would override the allocations stored at the primary account level.
+                value:
+                  {
+                    "accountId": "HW00013451A",
+                    "illustrationDetails": {
+                      "forecastPeriod": 10,
+                      "moneyMovements": [
+                        {
+                          "id": 1,
+                          "type": "CONTRIBUTIONS",
+                          "frequency": "MONTHLY",
+                          "nextDate": "2026-09-22",
+                          "endDate": "2026-09-22",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 1500,
+                            "currency": "GBP"
+                          },
+                          "fee": {
+                            "amount": 0.15,
+                            "percentage": 0,
+                            "instalmentPlan": {
+                              "totalMonths": 12
+                            }
+                          }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "id": 1,
+                          "type": "ADVISER_ANNUAL",
+                          "amount": 1000,
+                          "percentage": 0,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "startDate": "2025-04-28",
+                          "endDate": "2027-04-28"
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 10000,
+                            "currency": "GBP"
+                          },
+                          "model": {
+                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                            "allocations": [
+                              {
+                                "accountId": "HW00013451B",
+                                "percentage": 50
+                              },
+                              {
+                                "accountId": "HW00013451C",
+                                "percentage": 30
+                              },
+                              {
+                                "accountId": "HW00013451D",
+                                "percentage": 20
+                              }
+                            ],
+                            "fee": {
+                              "amount": 425.50,
+                              "percentage": 0
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+
       responses:
         "201":
           description: Illustration generated successfully.
@@ -9568,7 +9948,7 @@ paths:
     post:
       tags:
         - Illustrations
-      summary: Create an Illustration for pension products
+      summary: Create an Illustration for pension products, including multi-investment strategy (MIS) accounts.
       description: |
         You can use this endpoint to generate an illustration for an existing pension account or a hypothetical pension account that has not yet been onboarded to the platform.  
 
@@ -9576,8 +9956,10 @@ paths:
 
         You can retrieve the ID of an existing regular money movement or fee using the relevant GET endpoint and include that ID along with any proposed amendments.  This can include specifying an end date that falls before the illustration period, allowing you to generate an illustration that excludes the movement or fee entirely.  
 
-        When illustrating a hypothetical pension account, you need to populate the Product ID plus at least one money movement or transfer.  You also need to provide an investment strategy by either specifying the Model ID to use an existing model portfolio or defining individual asset allocations.
+        When illustrating a hypothetical pension account, you need to populate the Product ID plus at least one money movement or transfer.  You also need to provide an investment strategy. For single (non_MIS) accounts, you can specify the Model ID to use an existing model portfolio or define individual asset allocations.
 
+        If you want to illustrate for a multi-investment strategy (MIS) account, you can specify any mix of adviser or DFM models or individual asset allocations at an account level, using the “model.allocations” data. If you wish, you can also specify individual allocations for contributions, withdrawals or transfers using either the moneyMovements.allocations or the transfers.allocations data. 
+        
         For a flexi-access transfer, you only need to provide an investment instruction and transfer value.
 
         To accurately illustrate a capped transfer, you need to populate all of the transfer fields.  If you don't provide this information, the illustration engine will calculate the GAD maximum as at the illustration date and will treat the illustration date as the last review date.
@@ -9621,18 +10003,18 @@ paths:
                       {
                         "title": "MR",
                         "firstName": "John",
-                        "surname" : "Undy",
+                        "surname": "Undy",
                         "dateOfBirth": "1981-04-11"
                       }
                     ],
                     "illustrationDetails": {
                       "retirementAge": 67,
                       "account": {
-                        "productId": "HWS",
-                          "model": {
-                          "id": "DF000000001",
-                          "providerId": "DFM0001"
-                        }
+                        "productId": "HWS"
+                      },
+                      "model": {
+                        "id": "DF000000001",
+                        "providerId": "DFM0001"
                       },
                       "moneyMovements": [
                         {
@@ -9657,7 +10039,6 @@ paths:
                       ]
                     }
                   }
-          
               Ex2:
                 summary: Existing pension account with lump sum contribution and individual allocations
                 value:
@@ -9668,18 +10049,22 @@ paths:
                       "model": {
                         "allocations": [
                           {
-                            "isin": "GB00B03MLX29",
-                            "exchange": "ISDX",
-                            "currency": "GBP",
-                            "percentage": 60
-                          },
-                          {
-                            "isin": "IE00B4L5Y983",
-                            "exchange": "ISDX",
-                            "currency": "GBP",
-                            "percentage": 40
+                            "instruments": [
+                              {
+                                "isin": "GB00B03MLX29",
+                                "exchange": "ISDX",
+                                "currency": "GBP",
+                                "percentage": 60
+                              },
+                              {
+                                "isin": "IE00B4L5Y983",
+                                "exchange": "ISDX",
+                                "currency": "GBP",
+                                "percentage": 40
+                              }
+                            ]
                           }
-                        ]      
+                        ]
                       },
                       "moneyMovements": [
                         {
@@ -9694,7 +10079,179 @@ paths:
                       ]
                     }
                   }
-
+              Ex3:
+                summary: New MIS pension account with regular contribution and flexi access transfer (no fees). MIS Allocations set at primary account level.
+                value:
+                  {
+                    "illustrationType": "STANDARD_ILLUSTRATION",
+                    "investors": [
+                      {
+                        "title": "MR",
+                        "firstName": "John",
+                        "surname": "Undy",
+                        "dateOfBirth": "1981-04-11"
+                      }
+                    ],
+                    "illustrationDetails": {
+                      "retirementAge": 67,
+                      "account": {
+                        "productId": "HWS"
+                      },
+                      "model": {
+                        "name": "MIS Strategy 001",
+                        "date": "2026-08-01",
+                        "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                        "allocations": [
+                          {
+                            "modelId": "HW000000045",
+                            "providerId": "HUBWISE",
+                            "percentage": 60,
+                            "date": "2026-01-01"
+                          },
+                          {
+                            "modelId": "HW000000078",
+                            "providerId": "HUBWISE",
+                            "percentage": 20,
+                            "date": "2026-01-01"
+                          },
+                          {
+                            "instruments": [
+                              {
+                                "isin": "GB00B7Y1ZS06",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 10
+                              },
+                              {
+                                "isin": "GB00B7Y1AB79",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 10
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "moneyMovements": [
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "payer": "SELF",
+                          "frequency": "MONTHLY",
+                          "nextDate": "2026-08-01",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 500.00
+                          }
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "type": "FLEXI_ACCESS",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 25000.00
+                          }
+                        }
+                      ]
+                    }
+                  }
+              Ex4:
+                summary: New MIS pension account with regular contribution and flexi access transfer (no fees). MIS Allocations set at primary account level, but override allocations provided for the transfer.
+                value:
+                  {
+                    "illustrationType": "STANDARD_ILLUSTRATION",
+                    "investors": [
+                      {
+                        "title": "MR",
+                        "firstName": "John",
+                        "surname": "Undy",
+                        "dateOfBirth": "1981-04-11"
+                      }
+                    ],
+                    "illustrationDetails": {
+                      "retirementAge": 67,
+                      "account": {
+                        "productId": "HWS"
+                      },
+                      "model": {
+                        "name": "MIS Strategy 001",
+                        "date": "2026-08-01",
+                        "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                        "allocations": [
+                          {
+                            "modelId": "HW000000045",
+                            "providerId": "HUBWISE",
+                            "percentage": 60,
+                            "date": "2026-01-01"
+                          },
+                          {
+                            "modelId": "HW000000078",
+                            "providerId": "HUBWISE",
+                            "percentage": 20,
+                            "date": "2026-01-01"
+                          },
+                          {
+                            "instruments": [
+                              {
+                                "isin": "GB00B7Y1ZS06",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 10
+                              },
+                              {
+                                "isin": "GB00B7Y1AB79",
+                                "exchange": "LONX",
+                                "currency": "GBP",
+                                "percentage": 10
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "moneyMovements": [
+                        {
+                          "type": "CONTRIBUTIONS",
+                          "payer": "SELF",
+                          "frequency": "MONTHLY",
+                          "nextDate": "2026-08-01",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 500.00
+                          }
+                        }
+                      ],
+                      "transfers": [
+                        {
+                          "type": "FLEXI_ACCESS",
+                          "investmentInstruction": "INVEST_IN_MODEL",
+                          "value": {
+                            "amount": 25000.00
+                          },
+                          "model": {
+                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
+                            "allocations": [
+                              {
+                                "modelId": "HW000000045",
+                                "providerId": "HUBWISE",
+                                "percentage": 50,
+                                "date": "2026-01-01"
+                              },
+                              {
+                                "modelId": "HW000000078",
+                                "providerId": "HUBWISE",
+                                "percentage": 50,
+                                "date": "2026-01-01"
+                              }
+                            ]
+                          },
+                          "fee": {
+                            "amount": 550.95,
+                            "percentage": 0
+                          }
+                        }
+                      ]
+                    }
+                  }
       responses:
         "201":
           description: Illustration generated successfully.
@@ -11454,9 +12011,7 @@ components:
       description: >-
         Investment model linked to the account.
 
-
         For standard accounts, provide `id` to reference a single model portfolio.
-
 
         For Multiple Investment Strategy (MIS) accounts, omit `id` and instead provide an
         `allocations` array. Each allocation references a sub-account model and specifies the
@@ -13581,6 +14136,9 @@ components:
             - FLEXI_ACCESS_PCLS
           type: string
           example: CONTRIBUTIONS
+
+        model:
+          $ref: '#/components/schemas/IllustrationModel'
         
         frequency:
           description: >-
@@ -13691,7 +14249,10 @@ components:
         value:
           $ref: "#/components/schemas/IllustrationValue"
         fee:
-          $ref: "#/components/schemas/IllustrationTransferFee"    
+          $ref: "#/components/schemas/IllustrationTransferFee" 
+        model:
+          $ref: '#/components/schemas/IllustrationModel'     
+              
 
     IllustrationNPRequest:
       type: object
@@ -13926,6 +14487,9 @@ components:
         fee:
           $ref: "#/components/schemas/IllustrationMovementFee"
 
+        model:
+          $ref: '#/components/schemas/IllustrationModel' 
+
     IllustrationPensionAccountTransfer:
       type: object
       additionalProperties: false
@@ -13991,6 +14555,9 @@ components:
 
         fee:
           $ref: "#/components/schemas/IllustrationTransferFee"
+
+        model:
+          $ref: '#/components/schemas/IllustrationModel'
 
     IllustrationPensionRequest:
       type: object
@@ -14348,12 +14915,39 @@ components:
       type: object
       description: >
         Investment Strategy for the account.
+
+        For standard, non-MIS accounts, provide `id` to reference a single model portfolio or provide an
+        `instruments` array, within the 'allocations'.
+
+        For Multiple Investment Strategy (MIS) accounts, omit `id` and instead provide an
+        `allocations` array. Each allocation references a sub-account model and specifies the
+        percentage of the portfolio to allocate to it. Allocations may reference a model by
+        `modelId` or contain a direct `instruments` array; the percentages across all allocations
+        must sum to 100.
       additionalProperties: false
       properties:
+
         id:
           description: Unique SS&C Wealth Platform Model identifier.
           type: string
           example: HW000000090
+
+        name:
+          format: string
+          description: >-
+            Display name for the MIS strategy. Applies to MIS accounts only.
+          maxLength: 100
+          minLength: 1
+          type: string
+          example: Sam John MIS Strategy
+
+        type:
+          description: >-
+            The type of investment strategy. Use `MULTIPLE_INVESTMENT_STRATEGY` for MIS accounts.
+          type: string
+          enum:
+            - MULTIPLE_INVESTMENT_STRATEGY
+          example: MULTIPLE_INVESTMENT_STRATEGY
 
         providerId:
           description: Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId from the token will be used.
@@ -14367,40 +14961,117 @@ components:
           example: '2026-04-28'
 
         allocations: 
-          description: Individual asset selection.
+          description: Either a set of individual instruments for a non-MIS account or an array of model and instrument allocations for a Multiple Investment Strategy (MIS) account. Each entry
+            specifies either a sub-account model or a direct instrument list, along with its percentage of the total portfolio. 
           type: array
           items:
-            $ref: '#/components/schemas/IllustrationAllocation'
+            $ref: "#/components/schemas/IllustrationMisModelAllocation"
 
-    IllustrationAllocation:
+    IllustrationMisModelAllocation:
+      description: >-
+        Defines a single sub-account allocation within a Multiple Investment Strategy (MIS).
+        Each allocation creates a sub-account for either a specified model or a set of
+        directly held instruments. Exactly one of `modelId` or `instruments` must be provided.
       type: object
       additionalProperties: false
-      description: Asset allocation within the model.
       properties:
-        isin:
+        accountId:
+          format: string
+          description: >-
+            The SS&C Wealth Platform Account identifier for the sub-account created for this
+            allocation. Populated in the response only; read-only.
+          maxLength: 11
+          minLength: 11
           type: string
-          description: Must be a valid 12-character ISIN code identifying the asset to which the allocation applies.
-          example: GB0005405286
-
-        currency:
+          readOnly: true
+          example: HW04003261B
+        modelId:
+          format: string
+          description: >-
+            Unique SS&C Wealth Platform Model identifier for this sub-account allocation.
+            Required when `instruments` is not provided.
+          maxLength: 11
+          minLength: 11
           type: string
-          description: Market currency.
-          enum:
-            - USD
-            - GBP
-            - EUR
-          example: GBP
-
-        exchange:
+          example: HW000001984
+        providerId:
+          format: string
+          description: >-
+            Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId
+            against the token will be used. Applies to model-based allocations only.
+          maxLength: 7
+          minLength: 7
           type: string
-          description: Exchange code.
-          example: XLON
-
+          example: DFM0001
         percentage:
           type: number
           format: double
-          description: The percentage of any investment to be allocated to this asset.
-          example: 100
+          description: >-
+            The percentage of the total portfolio to allocate to this sub-account.
+            Must be a positive number. All allocation percentages must sum to 100.
+            Required when `modelId` is provided.
+          minimum: 0.01
+          maximum: 99.99
+          example: 60
+        date:
+          format: date
+          description: >-
+            The model date for this allocation. If not provided the latest model date will be used.
+            Applies to model-based allocations only.
+          type: string
+          example: "2024-07-01"
+        instruments:
+          description: >-
+            Array of directly held instruments for this sub-account allocation.
+            Required when `modelId` is not provided. The percentage of each instrument
+            represents its share of the total portfolio; all instrument percentages within
+            this allocation must sum to the allocation's contribution to the portfolio total.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/IllustrationMisInstrument"
+
+    IllustrationMisInstrument:
+      description: >-
+        Defines a directly held instrument within a MIS instrument-based allocation.
+      required:
+        - isin
+        - exchange
+        - currency
+        - percentage
+      type: object
+      additionalProperties: false
+      properties:
+        isin:
+          format: string
+          description: International Securities Identification Number for the instrument.
+          maxLength: 12
+          minLength: 12
+          type: string
+          example: LU0252633754
+        exchange:
+          format: string
+          description: Market Identifier Code (MIC) of the exchange on which the instrument is traded.
+          maxLength: 4
+          minLength: 4
+          type: string
+          example: XLON
+        currency:
+          format: string
+          description: currency code for the instrument.
+          maxLength: 3
+          minLength: 3
+          type: string
+          example: GBP
+        percentage:
+          type: number
+          format: double
+          description: >-
+            The percentage of the total portfolio to allocate to this instrument.
+            Must be a positive number.
+          minimum: 0.01
+          maximum: 99.99
+          example: 10
 
     IllustrationMovementFee:
       allOf:
