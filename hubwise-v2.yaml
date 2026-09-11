@@ -14119,7 +14119,7 @@ components:
         type:
           description: >-
             The type of money movement being specified, the API can support payments into and out
-            of the account.
+            of the account. Required if no money movement id is provided.
           enum:
             - CONTRIBUTIONS
             - WITHDRAWALS
@@ -14134,7 +14134,7 @@ components:
         
         frequency:
           description: >-
-            The frequency of this specific money movement.
+            The frequency of this specific money movement. Required if no money movement id is provided.
           enum:
             - ANNUALLY
             - MONTHLY
@@ -14146,7 +14146,7 @@ components:
         nextDate:
           format: date
           description: >-
-            The intended start date of the money movement. 
+            The intended start date of the money movement. Required if no money movement id is provided and frequenct is not ONE_OFF.
           type: string
           example: "2025-01-22"
         endDate:
@@ -14157,7 +14157,7 @@ components:
         
         investmentInstruction:
           description: >-
-            Whether a contribution should be invested immediately or held as cash.
+            Whether a contribution should be invested immediately or held as cash. Required if no money movement id is provided.
           enum:
             - LEAVE_IN_CASH
             - INVEST_IN_MODEL
@@ -14171,8 +14171,11 @@ components:
           $ref: "#/components/schemas/IllustrationMovementFee"  
     
     IllustrationNPAccountFee:
-      description: Account level fees not associated with a specific money movement or transfer.
+      description: Account level fees not associated with a specific money movement or transfer. 1 to 10 fees can be provided. Required when creating a new illustration without an account ID, or when illustrating proposed changes to an existing account.
       additionalProperties: false
+      required:
+        - type
+        - vatIncluded
       properties:
         id:
           type: integer
@@ -14238,7 +14241,7 @@ components:
       properties:
         investmentInstruction:
           type: string
-          description: Whether a transfer should be invested immediately or held as cash.
+          description: Whether a transfer should be invested immediately or held as cash. Required if transfer id is not provided.
           enum:
             - INVEST_IN_MODEL
             - LEAVE_IN_CASH
@@ -14370,8 +14373,11 @@ components:
               $ref: '#/components/schemas/IllustrationDocument'  
 
     IllustrationPensionAccountFee:
-      description: Account level fees not associated with a specific money movement or transfer.
+      description: Account level fees not associated with a specific money movement or transfer. 1 fee code, amount or percentage must be provided
       additionalProperties: false
+      required:
+        - type
+        - vatIncluded
       properties:
         id:
           type: integer
@@ -14423,7 +14429,7 @@ components:
     IllustrationPensionAccountMovement:
       type: object
       additionalProperties: false
-      description: Contributions and withdrawals associated with the illustration.
+      description: Contributions and withdrawals associated with the illustration. 
       properties:
         id:
           format: int64
@@ -14432,9 +14438,7 @@ components:
           example: 2
         type:
           description: >-
-            The type of money movement being illustrated, the API can support payments into and out of pension accounts.
-
-            Required if moneyMovements.id is not provided.
+            The type of money movement being illustrated, the API can support payments into and out of pension accounts.Required if no moneyMovements.id is provided. 
           enum:
             - CONTRIBUTIONS
             - UFPLS
@@ -14456,9 +14460,7 @@ components:
 
         frequency:
           description: >-
-            The frequency of this specific money movement.
-
-            Required if moneyMovements.id is not provided.
+            The frequency of this specific money movement. Required if moneyMovements.id is not provided.
           enum:
             - ANNUALLY
             - MONTHLY
@@ -14471,9 +14473,7 @@ components:
         nextDate:
           format: date
           description: >-
-            The intended start date of the money movement. 
-
-            Required if moneyMovements.id is not provided and moneyMovements.frequency is not `ONE_OFF`.
+            The intended start date of the money movement. Required if moneyMovements.id is not provided and moneyMovements.frequency is not `ONE_OFF`.
           type: string
           example: "2026-01-07"
 
@@ -14491,9 +14491,7 @@ components:
           
         investmentInstruction:
           description: >-
-            Whether a contribution should be invested immediately or held as cash.
-
-            Required if moneyMovements.id is not provided.
+            Whether a contribution should be invested immediately or held as cash. Required if moneyMovements.id is not provided.
           enum:
             - LEAVE_IN_CASH
             - INVEST_IN_MODEL
@@ -14501,7 +14499,7 @@ components:
           example: INVEST_IN_MODEL
         
         value:
-          $ref: '#/components/schemas/IllustrationPensionValue'
+          $ref: '#/components/schemas/IllustrationValue'
         
         fee:
           $ref: "#/components/schemas/IllustrationMovementFee"
@@ -14535,7 +14533,7 @@ components:
           example: LEAVE_IN_CASH
 
         value:
-          $ref: "#/components/schemas/IllustrationPensionValue"
+          $ref: "#/components/schemas/IllustrationValue"
 
         yearToDatePayments:
           description: Total income paid during the current pension year. Only applicable for CAPPED transfers.
@@ -14584,7 +14582,7 @@ components:
       properties:
         illustrationType:
           type: string
-          description: The type of pension benefit illustration being requested. Defaults to STANDARD_ILLUSTRATION if none provided.
+          description: The type of pension benefit illustration being requested. Defaults to STANDARD_ILLUSTRATION if not provided.
           enum:
             - SMPI
             - DRAWDOWN_REVIEW
@@ -14645,7 +14643,7 @@ components:
               maximum: 120
               example: 65
               description: |
-                The retirement age assumed when calculating pension benefits.Required if account. Must be 1 year older than the current age of the investor.
+                The assumed retirement age. Required if account.id is not provided. Required if account. Must be 1 year older than the current age of the investor.
             account:
               type: object
               description: Account details for the illustration
@@ -14698,7 +14696,7 @@ components:
             document:
               $ref: '#/components/schemas/IllustrationDocument'
     
-    IllustrationPensionValue:
+    IllustrationValue:
       required:
         - amount
       type: object
@@ -14706,9 +14704,14 @@ components:
       properties:
         amount:
           format: double
-          description: Monetary value of the movement or transfer.
+          description: Monetary value of the movement or transfer. Required if movement.id is not provided.
           type: number
           example: 15000
+        currency:
+            description: The currency in which to perform the instruction. Must match the base currency of the account.
+            type: string
+            maxLength: 3
+            example: GBP
 
     IllustrationResult:
       type: object
@@ -14943,7 +14946,7 @@ components:
       properties:
 
         id:
-          description: Unique SS&C Wealth Platform Model identifier.
+          description: Unique SS&C Wealth Platform Model identifier. Required unless instruments are provided.
           type: string
           example: HW000000090
           maxLength: 11
@@ -14952,7 +14955,7 @@ components:
         name:
           format: string
           description: >-
-            Display name for the MIS strategy. Applies to MIS accounts only.
+            Display name for the MIS strategy. Applies to MIS accounts only. Required for MIS accounts if no account.id is provided.
           maxLength: 100
           minLength: 1
           type: string
@@ -14960,7 +14963,7 @@ components:
 
         type:
           description: >-
-            The type of investment strategy. Use `MULTIPLE_INVESTMENT_STRATEGY` for MIS accounts.
+            The type of investment strategy. Use `MULTIPLE_INVESTMENT_STRATEGY` for MIS accounts. Required for MIS accounts if no account.id is provided.
           type: string
           enum:
             - MULTIPLE_INVESTMENT_STRATEGY
@@ -14981,12 +14984,12 @@ components:
 
         allocations: 
           description: Either a set of individual instruments for a non-MIS account or an array of model and instrument allocations for a Multiple Investment Strategy (MIS) account. Each entry
-            specifies either a sub-account model or a direct instrument list, along with its percentage of the total portfolio. 
+            specifies either a sub-account model or a direct instrument list, along with its percentage of the total portfolio. Required if no model.id is provided.
           type: array
           items:
-            $ref: "#/components/schemas/IllustrationMisModelAllocation"
+            $ref: "#/components/schemas/IllustrationModelAllocation"
 
-    IllustrationMisModelAllocation:
+    IllustrationModelAllocation:
       description: >-
         Defines a single sub-account allocation within a Multiple Investment Strategy (MIS).
         Each allocation creates a sub-account for either a specified model or a set of
@@ -15008,7 +15011,7 @@ components:
           format: string
           description: >-
             Unique SS&C Wealth Platform Model identifier for this sub-account allocation.
-            Required when `instruments` is not provided.
+            At least 1 Required for MIS accounts.
           maxLength: 11
           minLength: 11
           type: string
@@ -15048,11 +15051,11 @@ components:
           type: array
           minItems: 1
           items:
-            $ref: "#/components/schemas/IllustrationMisInstrument"
+            $ref: "#/components/schemas/IllustrationInstrument"
 
-    IllustrationMisInstrument:
+    IllustrationInstrument:
       description: >-
-        Defines a directly held instrument within a MIS instrument-based allocation.
+        Defines a directly held instrument within a MIS instrument-based allocation or when no model provided for no MIS account (required)
       required:
         - isin
         - exchange
@@ -15140,23 +15143,6 @@ components:
           type: integer
           example: 12
 
-    IllustrationValue:
-      required:
-        - amount
-        - currency
-      type: object
-      additionalProperties: false
-      properties:
-        amount:
-          format: double
-          description: Monetary value of the movement or transfer.
-          type: number
-          example: 15000
-        currency:
-          description: The currency associated with the money movement or transfer.
-          maxLength: 3
-          type: string
-          example: GBP
 
   examples:
 
