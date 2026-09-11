@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.23
+  version: 0.8.24
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -9287,11 +9287,9 @@ paths:
                   {
                     "investors": [
                       {
-                        "title": "Miss",
+                        "title": "MISS",
                         "firstName": "Anne",
                         "surname": "Winfield",
-                        "trustName": "",
-                        "corpName": "",
                         "dateOfBirth": "1990-05-15"
                       }
                     ],
@@ -9360,11 +9358,9 @@ paths:
                   {
                     "investors": [
                       {
-                        "title": "Miss",
+                        "title": "MISS",
                         "firstName": "Anne",
                         "surname": "Winfield",
-                        "trustName": "",
-                        "corpName": "",
                         "dateOfBirth": "1990-05-15"
                       }
                     ],
@@ -9546,11 +9542,9 @@ paths:
                   {
                     "investors": [
                       {
-                        "title": "Mr",
+                        "title": "MR",
                         "firstName": "John",
                         "surname": "Taylor",
-                        "trustName": "",
-                        "corpName": "",
                         "dateOfBirth": "1979-09-15"
                       }
                     ],
@@ -9649,11 +9643,9 @@ paths:
                   {
                     "investors": [
                       {
-                        "title": "Mrs",
+                        "title": "MRS",
                         "firstName": "Anne",
                         "surname": "Whitfield",
-                        "trustName": "",
-                        "corpName": "",
                         "dateOfBirth": "1981-04-11"
                       }
                     ],
@@ -9811,6 +9803,10 @@ paths:
                             "amount": 10000,
                             "currency": "GBP"
                           },
+                            "fee": {
+                              "amount": 425.50,
+                              "percentage": 0
+                            },
                           "model": {
                             "type": "MULTIPLE_INVESTMENT_STRATEGY",
                             "allocations": [
@@ -9826,11 +9822,7 @@ paths:
                                 "accountId": "HW00013451D",
                                 "percentage": 20
                               }
-                            ],
-                            "fee": {
-                              "amount": 425.50,
-                              "percentage": 0
-                            }
+                            ]
                           }
                         }
                       ]
@@ -9883,6 +9875,10 @@ paths:
                             "amount": 10000,
                             "currency": "GBP"
                           },
+                            "fee": {
+                              "amount": 425.50,
+                              "percentage": 0
+                            },
                           "model": {
                             "type": "MULTIPLE_INVESTMENT_STRATEGY",
                             "allocations": [
@@ -9898,11 +9894,7 @@ paths:
                                 "accountId": "HW00013451D",
                                 "percentage": 20
                               }
-                            ],
-                            "fee": {
-                              "amount": 425.50,
-                              "percentage": 0
-                            }
+                            ]
                           }
                         }
                       ]
@@ -14215,6 +14207,9 @@ components:
           type: string
           description: The currency associated with the fee.
           example: GBP
+          minLength: 3
+          maxLength: 3
+          
         vatIncluded:
           type: boolean
           description: Whether the fee includes VAT.
@@ -14233,6 +14228,8 @@ components:
           description: If the account is in a fee group for this fee type, the total value of the other accounts in the group.
           type: number
           example: 1000
+    
+
 
     IllustrationNPAccountTransfer:
       description: Transfers into the account from an external provider
@@ -14260,8 +14257,10 @@ components:
       properties:
         accountId:
            type: string
-           example: "ACC123456"
+           example: "HW00013567A"
            description: Unique SS&C Wealth Platform Account identifier
+           minLength: 11
+           maxLength: 11
         investors:
           type: array
           description: |
@@ -14270,25 +14269,42 @@ components:
             type: object
             properties:
               title:
-                type: string
-                example: "Miss"
-                description: The investor's title.
+                enum:
+                  - MR
+                  - MASTER
+                  - SIR
+                  - MRS
+                  - MISS
+                  - MS
+                  - PROF
+                  - DR
+                  - REV
+                  - LORD
+                  - LADY
+                  - OTHER 
+                description: The investor's title. 
               firstName:
                 type: string
                 example: "Anne"
                 description: The investor's first name.
+                maxLength: 30
               surname:
                 type: string
                 example: "Winfield"
                 description: The investor's surname.
+                maxLength: 25
               trustName:
                 type: string
                 example: "ABC Family Trust"
-                description: The name of the trust, if applicable.
+                description: The name of the trust, if applicable.             
+                maxLength: 70
+                minLength: 1
               corpName:
                 type: string
                 example: "ABC Holding LTD"
                 description: The name of the corporation, if applicable.
+                maxLength: 70
+                minLength: 1
               dateOfBirth:
                 type: string
                 format: date
@@ -14312,10 +14328,12 @@ components:
                   description: Unique SS&C Wealth Platform Product identifier.
                   type: string
                   example: GIA
+                  maxLength: 3
                 currency:
                   description: The currency associated with the account.
                   type: string
                   example: GBP
+                  maxLength: 3
             model:
               $ref: '#/components/schemas/IllustrationModel'
             moneyMovements:
@@ -14372,7 +14390,8 @@ components:
           example: ADVISER_ANNUAL
         code:
           type: string
-          description: Unique identifier for a pre-configured set of tiered rates.          
+          description: Unique identifier for a pre-configured set of tiered rates.
+          maxLength: 6
           example: AFGVCD
         amount:
           type: number
@@ -14598,25 +14617,23 @@ components:
                   - LORD
                   - LADY
                   - OTHER 
-                description: The investor's title. 
+                description: The investor's title.
               firtName:
                 type: string
                 maxLength: 25
                 example: "Anne"
-                description: The investor's first name. 
+                description: The investor's first name.
               surname:
                 type: string
                 maxLength: 25
                 example: "Winfield"
-                description: The investor's surname. 
+                description: The investor's surname.
               dateOfBirth:
                 type: string
                 format: date
                 example: "2000-10-10"
                 description: |
-                  The investor's date of birth.
-
-                  Required if account.id is not provided. Must not be in the past. Must not be more than 120 years ago.    
+                  The investor's date of birth. Required if account.id is not provided. Must not be in the future. Must not be more than 120 years ago.    
         illustrationDetails:
           type: object
           description: |
@@ -14628,9 +14645,7 @@ components:
               maximum: 120
               example: 65
               description: |
-                The retirement age assumed when calculating pension benefits.
-
-                Required if account.id is not provided.
+                The retirement age assumed when calculating pension benefits.Required if account. Must be 1 year older than the current age of the investor.
             account:
               type: object
               description: Account details for the illustration
@@ -14639,10 +14654,10 @@ components:
                 productId:
                   type: string
                   description: |
-                    Unique SS&C Wealth Platform Product identifier.
-
-                    Required if account.id is not provided.
+                    Unique SS&C Wealth Platform Product identifier. Required if account.id is not provided.
                   example: GIA
+                  maxLength: 3
+
 
             model:
               $ref: '#/components/schemas/IllustrationModel'
@@ -14931,6 +14946,8 @@ components:
           description: Unique SS&C Wealth Platform Model identifier.
           type: string
           example: HW000000090
+          maxLength: 11
+          minLength: 11
 
         name:
           format: string
@@ -14953,6 +14970,8 @@ components:
           description: Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId from the token will be used.
           type: string
           example: HUBWISE
+          maxLength: 7
+          minLength: 7
 
         date:
           description: The model version date. If not provided, the most recent version will be used.
@@ -15074,12 +15093,23 @@ components:
           example: 10
 
     IllustrationMovementFee:
-      allOf:
-        - $ref: '#/components/schemas/IllustrationTransferFee'
-        - type: object
-          properties:
-            instalmentPlan:
-              $ref: "#/components/schemas/IllustrationFeeInstalmentPlan"
+      description: A fee associated with this money movement.
+      type: object
+      additionalProperties: false
+      properties:
+        amount:
+          description: Amount-based fee value.
+          type: number
+          example: 5
+        percentage:
+          description: The rate for a percentage-based fee.
+          maximum: 100
+          minimum: 0
+          type: number
+          example: 5
+        instalmentPlan:
+          $ref: "#/components/schemas/IllustrationFeeInstalmentPlan"
+
 
     IllustrationTransferFee:
       description: A fee associated with this money movement or transfer.
