@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.23
+  version: 0.8.24
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -9287,11 +9287,9 @@ paths:
                   {
                     "investors": [
                       {
-                        "title": "Miss",
+                        "title": "MISS",
                         "firstName": "Anne",
                         "surname": "Winfield",
-                        "trustName": "",
-                        "corpName": "",
                         "dateOfBirth": "1990-05-15"
                       }
                     ],
@@ -9360,11 +9358,9 @@ paths:
                   {
                     "investors": [
                       {
-                        "title": "Miss",
+                        "title": "MISS",
                         "firstName": "Anne",
                         "surname": "Winfield",
-                        "trustName": "",
-                        "corpName": "",
                         "dateOfBirth": "1990-05-15"
                       }
                     ],
@@ -9546,11 +9542,9 @@ paths:
                   {
                     "investors": [
                       {
-                        "title": "Mr",
+                        "title": "MR",
                         "firstName": "John",
                         "surname": "Taylor",
-                        "trustName": "",
-                        "corpName": "",
                         "dateOfBirth": "1979-09-15"
                       }
                     ],
@@ -9644,16 +9638,14 @@ paths:
                     }
                   }
               Ex6:
-                summary: Generate an anonymous MIS Illustration for non pension product with multiple models and individual instruments. Additional override allocation provided for transfer.
+                summary: Generate an anonymous MIS Illustration for non pension product with override allocations provided for transfer
                 value:
                   {
                     "investors": [
                       {
-                        "title": "Mrs",
+                        "title": "MRS",
                         "firstName": "Anne",
                         "surname": "Whitfield",
-                        "trustName": "",
-                        "corpName": "",
                         "dateOfBirth": "1981-04-11"
                       }
                     ],
@@ -9748,7 +9740,7 @@ paths:
                     }
                   }
               Ex7:
-                summary: Generate an Illustration for an existing non pension product with add/amend/remove changes, including explicit allocations for movement and transfer, overriding primary allocation.
+                summary: Generate an Illustration for an existing MIS non pension product including override allocations
                 value:
                   {
                     "accountId": "HW00013451A",
@@ -9811,6 +9803,10 @@ paths:
                             "amount": 10000,
                             "currency": "GBP"
                           },
+                            "fee": {
+                              "amount": 425.50,
+                              "percentage": 0
+                            },
                           "model": {
                             "type": "MULTIPLE_INVESTMENT_STRATEGY",
                             "allocations": [
@@ -9826,18 +9822,14 @@ paths:
                                 "accountId": "HW00013451D",
                                 "percentage": 20
                               }
-                            ],
-                            "fee": {
-                              "amount": 425.50,
-                              "percentage": 0
-                            }
+                            ]
                           }
                         }
                       ]
                     }
                   }
               Ex8:
-                summary: Generate an Illustration for an existing non pension product with add/amend/remove changes, including a money movement, using the primary account allocation and transfer with specific allocations, which would override the allocations stored at the primary account level.
+                summary: Generate an Illustration for an existing MIS non pension product using a mix of primary and override allocations
                 value:
                   {
                     "accountId": "HW00013451A",
@@ -9883,6 +9875,10 @@ paths:
                             "amount": 10000,
                             "currency": "GBP"
                           },
+                            "fee": {
+                              "amount": 425.50,
+                              "percentage": 0
+                            },
                           "model": {
                             "type": "MULTIPLE_INVESTMENT_STRATEGY",
                             "allocations": [
@@ -9898,11 +9894,7 @@ paths:
                                 "accountId": "HW00013451D",
                                 "percentage": 20
                               }
-                            ],
-                            "fee": {
-                              "amount": 425.50,
-                              "percentage": 0
-                            }
+                            ]
                           }
                         }
                       ]
@@ -10080,7 +10072,7 @@ paths:
                     }
                   }
               Ex3:
-                summary: New MIS pension account with regular contribution and flexi access transfer (no fees). MIS Allocations set at primary account level.
+                summary: New MIS pension account. MIS Allocations set at primary account level, applying to all movements and transfers.
                 value:
                   {
                     "illustrationType": "STANDARD_ILLUSTRATION",
@@ -10156,7 +10148,7 @@ paths:
                     }
                   }
               Ex4:
-                summary: New MIS pension account with regular contribution and flexi access transfer (no fees). MIS Allocations set at primary account level, but override allocations provided for the transfer.
+                summary: New MIS pension account. MIS Allocations set at primary account level, but override allocations provided for a transfer.
                 value:
                   {
                     "illustrationType": "STANDARD_ILLUSTRATION",
@@ -11380,7 +11372,6 @@ components:
         notificationPreferences:
           $ref: "#/components/schemas/Notification"
 
-
     InstrumentDetails:
       required:
         - isin
@@ -11725,7 +11716,6 @@ components:
           example: HWI04003219
         tenantId:
           maxLength: 7
-          
           type: string
           description: Unique SS&C Wealth Platform Tenant identifier
           format: string
@@ -11733,7 +11723,6 @@ components:
           example: HUBWISE
         adviserId:
           maxLength: 7
-          
           type: string
           description: Unique SS&C Wealth Platform Adviser identifier
           format: string
@@ -14117,32 +14106,25 @@ components:
       type: object
       additionalProperties: false
       properties:
-      
         id:
           format: int64
           description: Unique SS&C Wealth Platform Money Movement identifier.
           type: integer
           example: 2
-        
         type:
           description: >-
             The type of money movement being specified, the API can support payments into and out
-            of the account.
+            of the account. Required if no money movement id is provided.
           enum:
             - CONTRIBUTIONS
             - WITHDRAWALS
-            - UFPLS
-            - FLEXI_ACCESS_INCOME
-            - FLEXI_ACCESS_PCLS
           type: string
           example: CONTRIBUTIONS
-
         model:
           $ref: '#/components/schemas/IllustrationModel'
-        
         frequency:
           description: >-
-            The frequency of this specific money movement.
+            The frequency of this specific money movement. Required if no money movement id is provided.
           enum:
             - ANNUALLY
             - MONTHLY
@@ -14154,7 +14136,7 @@ components:
         nextDate:
           format: date
           description: >-
-            The intended start date of the money movement. 
+            The intended start date of the money movement. Required if no money movement id is provided and frequenct is not ONE_OFF.
           type: string
           example: "2025-01-22"
         endDate:
@@ -14162,25 +14144,25 @@ components:
           description: >-
               The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
           type: string
-        
         investmentInstruction:
           description: >-
-            Whether a contribution should be invested immediately or held as cash.
+            Whether a contribution should be invested immediately or held as cash. Required if no money movement id is provided.
           enum:
             - LEAVE_IN_CASH
             - INVEST_IN_MODEL
           type: string
           example: INVEST_IN_MODEL
-        
         value:
           $ref: "#/components/schemas/IllustrationValue"
-        
         fee:
           $ref: "#/components/schemas/IllustrationMovementFee"  
     
     IllustrationNPAccountFee:
-      description: Account level fees not associated with a specific money movement or transfer.
+      description: Account level fees not associated with a specific money movement or transfer. 1 to 10 fees can be provided. Required when creating a new illustration without an account ID, or when illustrating proposed changes to an existing account.
       additionalProperties: false
+      required:
+        - type
+        - vatIncluded
       properties:
         id:
           type: integer
@@ -14215,6 +14197,8 @@ components:
           type: string
           description: The currency associated with the fee.
           example: GBP
+          minLength: 3
+          maxLength: 3
         vatIncluded:
           type: boolean
           description: Whether the fee includes VAT.
@@ -14241,7 +14225,7 @@ components:
       properties:
         investmentInstruction:
           type: string
-          description: Whether a transfer should be invested immediately or held as cash.
+          description: Whether a transfer should be invested immediately or held as cash. Required if transfer id is not provided.
           enum:
             - INVEST_IN_MODEL
             - LEAVE_IN_CASH
@@ -14252,7 +14236,6 @@ components:
           $ref: "#/components/schemas/IllustrationTransferFee" 
         model:
           $ref: '#/components/schemas/IllustrationModel'     
-              
 
     IllustrationNPRequest:
       type: object
@@ -14260,8 +14243,10 @@ components:
       properties:
         accountId:
            type: string
-           example: "ACC123456"
+           example: "HW00013567A"
            description: Unique SS&C Wealth Platform Account identifier
+           minLength: 11
+           maxLength: 11
         investors:
           type: array
           description: |
@@ -14270,25 +14255,42 @@ components:
             type: object
             properties:
               title:
-                type: string
-                example: "Miss"
-                description: The investor's title.
+                enum:
+                  - MR
+                  - MASTER
+                  - SIR
+                  - MRS
+                  - MISS
+                  - MS
+                  - PROF
+                  - DR
+                  - REV
+                  - LORD
+                  - LADY
+                  - OTHER 
+                description: The investor's title. 
               firstName:
                 type: string
                 example: "Anne"
                 description: The investor's first name.
+                maxLength: 30
               surname:
                 type: string
                 example: "Winfield"
                 description: The investor's surname.
+                maxLength: 25
               trustName:
                 type: string
                 example: "ABC Family Trust"
-                description: The name of the trust, if applicable.
+                description: The name of the trust, if applicable.             
+                maxLength: 70
+                minLength: 1
               corpName:
                 type: string
                 example: "ABC Holding LTD"
                 description: The name of the corporation, if applicable.
+                maxLength: 70
+                minLength: 1
               dateOfBirth:
                 type: string
                 format: date
@@ -14312,10 +14314,12 @@ components:
                   description: Unique SS&C Wealth Platform Product identifier.
                   type: string
                   example: GIA
+                  maxLength: 3
                 currency:
                   description: The currency associated with the account.
                   type: string
                   example: GBP
+                  maxLength: 3
             model:
               $ref: '#/components/schemas/IllustrationModel'
             moneyMovements:
@@ -14352,8 +14356,11 @@ components:
               $ref: '#/components/schemas/IllustrationDocument'  
 
     IllustrationPensionAccountFee:
-      description: Account level fees not associated with a specific money movement or transfer.
+      description: Account level fees not associated with a specific money movement or transfer. 1 fee code, amount or percentage must be provided
       additionalProperties: false
+      required:
+        - type
+        - vatIncluded
       properties:
         id:
           type: integer
@@ -14372,7 +14379,8 @@ components:
           example: ADVISER_ANNUAL
         code:
           type: string
-          description: Unique identifier for a pre-configured set of tiered rates.          
+          description: Unique identifier for a pre-configured set of tiered rates.
+          maxLength: 6
           example: AFGVCD
         amount:
           type: number
@@ -14404,7 +14412,7 @@ components:
     IllustrationPensionAccountMovement:
       type: object
       additionalProperties: false
-      description: Contributions and withdrawals associated with the illustration.
+      description: Contributions and withdrawals associated with the illustration. 
       properties:
         id:
           format: int64
@@ -14413,9 +14421,7 @@ components:
           example: 2
         type:
           description: >-
-            The type of money movement being illustrated, the API can support payments into and out of pension accounts.
-
-            Required if moneyMovements.id is not provided.
+            The type of money movement being illustrated, the API can support payments into and out of pension accounts.Required if no moneyMovements.id is provided. 
           enum:
             - CONTRIBUTIONS
             - UFPLS
@@ -14434,12 +14440,9 @@ components:
             - EMPLOYER
           type: string
           example: SELF
-
         frequency:
           description: >-
-            The frequency of this specific money movement.
-
-            Required if moneyMovements.id is not provided.
+            The frequency of this specific money movement. Required if moneyMovements.id is not provided.
           enum:
             - ANNUALLY
             - MONTHLY
@@ -14448,45 +14451,34 @@ components:
             - ONE_OFF
           type: string
           example: ONE_OFF
-
         nextDate:
           format: date
           description: >-
-            The intended start date of the money movement. 
-
-            Required if moneyMovements.id is not provided and moneyMovements.frequency is not `ONE_OFF`.
+            The intended start date of the money movement. Required if moneyMovements.id is not provided and moneyMovements.frequency is not `ONE_OFF`.
           type: string
           example: "2026-01-07"
-
         endDate:
           format: date
           description: >-
               The date when the movement is scheduled to stop. This is typically used for regular contributions or withdrawals.
           type: string
           example: "2026-01-09"
-
         isMaximum:
           type: boolean
           description: >-
               Set to true to illustrate the maximum available Flexi Access Income, PCLS. Will always be false for UFPLS.
-          
         investmentInstruction:
           description: >-
-            Whether a contribution should be invested immediately or held as cash.
-
-            Required if moneyMovements.id is not provided.
+            Whether a contribution should be invested immediately or held as cash. Required if moneyMovements.id is not provided.
           enum:
             - LEAVE_IN_CASH
             - INVEST_IN_MODEL
           type: string
           example: INVEST_IN_MODEL
-        
         value:
-          $ref: '#/components/schemas/IllustrationPensionValue'
-        
+          $ref: '#/components/schemas/IllustrationValue'
         fee:
           $ref: "#/components/schemas/IllustrationMovementFee"
-
         model:
           $ref: '#/components/schemas/IllustrationModel' 
 
@@ -14497,7 +14489,6 @@ components:
         - type
         - investmentInstruction
       properties:
-        
         type:
           description: The type of pension being transferred.
           enum:
@@ -14506,7 +14497,6 @@ components:
             - PRE_RETIREMENT
           type: string
           example: CAPPED
-
         investmentInstruction:
           description: Whether a transfer should be invested immediately or held as cash.
           enum:
@@ -14514,37 +14504,30 @@ components:
             - INVEST_IN_MODEL
           type: string
           example: LEAVE_IN_CASH
-
         value:
-          $ref: "#/components/schemas/IllustrationPensionValue"
-
+          $ref: "#/components/schemas/IllustrationValue"
         yearToDatePayments:
           description: Total income paid during the current pension year. Only applicable for CAPPED transfers.
           type: number
           example: 10000
-
         withdrawalReviewDate:
           description: |
             The next date when the capped income limit will be reviewed. Must not be in the past. Only applicable for CAPPED transfers.
           type: string
           format: date
           example: "2000-10-10"
-            
         gadMaximum:
           description: The maximum income that can be taken this year. Only applicable for CAPPED transfers.
           type: number
           example: 15000
-
         nextYearGadMaximum:
           description: The maximum income that can be taken next year. Only applicable for CAPPED transfers.
           type: number
           example: 15000
-
         preaDayDrawdown:
           description: Whether a drawdown arrangement started before 2006-04-06. Only applicable for CAPPED transfers.
           type: boolean
           example: true
-
         gadReviewPeriod:
           description: Number of years between reviews of the maximum income allowed. Only applicable for CAPPED transfers.
           type: number
@@ -14552,10 +14535,8 @@ components:
             - 1
             - 3
           example: 1
-
         fee:
           $ref: "#/components/schemas/IllustrationTransferFee"
-
         model:
           $ref: '#/components/schemas/IllustrationModel'
 
@@ -14565,7 +14546,7 @@ components:
       properties:
         illustrationType:
           type: string
-          description: The type of pension benefit illustration being requested. Defaults to STANDARD_ILLUSTRATION if none provided.
+          description: The type of pension benefit illustration being requested. Defaults to STANDARD_ILLUSTRATION if not provided.
           enum:
             - SMPI
             - DRAWDOWN_REVIEW
@@ -14598,25 +14579,23 @@ components:
                   - LORD
                   - LADY
                   - OTHER 
-                description: The investor's title. 
+                description: The investor's title.
               firtName:
                 type: string
                 maxLength: 25
                 example: "Anne"
-                description: The investor's first name. 
+                description: The investor's first name.
               surname:
                 type: string
                 maxLength: 25
                 example: "Winfield"
-                description: The investor's surname. 
+                description: The investor's surname.
               dateOfBirth:
                 type: string
                 format: date
                 example: "2000-10-10"
                 description: |
-                  The investor's date of birth.
-
-                  Required if account.id is not provided. Must not be in the past. Must not be more than 120 years ago.    
+                  The investor's date of birth. Required if account.id is not provided. Must not be in the future. Must not be more than 120 years ago.    
         illustrationDetails:
           type: object
           description: |
@@ -14628,9 +14607,7 @@ components:
               maximum: 120
               example: 65
               description: |
-                The retirement age assumed when calculating pension benefits.
-
-                Required if account.id is not provided.
+                The assumed retirement age. Required if account.id is not provided. Required if account. Must be 1 year older than the current age of the investor.
             account:
               type: object
               description: Account details for the illustration
@@ -14639,26 +14616,21 @@ components:
                 productId:
                   type: string
                   description: |
-                    Unique SS&C Wealth Platform Product identifier.
-
-                    Required if account.id is not provided.
+                    Unique SS&C Wealth Platform Product identifier. Required if account.id is not provided.
                   example: GIA
-
+                  maxLength: 3
             model:
               $ref: '#/components/schemas/IllustrationModel'
-
             moneyMovements:
               description: Contributions and Withdrawals.
               type: array
               items:
                 $ref: "#/components/schemas/IllustrationPensionAccountMovement"
-                
             transfers:
               description: Pension transfers into the account from an external provider.
               type: array
               items:
                 $ref: "#/components/schemas/IllustrationPensionAccountTransfer"
-                
             fees:
               description: Account level fees not associated with a specific money movement or transfer.
               type: array
@@ -14679,11 +14651,10 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/IllustrationResult'
-
             document:
               $ref: '#/components/schemas/IllustrationDocument'
     
-    IllustrationPensionValue:
+    IllustrationValue:
       required:
         - amount
       type: object
@@ -14691,9 +14662,14 @@ components:
       properties:
         amount:
           format: double
-          description: Monetary value of the movement or transfer.
+          description: Monetary value of the movement or transfer. Required if movement.id is not provided.
           type: number
           example: 15000
+        currency:
+            description: The currency in which to perform the instruction. Must match the base currency of the account.
+            type: string
+            maxLength: 3
+            example: GBP
 
     IllustrationResult:
       type: object
@@ -14709,26 +14685,22 @@ components:
           x-enum-descriptions:
             - New
             - Existing
-
         summary:
           type: array
           items:
             $ref: '#/components/schemas/IllustrationSummary'
-
         reductionInYield:
           type: array
           items:
             $ref: '#/components/schemas/IllustrationReductionInYield'
-
         deductions:
           type: array
           items:
             $ref: '#/components/schemas/IllustrationDeduction'
-
         adviserFees:
           type: array
           items:
-            $ref: '#/components/schemas/IllustratioAdviserFee'
+            $ref: '#/components/schemas/IllustrationAdviserFee'
 
     IllustrationSummary:
       type: object
@@ -14745,37 +14717,30 @@ components:
             - Low
             - Medium
             - High
-
         periodStartDate:
           type: string
           format: date
           example: "2026-01-01"
-
         periodEndDate:
           type: string
           format: date
           example: "2026-12-31"
-
         openingFundValue:
           type: number
           format: double
           example: 10000
-
         newFundInvestment:
           type: number
           format: double
           example: 500
-
         totalIncome:
           type: number
           format: double
           example: 200
-
         totalIncomeToDate:
           type: number
           format: double
           example: 200
-
         closingFundValue:
           type: number
           format: double
@@ -14792,12 +14757,10 @@ components:
           example: MEDIUM
           x-enum-descriptions:
             - Medium
-
         growthRatePercentage:
           type: number
           format: double
           example: 5.0
-
         reductionInYieldPercentage:
           type: number
           format: double
@@ -14814,56 +14777,46 @@ components:
           example: MEDIUM
           x-enum-descriptions:
             - Medium
-
         date:
           type: string
           format: date
           example: "2026-12-31"
-
         year:
           type: integer
           example: 1
-
         isProjectionEnd:
           type: boolean
           example: false
-
         inflowToDate:
           type: number
           format: double
           example: 1000
-
         outflowToDate:
           type: number
           format: double
           example: 200
-
         actualDeductionsToDate:
           type: number
           format: double
           example: 150
-
         effectOfDeductionsToDate:
           type: number
           format: double
           example: 75
-
         yearEndValue:
           type: number
           format: double
           example: 12000
-
         yearEndValueWithoutCharges:
           type: number
           format: double
           example: 12300
-
         yearEndValueAfterProductCharges:
           type: number
           format: double
           example: 11900
 
-    IllustratioAdviserFee:
+    IllustrationAdviserFee:
       type: object
       additionalProperties: false
       properties:
@@ -14874,25 +14827,20 @@ components:
           example: MEDIUM
           x-enum-descriptions:
             - Medium
-
         date:
           type: string
           format: date
           example: "2026-12-31"
-
         year:
           type: integer
           example: 1
-
         isProjectionEnd:
           type: boolean
           example: false
-
         initialAdviserFees:
           type: number
           format: double
           example: 250
-
         ongoingAdviserFees:
           type: number
           format: double
@@ -14906,7 +14854,6 @@ components:
           type: string
           format: byte
           description: Base64 encoded PDF document.
-
         totalPages:
           type: integer
           example: 12
@@ -14926,48 +14873,46 @@ components:
         must sum to 100.
       additionalProperties: false
       properties:
-
         id:
-          description: Unique SS&C Wealth Platform Model identifier.
+          description: Unique SS&C Wealth Platform Model identifier. Required unless instruments are provided.
           type: string
           example: HW000000090
-
+          maxLength: 11
+          minLength: 11
         name:
           format: string
           description: >-
-            Display name for the MIS strategy. Applies to MIS accounts only.
+            Display name for the MIS strategy. Applies to MIS accounts only. Required for MIS accounts if no account.id is provided.
           maxLength: 100
           minLength: 1
           type: string
           example: Sam John MIS Strategy
-
         type:
           description: >-
-            The type of investment strategy. Use `MULTIPLE_INVESTMENT_STRATEGY` for MIS accounts.
+            The type of investment strategy. Use `MULTIPLE_INVESTMENT_STRATEGY` for MIS accounts. Required for MIS accounts if no account.id is provided.
           type: string
           enum:
             - MULTIPLE_INVESTMENT_STRATEGY
           example: MULTIPLE_INVESTMENT_STRATEGY
-
         providerId:
           description: Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId from the token will be used.
           type: string
           example: HUBWISE
-
+          maxLength: 7
+          minLength: 7
         date:
           description: The model version date. If not provided, the most recent version will be used.
           type: string
           format: date
           example: '2026-04-28'
-
         allocations: 
           description: Either a set of individual instruments for a non-MIS account or an array of model and instrument allocations for a Multiple Investment Strategy (MIS) account. Each entry
-            specifies either a sub-account model or a direct instrument list, along with its percentage of the total portfolio. 
+            specifies either a sub-account model or a direct instrument list, along with its percentage of the total portfolio. Required if no model.id is provided.
           type: array
           items:
-            $ref: "#/components/schemas/IllustrationMisModelAllocation"
+            $ref: "#/components/schemas/IllustrationModelAllocation"
 
-    IllustrationMisModelAllocation:
+    IllustrationModelAllocation:
       description: >-
         Defines a single sub-account allocation within a Multiple Investment Strategy (MIS).
         Each allocation creates a sub-account for either a specified model or a set of
@@ -14989,7 +14934,7 @@ components:
           format: string
           description: >-
             Unique SS&C Wealth Platform Model identifier for this sub-account allocation.
-            Required when `instruments` is not provided.
+            At least 1 Required for MIS accounts.
           maxLength: 11
           minLength: 11
           type: string
@@ -15029,11 +14974,11 @@ components:
           type: array
           minItems: 1
           items:
-            $ref: "#/components/schemas/IllustrationMisInstrument"
+            $ref: "#/components/schemas/IllustrationInstrument"
 
-    IllustrationMisInstrument:
+    IllustrationInstrument:
       description: >-
-        Defines a directly held instrument within a MIS instrument-based allocation.
+        Defines a directly held instrument within a MIS instrument-based allocation or when no model provided for no MIS account (required)
       required:
         - isin
         - exchange
@@ -15074,12 +15019,22 @@ components:
           example: 10
 
     IllustrationMovementFee:
-      allOf:
-        - $ref: '#/components/schemas/IllustrationTransferFee'
-        - type: object
-          properties:
-            instalmentPlan:
-              $ref: "#/components/schemas/IllustrationFeeInstalmentPlan"
+      description: A fee associated with this money movement.
+      type: object
+      additionalProperties: false
+      properties:
+        amount:
+          description: Amount-based fee value.
+          type: number
+          example: 5
+        percentage:
+          description: The rate for a percentage-based fee.
+          maximum: 100
+          minimum: 0
+          type: number
+          example: 5
+        instalmentPlan:
+          $ref: "#/components/schemas/IllustrationFeeInstalmentPlan"
 
     IllustrationTransferFee:
       description: A fee associated with this money movement or transfer.
@@ -15110,23 +15065,6 @@ components:
           type: integer
           example: 12
 
-    IllustrationValue:
-      required:
-        - amount
-        - currency
-      type: object
-      additionalProperties: false
-      properties:
-        amount:
-          format: double
-          description: Monetary value of the movement or transfer.
-          type: number
-          example: 15000
-        currency:
-          description: The currency associated with the money movement or transfer.
-          maxLength: 3
-          type: string
-          example: GBP
 
   examples:
 

@@ -1,5 +1,10 @@
 # hw-api-specs
 
+Changelog for v0.8.24 API spec
+
+- Added MIS examples to pension and non-pension illutrations endpoints
+- clean up illustration endpoints
+
 Changelog for v0.8.23 API spec
 
 - Removed testMode query param throughout
@@ -7,7 +12,6 @@ Changelog for v0.8.23 API spec
 - Removed nullable fields throughout
 - Changed account status XX3 to TRADING_SUSPENDED_DATA
 - Remove 204 responses in get fees, money movements, third parties and transfers endpoints 
-- Added MIS examples to pension and non-pension illutrations endpoints
 
 Changelog for v0.8.22 API spec
 
