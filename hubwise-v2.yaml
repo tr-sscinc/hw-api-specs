@@ -14700,7 +14700,7 @@ components:
         adviserFees:
           type: array
           items:
-            $ref: '#/components/schemas/IllustratioAdviserFee'
+            $ref: '#/components/schemas/IllustrationAdviserFee'
 
     IllustrationSummary:
       type: object
@@ -14816,7 +14816,7 @@ components:
           format: double
           example: 11900
 
-    IllustratioAdviserFee:
+    IllustrationAdviserFee:
       type: object
       additionalProperties: false
       properties:
