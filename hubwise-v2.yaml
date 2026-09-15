@@ -9638,7 +9638,7 @@ paths:
                     }
                   }
               Ex6:
-                summary: Generate an anonymous MIS Illustration for non pension product with override allocations provided for transfer
+                summary: Generate an anonymous MIS Illustration for non pension product with override allocations and one-off adviser fee.
                 value:
                   {
                     "investors": [
@@ -9714,8 +9714,6 @@ paths:
                             "amount": 115000,
                             "currency": "GBP"
                           },
-                          "model": {
-                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
                             "allocations": [
                               {
                                 "modelId": "HW000000045",
@@ -9729,12 +9727,27 @@ paths:
                                 "percentage": 50,
                                 "date": "2026-01-01"
                               }
-                            ]
-                          },
+                            ],
                           "fee": {
                             "amount": 550.95,
                             "percentage": 0
                           }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "type": "ADVISER_ONE_OFF",
+                          "amount": 1500,
+                          "currency": "GBP",
+                          "vatIncluded": true,
+                          "allocations": [
+                          {
+                            "modelId": "HW000000045",
+                            "providerId": "HUBWISE",
+                            "percentage": 100,
+                            "date": "2026-01-01"
+                          }
+                          ]
                         }
                       ]
                     }
@@ -9758,23 +9771,20 @@ paths:
                             "amount": 1200,
                             "currency": "GBP"
                           },
-                          "model": {
-                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
-                            "allocations": [
-                              {
-                                "modelId": "HW000000045",
-                                "providerId": "HUBWISE",
-                                "percentage": 50,
-                                "date": "2026-01-01"
-                              },
-                              {
-                                "modelId": "HW000000078",
-                                "providerId": "HUBWISE",
-                                "percentage": 50,
-                                "date": "2026-01-01"
-                              }
-                            ]
-                          },
+                          "allocations": [
+                            {
+                              "modelId": "HW000000045",
+                              "providerId": "HUBWISE",
+                              "percentage": 50,
+                              "date": "2026-01-01"
+                            },
+                            {
+                              "modelId": "HW000000078",
+                              "providerId": "HUBWISE",
+                              "percentage": 50,
+                              "date": "2026-01-01"
+                            }
+                          ],
                           "fee": {
                             "amount": 0.15,
                             "percentage": 0,
@@ -9807,8 +9817,6 @@ paths:
                               "amount": 425.50,
                               "percentage": 0
                             },
-                          "model": {
-                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
                             "allocations": [
                               {
                                 "accountId": "HW00013451B",
@@ -9823,7 +9831,6 @@ paths:
                                 "percentage": 20
                               }
                             ]
-                          }
                         }
                       ]
                     }
@@ -9879,8 +9886,6 @@ paths:
                               "amount": 425.50,
                               "percentage": 0
                             },
-                          "model": {
-                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
                             "allocations": [
                               {
                                 "accountId": "HW00013451B",
@@ -9895,7 +9900,7 @@ paths:
                                 "percentage": 20
                               }
                             ]
-                          }
+
                         }
                       ]
                     }
@@ -10148,7 +10153,7 @@ paths:
                     }
                   }
               Ex4:
-                summary: New MIS pension account. MIS Allocations set at primary account level, but override allocations provided for a transfer.
+                summary: New MIS pension account. MIS Allocations set at primary account level, but override allocations provided. One-Off Adviser Fee.
                 value:
                   {
                     "illustrationType": "STANDARD_ILLUSTRATION",
@@ -10219,8 +10224,6 @@ paths:
                           "value": {
                             "amount": 25000.00
                           },
-                          "model": {
-                            "type": "MULTIPLE_INVESTMENT_STRATEGY",
                             "allocations": [
                               {
                                 "modelId": "HW000000045",
@@ -10234,12 +10237,26 @@ paths:
                                 "percentage": 50,
                                 "date": "2026-01-01"
                               }
-                            ]
-                          },
+                            ],
                           "fee": {
                             "amount": 550.95,
                             "percentage": 0
                           }
+                        }
+                      ],
+                      "fees": [
+                        {
+                          "type": "ADVISER_ONE_OFF",
+                          "amount": 1500,
+                          "vatIncluded": true,
+                          "allocations": [
+                          {
+                            "modelId": "HW000000045",
+                            "providerId": "HUBWISE",
+                            "percentage": 100,
+                            "date": "2026-01-01"
+                          }
+                          ]
                         }
                       ]
                     }
@@ -14120,8 +14137,6 @@ components:
             - WITHDRAWALS
           type: string
           example: CONTRIBUTIONS
-        model:
-          $ref: '#/components/schemas/IllustrationModel'
         frequency:
           description: >-
             The frequency of this specific money movement. Required if no money movement id is provided.
@@ -14156,6 +14171,8 @@ components:
           $ref: "#/components/schemas/IllustrationValue"
         fee:
           $ref: "#/components/schemas/IllustrationMovementFee"  
+        allocations:
+          $ref: "#/components/schemas/IllustrationMovementTransferAllocation"
     
     IllustrationNPAccountFee:
       description: Account level fees not associated with a specific money movement or transfer. 1 to 10 fees can be provided. Required when creating a new illustration without an account ID, or when illustrating proposed changes to an existing account.
@@ -14217,6 +14234,13 @@ components:
           description: If the account is in a fee group for this fee type, the total value of the other accounts in the group.
           type: number
           example: 1000
+        allocations:
+          description: >-
+            Used where a fee is to be allocated to one or more specified sub-accounts in an MIS structure. 
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/IllustrationFeeAllocation"
 
     IllustrationNPAccountTransfer:
       description: Transfers into the account from an external provider
@@ -14234,8 +14258,8 @@ components:
           $ref: "#/components/schemas/IllustrationValue"
         fee:
           $ref: "#/components/schemas/IllustrationTransferFee" 
-        model:
-          $ref: '#/components/schemas/IllustrationModel'     
+        allocations:
+          $ref: "#/components/schemas/IllustrationMovementTransferAllocation"
 
     IllustrationNPRequest:
       type: object
@@ -14408,6 +14432,13 @@ components:
           description: If the account is in a fee group for this fee type, the total value of the other accounts in the group.
           type: number
           example: 1000
+        allocations:
+          description: >-
+            Used where a fee is to be allocated to one or more specified sub-accounts in an MIS structure. 
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/IllustrationFeeAllocation"
     
     IllustrationPensionAccountMovement:
       type: object
@@ -14479,8 +14510,8 @@ components:
           $ref: '#/components/schemas/IllustrationValue'
         fee:
           $ref: "#/components/schemas/IllustrationMovementFee"
-        model:
-          $ref: '#/components/schemas/IllustrationModel' 
+        allocations:
+          $ref: "#/components/schemas/IllustrationMovementTransferAllocation"
 
     IllustrationPensionAccountTransfer:
       type: object
@@ -14537,8 +14568,8 @@ components:
           example: 1
         fee:
           $ref: "#/components/schemas/IllustrationTransferFee"
-        model:
-          $ref: '#/components/schemas/IllustrationModel'
+        allocations:
+          $ref: "#/components/schemas/IllustrationMovementTransferAllocation"
 
     IllustrationPensionRequest:
       type: object
@@ -15018,6 +15049,66 @@ components:
           maximum: 99.99
           example: 10
 
+    IllustrationMovementTransferAllocation:
+        description: >-
+          Defines an override allocation for a specfic money movement or transfer within a Multiple Investment Strategy (MIS). 
+        additionalProperties: false
+        properties:
+          accountId:
+            format: string
+            description: >-
+              The SS&C Wealth Platform Account identifier for the sub-account created for this
+              allocation. 
+            maxLength: 11
+            minLength: 11
+            type: string
+            example: HW04003261B
+          modelId:
+            format: string
+            description: >-
+              Unique SS&C Wealth Platform Model identifier for this sub-account allocation.
+              At least 1 Required for MIS accounts.
+            maxLength: 11
+            minLength: 11
+            type: string
+            example: HW000001984
+          providerId:
+            format: string
+            description: >-
+              Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId
+              against the token will be used. Applies to model-based allocations only.
+            maxLength: 7
+            minLength: 7
+            type: string
+            example: DFM0001
+          percentage:
+            type: number
+            format: double
+            description: >-
+              The percentage of the total portfolio to allocate to this sub-account.
+              Must be a positive number. All allocation percentages must sum to 100.
+              Required when `modelId` is provided.
+            minimum: 0.01
+            maximum: 100.00
+            example: 60
+          date:
+            format: date
+            description: >-
+              The model date for this allocation. If not provided the latest model date will be used.
+              Applies to model-based allocations only.
+            type: string
+            example: "2024-07-01"
+          instruments:
+            description: >-
+              Array of directly held instruments for this sub-account allocation.
+              Required when `modelId` is not provided. The percentage of each instrument
+              represents its share of the total portfolio; all instrument percentages within
+              this allocation must sum to the allocation's contribution to the portfolio total.
+            type: array
+            minItems: 1
+            items:
+              $ref: "#/components/schemas/IllustrationInstrument"
+
     IllustrationMovementFee:
       description: A fee associated with this money movement.
       type: object
@@ -15064,6 +15155,67 @@ components:
           maximum: 999
           type: integer
           example: 12
+
+    IllustrationFeeAllocation:
+      description: >-
+        Defines an override allocation for a specific fee within a Multiple Investment Strategy (MIS). 
+      additionalProperties: false
+      properties:
+        accountId:
+          format: string
+          description: >-
+            The SS&C Wealth Platform Account identifier for the sub-account created for this
+            allocation.
+          maxLength: 11
+          minLength: 11
+          type: string
+          example: HW04003261B
+        modelId:
+          format: string
+          description: >-
+            Unique SS&C Wealth Platform Model identifier for this sub-account allocation.
+            At least 1 Required for MIS accounts.
+          maxLength: 11
+          minLength: 11
+          type: string
+          example: HW000001984
+        providerId:
+          format: string
+          description: >-
+            Unique SS&C Wealth Platform tenant ID for the model owner. If not provided the tenantId
+            against the token will be used. Applies to model-based allocations only.
+          maxLength: 7
+          minLength: 7
+          type: string
+          example: DFM0001
+        percentage:
+          type: number
+          format: double
+          description: >-
+            The percentage of the total portfolio to allocate to this sub-account.
+            Must be a positive number. All allocation percentages must sum to 100.
+            Required when `modelId` is provided.
+          minimum: 0.01
+          maximum: 100.00
+          example: 60
+        date:
+          format: date
+          description: >-
+            The model date for this allocation. If not provided the latest model date will be used.
+            Applies to model-based allocations only.
+          type: string
+          example: "2024-07-01"
+        instruments:
+          description: >-
+            Array of directly held instruments for this sub-account allocation.
+            Required when `modelId` is not provided. The percentage of each instrument
+            represents its share of the total portfolio; all instrument percentages within
+            this allocation must sum to the allocation's contribution to the portfolio total.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/IllustrationInstrument"
+
 
 
   examples:
