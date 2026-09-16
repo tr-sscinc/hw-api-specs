@@ -9714,20 +9714,20 @@ paths:
                             "amount": 115000,
                             "currency": "GBP"
                           },
-                            "allocations": [
-                              {
-                                "modelId": "HW000000045",
-                                "providerId": "HUBWISE",
-                                "percentage": 50,
-                                "date": "2026-01-01"
-                              },
-                              {
-                                "modelId": "HW000000078",
-                                "providerId": "HUBWISE",
-                                "percentage": 50,
-                                "date": "2026-01-01"
-                              }
-                            ],
+                          "allocations": [
+                            {
+                              "modelId": "HW000000045",
+                              "providerId": "HUBWISE",
+                              "percentage": 50,
+                              "date": "2026-01-01"
+                            },
+                            {
+                              "modelId": "HW000000078",
+                              "providerId": "HUBWISE",
+                              "percentage": 50,
+                              "date": "2026-01-01"
+                            }
+                          ],
                           "fee": {
                             "amount": 550.95,
                             "percentage": 0
@@ -9741,12 +9741,12 @@ paths:
                           "currency": "GBP",
                           "vatIncluded": true,
                           "allocations": [
-                          {
-                            "modelId": "HW000000045",
-                            "providerId": "HUBWISE",
-                            "percentage": 100,
-                            "date": "2026-01-01"
-                          }
+                            {
+                              "modelId": "HW000000045",
+                              "providerId": "HUBWISE",
+                              "percentage": 100,
+                              "date": "2026-01-01"
+                            }
                           ]
                         }
                       ]
@@ -9813,24 +9813,24 @@ paths:
                             "amount": 10000,
                             "currency": "GBP"
                           },
-                            "fee": {
-                              "amount": 425.50,
-                              "percentage": 0
+                          "fee": {
+                            "amount": 425.50,
+                            "percentage": 0
+                          },
+                          "allocations": [
+                            {
+                              "accountId": "HW00013451B",
+                              "percentage": 50
                             },
-                            "allocations": [
-                              {
-                                "accountId": "HW00013451B",
-                                "percentage": 50
-                              },
-                              {
-                                "accountId": "HW00013451C",
-                                "percentage": 30
-                              },
-                              {
-                                "accountId": "HW00013451D",
-                                "percentage": 20
-                              }
-                            ]
+                            {
+                              "accountId": "HW00013451C",
+                              "percentage": 30
+                            },
+                            {
+                              "accountId": "HW00013451D",
+                              "percentage": 20
+                            }
+                          ]
                         }
                       ]
                     }
@@ -9882,25 +9882,24 @@ paths:
                             "amount": 10000,
                             "currency": "GBP"
                           },
-                            "fee": {
-                              "amount": 425.50,
-                              "percentage": 0
+                          "fee": {
+                            "amount": 425.50,
+                            "percentage": 0
+                          },
+                          "allocations": [
+                            {
+                              "accountId": "HW00013451B",
+                              "percentage": 50
                             },
-                            "allocations": [
-                              {
-                                "accountId": "HW00013451B",
-                                "percentage": 50
-                              },
-                              {
-                                "accountId": "HW00013451C",
-                                "percentage": 30
-                              },
-                              {
-                                "accountId": "HW00013451D",
-                                "percentage": 20
-                              }
-                            ]
-
+                            {
+                              "accountId": "HW00013451C",
+                              "percentage": 30
+                            },
+                            {
+                              "accountId": "HW00013451D",
+                              "percentage": 20
+                            }
+                          ]
                         }
                       ]
                     }
@@ -10224,20 +10223,20 @@ paths:
                           "value": {
                             "amount": 25000.00
                           },
-                            "allocations": [
-                              {
-                                "modelId": "HW000000045",
-                                "providerId": "HUBWISE",
-                                "percentage": 50,
-                                "date": "2026-01-01"
-                              },
-                              {
-                                "modelId": "HW000000078",
-                                "providerId": "HUBWISE",
-                                "percentage": 50,
-                                "date": "2026-01-01"
-                              }
-                            ],
+                          "allocations": [
+                            {
+                              "modelId": "HW000000045",
+                              "providerId": "HUBWISE",
+                              "percentage": 50,
+                              "date": "2026-01-01"
+                            },
+                            {
+                              "modelId": "HW000000078",
+                              "providerId": "HUBWISE",
+                              "percentage": 50,
+                              "date": "2026-01-01"
+                            }
+                          ],
                           "fee": {
                             "amount": 550.95,
                             "percentage": 0
@@ -10250,12 +10249,12 @@ paths:
                           "amount": 1500,
                           "vatIncluded": true,
                           "allocations": [
-                          {
-                            "modelId": "HW000000045",
-                            "providerId": "HUBWISE",
-                            "percentage": 100,
-                            "date": "2026-01-01"
-                          }
+                            {
+                              "modelId": "HW000000045",
+                              "providerId": "HUBWISE",
+                              "percentage": 100,
+                              "date": "2026-01-01"
+                            }
                           ]
                         }
                       ]
