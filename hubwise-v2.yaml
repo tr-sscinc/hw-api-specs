@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: SS&C Wealth Platform API
-  version: 0.8.24
+  version: 1.0.0-pre
   description: API Contract to integrate with SS&C Wealth Platform
   
 servers:
@@ -68,7 +68,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Investor"
+              $ref: "#/components/schemas/Investor" 
             examples:
               Ex1:
                 summary: Investor is an individual
@@ -1090,7 +1090,7 @@ paths:
                       }
                   }
               Ex4:
-                summary: Adds a new primary tax redsidence and makes the existing one secondary
+                summary: Adds a new primary tax residence and makes the existing one secondary
                 value:
                   {
                       "individual": {
@@ -1371,7 +1371,7 @@ paths:
     get:
       tags:
         - Investor Servicing
-      summary: Retrieves an investor's vulnerable Characteristics
+      summary: Retrieves an investor's vulnerable characteristics
       description: 
         Retrieves the characteristics of vulnerabilities for a specific investor record.
 
@@ -3298,7 +3298,7 @@ paths:
               $ref: "#/components/schemas/MovementsHeader"
             examples:
               Ex1:
-                summary: create a one off and regular contribution for a GIA/ISA
+                summary: Create a one off and regular contribution for a GIA/ISA
                 value:
                   {
                     "moneyMovements": [
@@ -3362,7 +3362,7 @@ paths:
                     ]
                   }
               Ex2:
-                summary: create a one off self and regular employer contribution for a SIPP 
+                summary: Create a one off self and regular employer contribution for a SIPP 
                 value:
                   {
                     "moneyMovements": [
@@ -3424,7 +3424,7 @@ paths:
                     ]
                   }
               Ex3:
-                summary: create a one off and regular withdrawal for a GIA/ISA
+                summary: Create a one off and regular withdrawal for a GIA/ISA
                 value:
                   {
                     "moneyMovements": [
@@ -3468,7 +3468,7 @@ paths:
                     ]
                   } 
               Ex4:
-                summary: create a maximum PCLS for a SIPP
+                summary: Create a maximum PCLS for a SIPP
                 value:
                   {
                     "moneyMovements": [
@@ -3494,7 +3494,7 @@ paths:
                     ]
                   }
               Ex5:
-                summary: create a regular income for a SIPP with hmrc protection
+                summary: Create a regular income for a SIPP with hmrc protection
                 value:
                   {
                     "moneyMovements": [
@@ -3527,7 +3527,7 @@ paths:
                     ]
                   }
               Ex6:
-                summary: create a one off contribution split across MIS sub-accounts
+                summary: Create a one off contribution split across MIS sub-accounts
                 value:
                   {
                     "moneyMovements": [
@@ -4104,7 +4104,7 @@ paths:
               $ref: "#/components/schemas/MovementsHeaderPatch"
             examples:
               Ex1:
-                summary: Update Regular Contribution Amount and Fee
+                summary: Update regular contribution amount and fee
                 value:
                   {
                     "moneyMovements": [
@@ -4129,7 +4129,7 @@ paths:
                     ]
                   }
               Ex2:
-                summary: Update Regular Withdrawal Frequency
+                summary: Update regular withdrawal frequency
                 value:
                   {
                     "moneyMovements": [
@@ -4146,7 +4146,7 @@ paths:
                     ]
                   }
               Ex3:
-                summary: Update Regular Contribution Bank Details
+                summary: Update regular contribution bank details
                 value:
                   {
                     "moneyMovements": [
@@ -4177,7 +4177,7 @@ paths:
                 $ref: "#/components/schemas/MovementsHeader"
               examples:
                 Ex1:
-                  summary: Update Regular Contribution Amount and Fee
+                  summary: Update regular contribution amount and fee
                   value:
                     {
                       "moneyMovements": [
@@ -4216,7 +4216,7 @@ paths:
                       ]
                     }
                 Ex2:
-                  summary: Update Regular Withdrawal Frequency
+                  summary: Update regular withdrawal frequency
                   value:
                     {
                       "moneyMovements": [
@@ -4255,7 +4255,7 @@ paths:
                       ]
                     }    
                 Ex3:
-                  summary: Update Regular Contirubtion Bank Details
+                  summary: Update regular contribution bank details
                   value:
                     {
                       "moneyMovements": [
@@ -6097,7 +6097,7 @@ paths:
     patch:
       tags:
         - Fees & Charges
-      summary: archive an accounts fee
+      summary: Archive an accounts fee
       description: >-
         
         Archives an existing active fee record for an active investment account.
@@ -7378,7 +7378,7 @@ paths:
               $ref: "#/components/schemas/InvestmentInstructions"
             examples:
               Ex1:
-                summary: create two purchase instructions, one a buy as quantity of an instrument and the other an Invest, as a monetary
+                summary: Create two purchase instructions, one a Buy (as a quantity of an instrument) and the other an Invest (as a monetary amount).
                 value: 
                   {
                     "instructions": [
@@ -7410,7 +7410,7 @@ paths:
                     ]
                   }
               Ex2:
-                summary: Specfies two instructions to sell, one as a quantity of units/stock and one as a percentage of current holdings.
+                summary: Specifies two instructions to sell, one as a quantity of units/stock and one as a percentage of current holdings.
                 value:
                   {
                     "instructions": [
@@ -7681,7 +7681,7 @@ paths:
                       ]
                     }
                 Ex4:
-                  summary: Created a switch reqest, involving three sales as monetary amounts and the reinvestment of the proceeds into two new instruments.
+                  summary: Created a switch request, involving three sales as monetary amounts and the reinvestment of the proceeds into two new instruments.
                   value:
                     {
                       "instructionsUrn": 00000004988,
@@ -8902,7 +8902,7 @@ paths:
                 $ref: "#/components/schemas/ProblemDetails"
               examples:
                 DuplicateGroupId:
-                  summary: groupId already exists for the tenant
+                  summary: Group ID already exists for the tenant
                   value:
                     title: Bad Request
                     status: 400
@@ -9138,7 +9138,7 @@ paths:
                 $ref: "#/components/schemas/ProblemDetails"
               examples:
                 NoOperations:
-                  summary: operations array is empty
+                  summary: Operations array is empty
                   value:
                     title: Bad Request
                     status: 400
@@ -9236,7 +9236,7 @@ paths:
     post:
       tags:
         - Illustrations
-      summary: Create an Illustration for non pension products, including multi-investment strategy (MIS) accounts, including multi-investment strategy (MIS) accounts
+      summary: Create an Illustration for non pension products, including multi-investment strategy (MIS) accounts
       description: |
         Creates an illustration based on the supplied scenario.
 
@@ -10477,7 +10477,7 @@ components:
           example: E273053
         baseCurrency:
           format: string
-          description: The currency used  to record the accounts holdings historical cost
+          description: The currency used to record the account's holdings historical cost
           maxLength: 3
           minLength: 3
           type: string
@@ -12411,7 +12411,7 @@ components:
           description: The fee amount for a fixed amount based fee
           type: number
         percentage:
-          description: The percectage expressed as a decimal for a fixed percentage based fee
+          description: The percentage expressed as a decimal for a fixed percentage based fee
           maximum: 1
           minimum: 0
           type: number
@@ -13753,7 +13753,7 @@ components:
       description: | 
         Subscription details for an ISA or JISA. Applies to:
         
-          - Transfers in, to record the transfered amount
+          - Transfers in, to record the transferred amount
           - Investment account, to record the amount not tranferred. 
       type: object
       properties:
@@ -13783,21 +13783,21 @@ components:
       properties:
         reference:
           format: string
-          description: The reference number of the plan being transfered. This will be validated.
+          description: The reference number of the plan being transferred. This will be validated.
           maxLength: 20
           minLength: 1
           type: string
           example: "896546"
         holderName:
           format: string
-          description: The registered holder name of the plan being transfered
+          description: The registered holder name of the plan being transferred
           maxLength: 70
           minLength: 1
           type: string
           example: James Holden
         type:
           description: >-
-            The type of ISA, JISA and pension plan being transfered. This field is only relevant
+            The type of ISA, JISA and pension plan being transferred. This field is only relevant
             for ISA, JISA and pension products.
           enum:
             - CASH
@@ -14150,7 +14150,7 @@ components:
         nextDate:
           format: date
           description: >-
-            The intended start date of the money movement. Required if no money movement id is provided and frequenct is not ONE_OFF.
+            The intended start date of the money movement. Required if no money movement id is provided and frequency is not ONE_OFF.
           type: string
           example: "2025-01-22"
         endDate:
@@ -14637,7 +14637,7 @@ components:
               maximum: 120
               example: 65
               description: |
-                The assumed retirement age. Required if account.id is not provided. Required if account. Must be 1 year older than the current age of the investor.
+                The assumed retirement age. Required if account.id is not provided. Must be at least 1 year older than the current age of the investor.
             account:
               type: object
               description: Account details for the illustration
@@ -15008,7 +15008,7 @@ components:
 
     IllustrationInstrument:
       description: >-
-        Defines a directly held instrument within a MIS instrument-based allocation or when no model provided for no MIS account (required)
+        Defines a directly held instrument within a MIS instrument-based allocation or when no model provided for no MIS account (required).
       required:
         - isin
         - exchange
